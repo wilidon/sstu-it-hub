@@ -7,7 +7,7 @@ spring.datasource.password=
 
 ## SpringDataJPA
 spring.jpa.show-sql=true
-spring.jpa.hibernate.ddl-auto=none
+spring.jpa.hibernate.ddl-auto=create
 
 spring.liquibase.change-log=classpath:/db/changelog/changelog.xml
 
@@ -32,3 +32,10 @@ logging.level.org.hibernate.orm.jdbc.bind=trace
 ## File sizes
 spring.servlet.multipart.max-file-size=10MB
 spring.servlet.multipart.max-request-size=10MB
+
+## S3
+s3.uploadEndpoint=https://s3.us-east-005.backblazeb2.com
+s3.endpoint=https://it-hub.s3.us-east-005.backblazeb2.com/
+s3.accessKey=005c49b002c16ce0000000003
+s3.secretKey=K005rzB/U/5ltt9xxrW2xEPFbSR0hi4
+s3.bucket=it-hub
