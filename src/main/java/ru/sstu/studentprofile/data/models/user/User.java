@@ -14,6 +14,8 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
+import ru.sstu.studentprofile.data.models.project.Project;
+import ru.sstu.studentprofile.data.models.project.Team;
 
 import java.time.LocalDateTime;
 import java.util.LinkedHashSet;
@@ -47,6 +49,12 @@ public class User {
 
     @OneToMany(mappedBy = "user", orphanRemoval = true)
     private Set<UserRole> userRoles = new LinkedHashSet<>();
+
+    @OneToMany(mappedBy = "leader", orphanRemoval = true)
+    private Set<Project> userLeaders = new LinkedHashSet<>();
+
+    @OneToMany(mappedBy = "user", orphanRemoval = true)
+    private Set<Team> userTeams = new LinkedHashSet<>();
 
     private LocalDateTime lastActivityTime = LocalDateTime.now();
 

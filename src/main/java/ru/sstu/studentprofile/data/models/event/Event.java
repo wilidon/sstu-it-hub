@@ -1,22 +1,17 @@
 package ru.sstu.studentprofile.data.models.event;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
+import ru.sstu.studentprofile.data.models.project.Project;
 import ru.sstu.studentprofile.data.models.user.User;
+import ru.sstu.studentprofile.data.models.user.UserRole;
 
 import java.time.LocalDateTime;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "event")
@@ -51,4 +46,7 @@ public class Event {
 
     @Enumerated(EnumType.STRING)
     private EventStatus status;
+
+    @OneToMany(mappedBy = "event", orphanRemoval = true)
+    private Set<Project> eventProjects = new LinkedHashSet<>();
 }
