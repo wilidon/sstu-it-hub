@@ -10,6 +10,7 @@ import org.springframework.web.multipart.MultipartFile;
 import ru.sstu.studentprofile.domain.service.event.EventService;
 import ru.sstu.studentprofile.domain.service.event.dto.EventIn;
 import ru.sstu.studentprofile.domain.service.event.dto.EventOut;
+import ru.sstu.studentprofile.domain.service.event.dto.EventStatusIn;
 import ru.sstu.studentprofile.domain.service.user.dto.UserOut;
 import ru.sstu.studentprofile.web.controller.event.EventApi;
 
@@ -37,6 +38,17 @@ public class EventController implements EventApi {
                                     Authentication authentication) {
         return ResponseEntity.ok(eventService.create(eventIn, authentication));
     }
+
+    @Override
+    public ResponseEntity<?> updateEvent(long eventId, EventIn eventIn, Authentication authentication) {
+        return ResponseEntity.ok(eventService.update(eventId, eventIn, authentication));
+    }
+
+    @Override
+    public ResponseEntity<?> updateEventStatus(long eventId, EventStatusIn eventStatusIn, Authentication authentication) {
+        return ResponseEntity.ok(eventService.updateStatus(eventId, eventStatusIn, authentication));
+    }
+
 
     @Override
     public ResponseEntity<EventOut> uploadFile(

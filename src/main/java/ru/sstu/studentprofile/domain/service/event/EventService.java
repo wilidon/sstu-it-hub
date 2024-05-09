@@ -13,6 +13,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import ru.sstu.studentprofile.data.models.event.Event;
+import ru.sstu.studentprofile.data.models.event.EventStatus;
 import ru.sstu.studentprofile.data.models.user.User;
 import ru.sstu.studentprofile.data.models.user.UserRole;
 import ru.sstu.studentprofile.data.repository.event.EventRepository;
@@ -23,6 +24,7 @@ import ru.sstu.studentprofile.domain.exception.UnprocessableEntityException;
 import ru.sstu.studentprofile.domain.security.JwtAuthentication;
 import ru.sstu.studentprofile.domain.service.event.dto.EventIn;
 import ru.sstu.studentprofile.domain.service.event.dto.EventOut;
+import ru.sstu.studentprofile.domain.service.event.dto.EventStatusIn;
 import ru.sstu.studentprofile.domain.service.storage.FileLoader;
 import ru.sstu.studentprofile.domain.service.user.UserService;
 import software.amazon.awssdk.auth.credentials.AwsSessionCredentials;
@@ -85,7 +87,44 @@ public class EventService {
         return mapper.toEventOut(event, 100L);
     }
 
-    @PreAuthorize("hasAnyAuthority('TEACHER', 'ADMIN')")
+    @Transactional
+    public EventOut update(long eventId,
+                           EventIn eventIn,
+                           Authentication authentication) {
+        Event event = eventRepository.findById(eventId)
+                .orElseThrow(() -> new NotFoundException("Мероприятие с id=%d не найдено".formatted(eventId)));
+        long userId = ((JwtAuthentication) authentication).getUserId();
+
+        if (event.getAuthor().getId() != userId) {
+            throw new ForbiddenException("Вы не являетесь автором мероприятия");
+        }
+
+        event.setName(eventIn.name());
+        event.setDescription(eventIn.description());
+        event.setStartDate(eventIn.startDate());
+        event.setEndDate(eventIn.endDate());
+        event.setStatus(EventStatus.fromEventStatusIn(eventIn.status()));
+
+        eventRepository.save(event);
+        return this.findById(eventId);
+    }
+    @Transactional
+    public EventOut updateStatus(long eventId,
+                                 EventStatusIn eventStatusIn,
+                                 Authentication authentication) {
+        Event event = eventRepository.findById(eventId)
+                .orElseThrow(() -> new NotFoundException("Мероприятие с id=%d не найдено".formatted(eventId)));
+        long userId = ((JwtAuthentication) authentication).getUserId();
+
+        if (event.getAuthor().getId() != userId) {
+            throw new ForbiddenException("Вы не являетесь автором мероприятия");
+        }
+
+        event.setStatus(EventStatus.fromEventStatusIn(eventStatusIn));
+        eventRepository.save(event);
+        return this.findById(eventId);
+    }
+
     public EventOut uploadAvatar(final long eventId,
                                  final Authentication authentication,
                                  final MultipartFile file) throws IOException {

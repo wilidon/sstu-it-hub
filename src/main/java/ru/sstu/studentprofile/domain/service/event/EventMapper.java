@@ -19,6 +19,7 @@ public interface EventMapper {
     List<EventOut> toEventOut(List<Event> events);
 
     @Mapping(target = "avatar", ignore = true)
+    @Mapping(target = "id", ignore = true)
     @Mapping(target = "author", source = "user")
     Event toEvent(EventIn eventIn, User user);
 }

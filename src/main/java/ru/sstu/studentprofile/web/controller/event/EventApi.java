@@ -8,15 +8,16 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -25,7 +26,7 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.multipart.MultipartFile;
 import ru.sstu.studentprofile.domain.service.event.dto.EventIn;
 import ru.sstu.studentprofile.domain.service.event.dto.EventOut;
-import ru.sstu.studentprofile.domain.service.user.dto.UserOut;
+import ru.sstu.studentprofile.domain.service.event.dto.EventStatusIn;
 import ru.sstu.studentprofile.web.exp.ErrorMessage;
 
 import java.io.IOException;
@@ -63,6 +64,7 @@ public interface EventApi {
 
     @PostMapping()
     @SecurityRequirement(name = "bearerAuth")
+    @PreAuthorize("hasAnyAuthority('ADMIN')")
     @ApiResponses(
             value = {
                     @ApiResponse(responseCode = "201",
@@ -81,6 +83,88 @@ public interface EventApi {
     )
     ResponseEntity<?> create(@RequestBody @Valid EventIn eventIn,
                              Authentication authentication);
+
+    @PutMapping("/{eventId}")
+    @SecurityRequirement(name = "bearerAuth")
+    @PreAuthorize("hasAnyAuthority('ADMIN')")
+    @ApiResponses(
+            value = {@ApiResponse(
+                    responseCode = "200",
+                    description = "Обновляет мероприятие. Возвращает обновленное мероприятие.",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = EventOut.class))
+            ),
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "Мероприятие не найдено",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorMessage.class)
+                    )
+            ),
+            @ApiResponse(
+                    responseCode = "422",
+                    description = "Неверные данные",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorMessage.class)
+                    )
+            ),
+            @ApiResponse(
+                    responseCode = "403",
+                    description = "Недостаточно прав",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorMessage.class)
+                    )
+
+            )}
+    )
+    ResponseEntity<?> updateEvent(@PathVariable("eventId") long eventId,
+                                        @RequestBody @Valid EventIn eventIn,
+                                        Authentication authentication);
+
+    @PatchMapping("/{eventId}/status")
+    @SecurityRequirement(name = "bearerAuth")
+    @PreAuthorize("hasAnyAuthority('ADMIN')")
+    @ApiResponses(
+            value = {@ApiResponse(
+                    responseCode = "200",
+                    description = "Обновляет статус мероприятие. Возвращает обновленное мероприятие.",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = EventOut.class))
+            ),
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "Мероприятие не найдено",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorMessage.class)
+                    )
+            ),
+            @ApiResponse(
+                    responseCode = "422",
+                    description = "Неверные данные",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorMessage.class)
+                    )
+            ),
+            @ApiResponse(
+                    responseCode = "403",
+                    description = "Недостаточно прав",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorMessage.class)
+                    )
+
+            )}
+    )
+    ResponseEntity<?> updateEventStatus(@PathVariable("eventId") long eventId,
+                                        EventStatusIn eventStatusIn,
+                                        Authentication authentication);
 
     @RequestMapping(value = "/{eventId}/avatar",
             method = RequestMethod.PATCH,

@@ -5,6 +5,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -59,10 +60,12 @@ public class ExceptionController {
                 .body(message);
     }
 
-    @ExceptionHandler(UnprocessableEntityException.class)
+    @ExceptionHandler(value =
+            {UnprocessableEntityException.class,
+                    HttpMessageNotReadableException.class})
     public ResponseEntity<ErrorMessage> unprocessableEntityException(final Exception exception,
-                                                                    final HttpServletRequest request,
-                                                                    final JwtAuthentication authentication) {
+                                                                     final HttpServletRequest request,
+                                                                     final JwtAuthentication authentication) {
         final ErrorMessage message = new ErrorMessage(LocalDateTime.now(),
                 HttpStatus.UNPROCESSABLE_ENTITY.value(),
                 HttpStatus.UNPROCESSABLE_ENTITY.getReasonPhrase(),
@@ -76,8 +79,8 @@ public class ExceptionController {
 
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<ErrorMessage> runtimeException(final Exception exception,
-                                                          final HttpServletRequest request,
-                                                          final JwtAuthentication authentication) {
+                                                         final HttpServletRequest request,
+                                                         final JwtAuthentication authentication) {
         final ErrorMessage message = new ErrorMessage(LocalDateTime.now(),
                 HttpStatus.BAD_REQUEST.value(),
                 HttpStatus.BAD_REQUEST.getReasonPhrase(),
