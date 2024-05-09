@@ -69,4 +69,9 @@ public class ProjectController implements ProjectApi {
     public ResponseEntity<EventOut> getProjectEvent(long projectId) {
         return ResponseEntity.ok(projectService.getProjectEvent(projectId));
     }
+
+    @Override
+    public ResponseEntity<EventOut> updateProjectEvent(long projectId, long eventId, Authentication authentication) {
+        return ResponseEntity.ok(projectService.updateProjectEvent(projectId, eventId, authentication));
+    }
 }

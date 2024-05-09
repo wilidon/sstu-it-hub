@@ -207,7 +207,7 @@ public interface ProjectApi {
                     description = "Возвращает данные лидера",
                     content = @Content(
                             mediaType = "application/json",
-                            schema = @Schema(implementation = ProjectOut.class))
+                            schema = @Schema(implementation = UserOut.class))
             )
     )
     ResponseEntity<UserOut> getProjectLeader(@PathVariable("projectId") long projectId);
@@ -220,8 +220,48 @@ public interface ProjectApi {
                     description = "Возвращает данные мероприятия",
                     content = @Content(
                             mediaType = "application/json",
-                            schema = @Schema(implementation = ProjectOut.class))
+                            schema = @Schema(implementation = EventOut.class))
             )
     )
     ResponseEntity<EventOut> getProjectEvent(@PathVariable("projectId") long projectId);
+
+    @PatchMapping("/{projectId}/event")
+    @SecurityRequirement(name = "bearerAuth")
+    @ApiResponses(
+            value = {@ApiResponse(
+                    responseCode = "200",
+                    description = "Обновление мероприятия проекта. Возвращает модель проекта",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = EventOut.class))
+            ),
+                    @ApiResponse(
+                            responseCode = "404",
+                            description = "Проект не найден",
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = ru.sstu.studentprofile.web.exp.ErrorMessage.class)
+                            )
+                    ),
+                    @ApiResponse(
+                            responseCode = "422",
+                            description = "Неверные данные",
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = ru.sstu.studentprofile.web.exp.ErrorMessage.class)
+                            )
+                    ),
+                    @ApiResponse(
+                            responseCode = "403",
+                            description = "Недостаточно прав",
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = ru.sstu.studentprofile.web.exp.ErrorMessage.class)
+                            )
+
+                    )}
+    )
+    ResponseEntity<EventOut> updateProjectEvent(@PathVariable("projectId") long projectId,
+                                                   long eventId,
+                                                   Authentication authentication);
 }

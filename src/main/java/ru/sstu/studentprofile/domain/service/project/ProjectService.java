@@ -14,6 +14,7 @@ import ru.sstu.studentprofile.data.models.event.Event;
 import ru.sstu.studentprofile.data.models.project.Project;
 import ru.sstu.studentprofile.data.models.project.ProjectStatus;
 import ru.sstu.studentprofile.data.models.user.User;
+import ru.sstu.studentprofile.data.repository.event.EventRepository;
 import ru.sstu.studentprofile.data.repository.project.ProjectRepository;
 import ru.sstu.studentprofile.data.repository.user.UserRepository;
 import ru.sstu.studentprofile.domain.exception.ForbiddenException;
@@ -37,15 +38,17 @@ import java.util.List;
 public class ProjectService {
     private final ProjectRepository projectRepository;
     private final UserRepository userRepository;
+    private final EventRepository eventRepository;
     private final UserMapper mapperUser;
     private final EventMapper mapperEvent;
     private final ProjectMapper mapper;
     private final FileLoader fileLoader;
 
     @Autowired
-    public ProjectService(ProjectRepository projectRepository, UserRepository userRepository, EventMapper mapperEvent, UserMapper mapperUser, ProjectMapper mapper, @Qualifier("projectAvatarLoader") FileLoader fileLoader) {
+    public ProjectService(ProjectRepository projectRepository, UserRepository userRepository, EventRepository eventRepository,EventMapper mapperEvent, UserMapper mapperUser, ProjectMapper mapper, @Qualifier("projectAvatarLoader") FileLoader fileLoader) {
         this.projectRepository = projectRepository;
         this.userRepository = userRepository;
+        this.eventRepository = eventRepository;
         this.mapperUser = mapperUser;
         this.mapperEvent = mapperEvent;
         this.mapper = mapper;
@@ -153,6 +156,24 @@ public class ProjectService {
     public EventOut getProjectEvent(long projectId){
         Project project =  projectRepository.findById(projectId).orElseThrow(() -> new NotFoundException("Проект не найден"));
         Event event = project.getEvent();
+
+        return mapperEvent.toEventOut(event, 100L);
+    }
+
+    @Transactional
+    public EventOut updateProjectEvent(long projectId, long eventId, Authentication authentication){
+        Project project = projectRepository.findById(projectId)
+                .orElseThrow(() -> new NotFoundException("Проект с id=%d не найдено".formatted(projectId)));
+        long userId = ((JwtAuthentication) authentication).getUserId();
+
+        if (project.getLeader().getId() != userId)
+            throw new ForbiddenException("Вы не лидер проекта");
+
+        Event event = eventRepository.findById(eventId)
+                .orElseThrow(() -> new NotFoundException("Мероприятие с id=%d не найдено".formatted(eventId)));
+
+        project.setEvent(event);
+        projectRepository.save(project);
 
         return mapperEvent.toEventOut(event, 100L);
     }
