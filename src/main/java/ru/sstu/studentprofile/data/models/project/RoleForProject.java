@@ -19,7 +19,4 @@ public class RoleForProject {
 
     @Column(name="name", nullable = false, length = 128)
     private String name;
-
-    @OneToMany(mappedBy = "role", orphanRemoval = true)
-    private Set<Team> roleTeams = new LinkedHashSet<>();
 }

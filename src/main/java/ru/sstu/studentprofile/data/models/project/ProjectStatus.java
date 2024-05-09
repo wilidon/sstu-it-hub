@@ -14,7 +14,7 @@ public enum ProjectStatus {
             case PLANNED -> PLANNED;
             case OPEN -> OPEN;
             case COMPLETED -> COMPLETED;
-            default -> throw new IllegalArgumentException("Неизвестный статус мероприятия: " + projectStatusIn);
+            default -> throw new IllegalArgumentException("Неизвестный статус проекта: " + projectStatusIn);
         };
     }
 }

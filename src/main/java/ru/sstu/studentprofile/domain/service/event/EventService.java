@@ -45,7 +45,6 @@ public class EventService {
     private final EventRepository eventRepository;
     private final EventMapper mapper;
     private final FileLoader fileLoader;
-
     private final UserRepository userRepository;
 
     @Autowired

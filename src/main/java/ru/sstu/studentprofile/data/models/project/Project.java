@@ -1,13 +1,11 @@
 package ru.sstu.studentprofile.data.models.project;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 import ru.sstu.studentprofile.data.models.event.Event;
 import ru.sstu.studentprofile.data.models.user.User;
-import ru.sstu.studentprofile.data.models.user.UserRole;
 
 import java.time.LocalDateTime;
 import java.util.LinkedHashSet;
@@ -48,5 +46,5 @@ public class Project {
     private Event event;
 
     @OneToMany(mappedBy = "project", orphanRemoval = true)
-    private Set<Team> projectTeam = new LinkedHashSet<>();
+    private Set<ProjectMember> projectMembers = new LinkedHashSet<>();
 }

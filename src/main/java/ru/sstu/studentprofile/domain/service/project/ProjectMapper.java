@@ -11,9 +11,13 @@ import ru.sstu.studentprofile.domain.service.event.dto.EventOut;
 import ru.sstu.studentprofile.domain.service.project.dto.ProjectIn;
 import ru.sstu.studentprofile.domain.service.project.dto.ProjectOut;
 
+import java.util.List;
+
 @Mapper(componentModel = MappingConstants.ComponentModel.SPRING)
 public interface ProjectMapper {
     ProjectOut toProjectOut(Project project);
+
+    List<ProjectOut> toProjectOut(List<Project> projects);
 
     @Mapping(target = "avatar", ignore = true)
     @Mapping(target = "id", ignore = true)

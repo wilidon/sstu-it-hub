@@ -10,12 +10,11 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 import ru.sstu.studentprofile.data.models.project.Project;
-import ru.sstu.studentprofile.data.models.project.Team;
+import ru.sstu.studentprofile.data.models.project.ProjectMember;
 
 import java.time.LocalDateTime;
 import java.util.LinkedHashSet;
@@ -54,7 +53,7 @@ public class User {
     private Set<Project> userLeaders = new LinkedHashSet<>();
 
     @OneToMany(mappedBy = "user", orphanRemoval = true)
-    private Set<Team> userTeams = new LinkedHashSet<>();
+    private Set<ProjectMember> userProjectMembers = new LinkedHashSet<>();
 
     private LocalDateTime lastActivityTime = LocalDateTime.now();
 
