@@ -211,4 +211,17 @@ public interface ProjectApi {
             )
     )
     ResponseEntity<UserOut> getProjectLeader(@PathVariable("projectId") long projectId);
+
+    @GetMapping("/{projectId}/event")
+    @SecurityRequirement(name = "bearerAuth")
+    @ApiResponses(
+            value = @ApiResponse(
+                    responseCode = "200",
+                    description = "Возвращает данные мероприятия",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ProjectOut.class))
+            )
+    )
+    ResponseEntity<EventOut> getProjectEvent(@PathVariable("projectId") long projectId);
 }

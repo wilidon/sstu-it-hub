@@ -64,4 +64,9 @@ public class ProjectController implements ProjectApi {
     public ResponseEntity<UserOut> getProjectLeader(long projectId) {
         return ResponseEntity.ok(projectService.getProjectLeader(projectId));
     }
+
+    @Override
+    public ResponseEntity<EventOut> getProjectEvent(long projectId) {
+        return ResponseEntity.ok(projectService.getProjectEvent(projectId));
+    }
 }

@@ -52,6 +52,4 @@ public interface UserApi {
     )
     )
     ResponseEntity<UserOut> me(JwtAuthentication authentication);
-
-    //два эндоинта для получаения лидера и получения мероприятия
 }

@@ -10,6 +10,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import ru.sstu.studentprofile.data.models.event.Event;
 import ru.sstu.studentprofile.data.models.project.Project;
 import ru.sstu.studentprofile.data.models.project.ProjectStatus;
 import ru.sstu.studentprofile.data.models.user.User;
@@ -19,6 +20,8 @@ import ru.sstu.studentprofile.domain.exception.ForbiddenException;
 import ru.sstu.studentprofile.domain.exception.NotFoundException;
 import ru.sstu.studentprofile.domain.exception.UnprocessableEntityException;
 import ru.sstu.studentprofile.domain.security.JwtAuthentication;
+import ru.sstu.studentprofile.domain.service.event.EventMapper;
+import ru.sstu.studentprofile.domain.service.event.dto.EventOut;
 import ru.sstu.studentprofile.domain.service.event.dto.EventStatusIn;
 import ru.sstu.studentprofile.domain.service.project.dto.ProjectIn;
 import ru.sstu.studentprofile.domain.service.project.dto.ProjectOut;
@@ -35,14 +38,16 @@ public class ProjectService {
     private final ProjectRepository projectRepository;
     private final UserRepository userRepository;
     private final UserMapper mapperUser;
+    private final EventMapper mapperEvent;
     private final ProjectMapper mapper;
     private final FileLoader fileLoader;
 
     @Autowired
-    public ProjectService(ProjectRepository projectRepository, UserRepository userRepository, UserMapper mapperUser, ProjectMapper mapper, @Qualifier("projectAvatarLoader") FileLoader fileLoader) {
+    public ProjectService(ProjectRepository projectRepository, UserRepository userRepository, EventMapper mapperEvent, UserMapper mapperUser, ProjectMapper mapper, @Qualifier("projectAvatarLoader") FileLoader fileLoader) {
         this.projectRepository = projectRepository;
         this.userRepository = userRepository;
         this.mapperUser = mapperUser;
+        this.mapperEvent = mapperEvent;
         this.mapper = mapper;
         this.fileLoader = fileLoader;
     }
@@ -143,5 +148,12 @@ public class ProjectService {
         User leader = project.getLeader();
 
         return mapperUser.toUserOut(leader);
+    }
+
+    public EventOut getProjectEvent(long projectId){
+        Project project =  projectRepository.findById(projectId).orElseThrow(() -> new NotFoundException("Проект не найден"));
+        Event event = project.getEvent();
+
+        return mapperEvent.toEventOut(event, 100L);
     }
 }
