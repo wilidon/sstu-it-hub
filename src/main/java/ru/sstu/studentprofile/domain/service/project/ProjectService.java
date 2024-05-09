@@ -24,6 +24,8 @@ import ru.sstu.studentprofile.domain.service.project.dto.ProjectIn;
 import ru.sstu.studentprofile.domain.service.project.dto.ProjectOut;
 import ru.sstu.studentprofile.domain.service.project.dto.ProjectStatusIn;
 import ru.sstu.studentprofile.domain.service.storage.FileLoader;
+import ru.sstu.studentprofile.domain.service.user.UserMapper;
+import ru.sstu.studentprofile.domain.service.user.dto.UserOut;
 
 import java.io.IOException;
 import java.util.List;
@@ -32,13 +34,15 @@ import java.util.List;
 public class ProjectService {
     private final ProjectRepository projectRepository;
     private final UserRepository userRepository;
+    private final UserMapper mapperUser;
     private final ProjectMapper mapper;
     private final FileLoader fileLoader;
 
     @Autowired
-    public ProjectService(ProjectRepository projectRepository, UserRepository userRepository, ProjectMapper mapper, @Qualifier("projectAvatarLoader") FileLoader fileLoader) {
+    public ProjectService(ProjectRepository projectRepository, UserRepository userRepository, UserMapper mapperUser, ProjectMapper mapper, @Qualifier("projectAvatarLoader") FileLoader fileLoader) {
         this.projectRepository = projectRepository;
         this.userRepository = userRepository;
+        this.mapperUser = mapperUser;
         this.mapper = mapper;
         this.fileLoader = fileLoader;
     }
@@ -132,5 +136,12 @@ public class ProjectService {
         project.setAvatar(null);
         projectRepository.save(project);
         return this.findProjectById(projectId);
+    }
+
+    public UserOut getProjectLeader(long projectId){
+        Project project =  projectRepository.findById(projectId).orElseThrow(() -> new NotFoundException("Проект не найден"));
+        User leader = project.getLeader();
+
+        return mapperUser.toUserOut(leader);
     }
 }

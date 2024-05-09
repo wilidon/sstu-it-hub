@@ -55,6 +55,9 @@ public class User {
     @OneToMany(mappedBy = "user", orphanRemoval = true)
     private Set<ProjectMember> userProjectMembers = new LinkedHashSet<>();
 
+    @OneToMany(mappedBy = "user", orphanRemoval = true)
+    private Set<UserRoleForProject> userRolesForProject = new LinkedHashSet<>();
+
     private LocalDateTime lastActivityTime = LocalDateTime.now();
 
     private LocalDateTime createdAt = LocalDateTime.now();

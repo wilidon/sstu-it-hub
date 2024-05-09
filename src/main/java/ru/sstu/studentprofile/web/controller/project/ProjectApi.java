@@ -198,4 +198,17 @@ public interface ProjectApi {
     ResponseEntity<ProjectOut> deleteAvatar(
             @PathVariable("projectId") long projectId,
             @NotNull Authentication authentication);
+
+    @GetMapping("/{projectId}/leader")
+    @SecurityRequirement(name = "bearerAuth")
+    @ApiResponses(
+            value = @ApiResponse(
+                    responseCode = "200",
+                    description = "Возвращает данные лидера",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ProjectOut.class))
+            )
+    )
+    ResponseEntity<UserOut> getProjectLeader(@PathVariable("projectId") long projectId);
 }

@@ -11,5 +11,6 @@ import ru.sstu.studentprofile.domain.service.user.dto.UserOut;
 )
 public interface UserMapper {
     @Mapping(target = "roles", expression = "java(user.getUserRoles().stream().map(userRole -> userRole.getRole().getName()).toList())")
+    @Mapping(target = "rolesForProject", expression = "java(user.getUserRolesForProject().stream().map(userRoleForProject -> userRoleForProject.getRole().getName()).toList())")
     UserOut toUserOut(User user);
 }

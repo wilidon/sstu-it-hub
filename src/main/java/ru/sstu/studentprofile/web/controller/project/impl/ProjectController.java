@@ -59,4 +59,9 @@ public class ProjectController implements ProjectApi {
     public ResponseEntity<ProjectOut> deleteAvatar(long projectId, Authentication authentication) {
         return ResponseEntity.ok(projectService.deleteFileAvatar(projectId, authentication));
     }
+
+    @Override
+    public ResponseEntity<UserOut> getProjectLeader(long projectId) {
+        return ResponseEntity.ok(projectService.getProjectLeader(projectId));
+    }
 }
