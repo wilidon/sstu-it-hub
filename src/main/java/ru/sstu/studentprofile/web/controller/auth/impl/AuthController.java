@@ -3,10 +3,7 @@ package ru.sstu.studentprofile.web.controller.auth.impl;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import ru.sstu.studentprofile.domain.service.auth.AuthService;
 import ru.sstu.studentprofile.domain.service.auth.dto.BearerLoginOut;
 import ru.sstu.studentprofile.domain.service.auth.dto.LoginIn;
@@ -18,6 +15,7 @@ import ru.sstu.studentprofile.web.controller.auth.AuthApi;
 @RequestMapping("/auth")
 @AllArgsConstructor
 @Tag(name = "1. Авторизация")
+@CrossOrigin("*")
 public class AuthController implements AuthApi {
     private AuthService authService;
 

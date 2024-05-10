@@ -2,6 +2,7 @@ package ru.sstu.studentprofile.web.controller.user.impl;
 
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import ru.sstu.studentprofile.data.models.user.User;
@@ -13,6 +14,7 @@ import ru.sstu.studentprofile.web.controller.user.UserApi;
 @RestController
 @AllArgsConstructor
 @RequestMapping("/users")
+@CrossOrigin("*")
 public class UserController implements UserApi {
 
     private final UserService userService;
