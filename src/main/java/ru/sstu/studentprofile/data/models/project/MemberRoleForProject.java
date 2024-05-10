@@ -16,12 +16,8 @@ public class MemberRoleForProject {
     private long id;
 
     @ManyToOne
-    @JoinColumn(name = "project_id", nullable = false)
-    private Project project;
-
-    @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
-    private User user;
+    @JoinColumn(name = "project_member_id", nullable = false)
+    private ProjectMember projectMember;
 
     @ManyToOne
     @JoinColumn(name = "role_for_project_id", nullable = false)

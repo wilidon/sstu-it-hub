@@ -27,6 +27,7 @@ import ru.sstu.studentprofile.domain.service.event.EventMapper;
 import ru.sstu.studentprofile.domain.service.event.dto.EventOut;
 import ru.sstu.studentprofile.domain.service.event.dto.EventStatusIn;
 import ru.sstu.studentprofile.domain.service.project.dto.ProjectIn;
+import ru.sstu.studentprofile.domain.service.project.dto.ProjectMemberOut;
 import ru.sstu.studentprofile.domain.service.project.dto.ProjectOut;
 import ru.sstu.studentprofile.domain.service.project.dto.ProjectStatusIn;
 import ru.sstu.studentprofile.domain.service.storage.FileLoader;
@@ -46,11 +47,13 @@ public class ProjectService {
     private final ProjectMemberRepository projectMemberRepository;
     private final UserMapper mapperUser;
     private final EventMapper mapperEvent;
+    private final ProjectMemberMapper mapperProjectMember;
     private final ProjectMapper mapper;
     private final FileLoader fileLoader;
 
+
     @Autowired
-    public ProjectService(ProjectRepository projectRepository, UserRepository userRepository, EventRepository eventRepository, ProjectMemberRepository projectMemberRepository, EventMapper mapperEvent, UserMapper mapperUser, ProjectMapper mapper, @Qualifier("projectAvatarLoader") FileLoader fileLoader) {
+    public ProjectService(ProjectRepository projectRepository, UserRepository userRepository, EventRepository eventRepository, ProjectMemberRepository projectMemberRepository, EventMapper mapperEvent, UserMapper mapperUser, ProjectMapper mapper, @Qualifier("projectAvatarLoader") FileLoader fileLoader, ProjectMemberMapper mapperProjectMember) {
         this.projectRepository = projectRepository;
         this.userRepository = userRepository;
         this.eventRepository = eventRepository;
@@ -59,6 +62,7 @@ public class ProjectService {
         this.mapperEvent = mapperEvent;
         this.mapper = mapper;
         this.fileLoader = fileLoader;
+        this.mapperProjectMember = mapperProjectMember;
     }
 
     public ProjectOut findProjectById(final long id){
@@ -204,17 +208,17 @@ public class ProjectService {
         return mapper.toProjectOut(project);
     }
 
-    public List<UserOut> getProjectMembers(long projectId){
+    public List<ProjectMemberOut> getProjectMembers(long projectId){
         Project project = projectRepository.findById(projectId)
                 .orElseThrow(() -> new NotFoundException("Проект с id=%d не найдено".formatted(projectId)));
 
-        List<User> users = projectMemberRepository.findMembersUniqueByProjectId(projectId);
-        List<UserOut> usersOut = new ArrayList<>();
+        List<ProjectMember> projectMembers = projectMemberRepository.findMembersUniqueByProjectId(projectId);
+        List<ProjectMemberOut> projectMembersOut = new ArrayList<>();
 
-        for (User user: users){
-            usersOut.add(mapperUser.toUserOut(user));
+        for (ProjectMember member : projectMembers){
+            projectMembersOut.add(mapperProjectMember.toProjectMemberOut(member));
         }
 
-        return usersOut;
+        return projectMembersOut;
     }
 }

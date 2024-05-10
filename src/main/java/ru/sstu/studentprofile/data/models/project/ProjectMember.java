@@ -4,6 +4,10 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import ru.sstu.studentprofile.data.models.user.User;
+import ru.sstu.studentprofile.data.models.user.UserRole;
+
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "project_member")
@@ -22,6 +26,8 @@ public class ProjectMember {
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
+
+    @OneToMany(mappedBy = "projectMember", orphanRemoval = true)
+    private Set<MemberRoleForProject> projectMemberRoles = new LinkedHashSet<>();
 }
 
-// НОВАЯ ТАБЛИЦА МНОГИЕ КО МНОГИЕ СОСТАВНУЮ КЛЮЧ TEAM USER

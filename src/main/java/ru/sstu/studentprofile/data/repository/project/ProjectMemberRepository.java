@@ -12,7 +12,7 @@ import ru.sstu.studentprofile.data.models.user.User;
 import java.util.List;
 @Repository
 public interface ProjectMemberRepository extends JpaRepository<ProjectMember, Long> {
-    @Query("SELECT m.user FROM ProjectMember m WHERE m.project.id = :projectId GROUP BY m.user")
-    List<User> findMembersUniqueByProjectId(@Param("projectId") long projectId);
+    @Query("SELECT m FROM ProjectMember m WHERE m.project.id = :projectId")
+    List<ProjectMember> findMembersUniqueByProjectId(@Param("projectId") long projectId);
 }
 

@@ -20,6 +20,7 @@ import ru.sstu.studentprofile.domain.service.event.dto.EventIn;
 import ru.sstu.studentprofile.domain.service.event.dto.EventOut;
 import ru.sstu.studentprofile.domain.service.event.dto.EventStatusIn;
 import ru.sstu.studentprofile.domain.service.project.dto.ProjectIn;
+import ru.sstu.studentprofile.domain.service.project.dto.ProjectMemberOut;
 import ru.sstu.studentprofile.domain.service.project.dto.ProjectOut;
 import ru.sstu.studentprofile.domain.service.project.dto.ProjectStatusIn;
 import ru.sstu.studentprofile.domain.service.user.dto.UserOut;
@@ -311,7 +312,7 @@ public interface ProjectApi {
                     description = "Получение участников проекта. Возвращает массив с участниками проекта",
                     content = @Content(
                             mediaType = "application/json",
-                            schema = @Schema(implementation = UserOut.class))
+                            schema = @Schema(implementation = ProjectMemberOut.class))
             ),
                     @ApiResponse(
                             responseCode = "404",
@@ -322,5 +323,5 @@ public interface ProjectApi {
                             )
                     ),}
     )
-    ResponseEntity<List<UserOut>> getProjectMembers(@PathVariable("projectId") long projectId);
+    ResponseEntity<List<ProjectMemberOut>> getProjectMembers(@PathVariable("projectId") long projectId);
 }
