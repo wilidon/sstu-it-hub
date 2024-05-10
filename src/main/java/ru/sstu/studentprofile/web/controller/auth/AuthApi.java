@@ -7,6 +7,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springdoc.api.ErrorMessage;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,6 +18,7 @@ import ru.sstu.studentprofile.domain.service.auth.dto.RegisterIn;
 
 @Tag(name = "1. Авторизация")
 @RequestMapping("/auth")
+@CrossOrigin("*")
 public interface AuthApi {
     @PostMapping("/login")
     @ApiResponses(value = {

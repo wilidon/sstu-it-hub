@@ -30,6 +30,7 @@ import java.util.List;
 
 @Tag(name = "4. Проекты")
 @RequestMapping("/projects")
+@CrossOrigin("*")
 public interface ProjectApi {
 
     @SuppressWarnings("checkstyle:Indentation")

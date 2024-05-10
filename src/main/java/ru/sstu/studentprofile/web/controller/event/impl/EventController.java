@@ -20,6 +20,7 @@ import java.util.List;
 
 @RestController
 @AllArgsConstructor
+@CrossOrigin("*")
 public class EventController implements EventApi {
 
     private final EventService eventService;
