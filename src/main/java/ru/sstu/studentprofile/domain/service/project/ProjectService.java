@@ -1,7 +1,6 @@
 package ru.sstu.studentprofile.domain.service.project;
 
 import jakarta.transaction.Transactional;
-import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.PageRequest;
@@ -16,7 +15,6 @@ import ru.sstu.studentprofile.data.models.project.ProjectMember;
 import ru.sstu.studentprofile.data.models.project.ProjectStatus;
 import ru.sstu.studentprofile.data.models.user.User;
 import ru.sstu.studentprofile.data.repository.event.EventRepository;
-import ru.sstu.studentprofile.data.repository.project.ProjectMemberRepository;
 import ru.sstu.studentprofile.data.repository.project.ProjectRepository;
 import ru.sstu.studentprofile.data.repository.user.UserRepository;
 import ru.sstu.studentprofile.domain.exception.ForbiddenException;
@@ -25,7 +23,6 @@ import ru.sstu.studentprofile.domain.exception.UnprocessableEntityException;
 import ru.sstu.studentprofile.domain.security.JwtAuthentication;
 import ru.sstu.studentprofile.domain.service.event.EventMapper;
 import ru.sstu.studentprofile.domain.service.event.dto.EventOut;
-import ru.sstu.studentprofile.domain.service.event.dto.EventStatusIn;
 import ru.sstu.studentprofile.domain.service.project.dto.ProjectIn;
 import ru.sstu.studentprofile.domain.service.project.dto.ProjectMemberOut;
 import ru.sstu.studentprofile.domain.service.project.dto.ProjectOut;
@@ -37,14 +34,12 @@ import ru.sstu.studentprofile.domain.service.user.dto.UserOut;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 @Service
 public class ProjectService {
     private final ProjectRepository projectRepository;
     private final UserRepository userRepository;
     private final EventRepository eventRepository;
-    private final ProjectMemberRepository projectMemberRepository;
     private final UserMapper mapperUser;
     private final EventMapper mapperEvent;
     private final ProjectMemberMapper mapperProjectMember;
@@ -53,11 +48,10 @@ public class ProjectService {
 
 
     @Autowired
-    public ProjectService(ProjectRepository projectRepository, UserRepository userRepository, EventRepository eventRepository, ProjectMemberRepository projectMemberRepository, EventMapper mapperEvent, UserMapper mapperUser, ProjectMapper mapper, @Qualifier("projectAvatarLoader") FileLoader fileLoader, ProjectMemberMapper mapperProjectMember) {
+    public ProjectService(ProjectRepository projectRepository, UserRepository userRepository, EventRepository eventRepository, EventMapper mapperEvent, UserMapper mapperUser, ProjectMapper mapper, @Qualifier("projectAvatarLoader") FileLoader fileLoader, ProjectMemberMapper mapperProjectMember) {
         this.projectRepository = projectRepository;
         this.userRepository = userRepository;
         this.eventRepository = eventRepository;
-        this.projectMemberRepository = projectMemberRepository;
         this.mapperUser = mapperUser;
         this.mapperEvent = mapperEvent;
         this.mapper = mapper;
@@ -212,7 +206,7 @@ public class ProjectService {
         Project project = projectRepository.findById(projectId)
                 .orElseThrow(() -> new NotFoundException("Проект с id=%d не найдено".formatted(projectId)));
 
-        List<ProjectMember> projectMembers = projectMemberRepository.findMembersUniqueByProjectId(projectId);
+        List<ProjectMember> projectMembers = project.getProjectMembers().stream().toList();
         List<ProjectMemberOut> projectMembersOut = new ArrayList<>();
 
         for (ProjectMember member : projectMembers){
