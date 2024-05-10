@@ -14,7 +14,6 @@ import ru.sstu.studentprofile.web.controller.user.UserApi;
 @RestController
 @AllArgsConstructor
 @RequestMapping("/users")
-@CrossOrigin("*")
 public class UserController implements UserApi {
 
     private final UserService userService;

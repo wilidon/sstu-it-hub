@@ -15,7 +15,6 @@ import ru.sstu.studentprofile.web.controller.auth.AuthApi;
 @RequestMapping("/auth")
 @AllArgsConstructor
 @Tag(name = "1. Авторизация")
-@CrossOrigin("*")
 public class AuthController implements AuthApi {
     private AuthService authService;
 

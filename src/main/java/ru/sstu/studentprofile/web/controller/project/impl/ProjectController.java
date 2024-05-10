@@ -24,7 +24,6 @@ import java.util.List;
 @RestController
 @AllArgsConstructor
 @RequestMapping("/projects")
-@CrossOrigin("*")
 public class ProjectController implements ProjectApi {
     private final ProjectService projectService;
 
