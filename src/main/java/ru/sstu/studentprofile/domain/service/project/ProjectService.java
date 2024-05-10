@@ -177,4 +177,19 @@ public class ProjectService {
 
         return mapperEvent.toEventOut(event, 100L);
     }
+
+    @Transactional
+    public ProjectOut deleteProjectEvent(long projectId, Authentication authentication){
+        Project project = projectRepository.findById(projectId)
+                .orElseThrow(() -> new NotFoundException("Проект с id=%d не найдено".formatted(projectId)));
+        long userId = ((JwtAuthentication) authentication).getUserId();
+
+        if (project.getLeader().getId() != userId)
+            throw new ForbiddenException("Вы не лидер проекта");
+
+        project.setEvent(null);
+        projectRepository.save(project);
+
+        return mapper.toProjectOut(project);
+    }
 }

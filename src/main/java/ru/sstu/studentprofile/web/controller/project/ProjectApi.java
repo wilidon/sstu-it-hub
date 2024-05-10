@@ -263,5 +263,43 @@ public interface ProjectApi {
     )
     ResponseEntity<EventOut> updateProjectEvent(@PathVariable("projectId") long projectId,
                                                    long eventId,
-                                                   Authentication authentication);
+                                                Authentication authentication);
+
+    @DeleteMapping("/{projectId}/event")
+    @SecurityRequirement(name = "bearerAuth")
+    @ApiResponses(
+            value = {@ApiResponse(
+                    responseCode = "200",
+                    description = "Удаление мероприятия проекта. Возвращает модель проекта",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ProjectOut.class))
+            ),
+                    @ApiResponse(
+                            responseCode = "404",
+                            description = "Проект не найден",
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = ru.sstu.studentprofile.web.exp.ErrorMessage.class)
+                            )
+                    ),
+                    @ApiResponse(
+                            responseCode = "422",
+                            description = "Неверные данные",
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = ru.sstu.studentprofile.web.exp.ErrorMessage.class)
+                            )
+                    ),
+                    @ApiResponse(
+                            responseCode = "403",
+                            description = "Недостаточно прав",
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = ru.sstu.studentprofile.web.exp.ErrorMessage.class)
+                            )
+
+                    )}
+    )
+    ResponseEntity<ProjectOut> deleteProjectEvent(@PathVariable("projectId") long projectId, Authentication authentication);
 }

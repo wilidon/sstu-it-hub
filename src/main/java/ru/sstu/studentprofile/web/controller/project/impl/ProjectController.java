@@ -74,4 +74,11 @@ public class ProjectController implements ProjectApi {
     public ResponseEntity<EventOut> updateProjectEvent(long projectId, long eventId, Authentication authentication) {
         return ResponseEntity.ok(projectService.updateProjectEvent(projectId, eventId, authentication));
     }
+
+    @Override
+    public ResponseEntity<ProjectOut> deleteProjectEvent(long projectId, Authentication authentication) {
+        return ResponseEntity.ok(projectService.deleteProjectEvent(projectId, authentication));
+    }
 }
+
+// TODO ДОБАВИТЬ ФУНКЦИЮ ПО УДАЛЕНИЮ ПРИВЯЗКИ МЕРОПРИЯТИЯ К ПРОЕКТУ
