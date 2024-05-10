@@ -47,4 +47,7 @@ public class Project {
 
     @OneToMany(mappedBy = "project", orphanRemoval = true)
     private Set<ProjectMember> projectMembers = new LinkedHashSet<>();
+
+    @OneToMany(mappedBy = "project", orphanRemoval = true)
+    private Set<ActualRoleForProject> actualRoleForProject = new LinkedHashSet<>();
 }

@@ -12,9 +12,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import ru.sstu.studentprofile.data.models.event.Event;
 import ru.sstu.studentprofile.data.models.project.Project;
+import ru.sstu.studentprofile.data.models.project.ProjectMember;
 import ru.sstu.studentprofile.data.models.project.ProjectStatus;
 import ru.sstu.studentprofile.data.models.user.User;
 import ru.sstu.studentprofile.data.repository.event.EventRepository;
+import ru.sstu.studentprofile.data.repository.project.ProjectMemberRepository;
 import ru.sstu.studentprofile.data.repository.project.ProjectRepository;
 import ru.sstu.studentprofile.data.repository.user.UserRepository;
 import ru.sstu.studentprofile.domain.exception.ForbiddenException;
@@ -32,23 +34,27 @@ import ru.sstu.studentprofile.domain.service.user.UserMapper;
 import ru.sstu.studentprofile.domain.service.user.dto.UserOut;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class ProjectService {
     private final ProjectRepository projectRepository;
     private final UserRepository userRepository;
     private final EventRepository eventRepository;
+    private final ProjectMemberRepository projectMemberRepository;
     private final UserMapper mapperUser;
     private final EventMapper mapperEvent;
     private final ProjectMapper mapper;
     private final FileLoader fileLoader;
 
     @Autowired
-    public ProjectService(ProjectRepository projectRepository, UserRepository userRepository, EventRepository eventRepository,EventMapper mapperEvent, UserMapper mapperUser, ProjectMapper mapper, @Qualifier("projectAvatarLoader") FileLoader fileLoader) {
+    public ProjectService(ProjectRepository projectRepository, UserRepository userRepository, EventRepository eventRepository, ProjectMemberRepository projectMemberRepository, EventMapper mapperEvent, UserMapper mapperUser, ProjectMapper mapper, @Qualifier("projectAvatarLoader") FileLoader fileLoader) {
         this.projectRepository = projectRepository;
         this.userRepository = userRepository;
         this.eventRepository = eventRepository;
+        this.projectMemberRepository = projectMemberRepository;
         this.mapperUser = mapperUser;
         this.mapperEvent = mapperEvent;
         this.mapper = mapper;
@@ -66,7 +72,12 @@ public class ProjectService {
         Pageable pageable = PageRequest.of(page - 1, PAGE_SIZE, Sort.by("createDate").descending());
         List<Project> projects = projectRepository.findAllByOrderByCreateDateDesc(pageable);
 
-        return mapper.toProjectOut(projects);
+        List<ProjectOut> projectsOut = new ArrayList<>();
+        for (Project project : projects){
+            projectsOut.add(mapper.toProjectOut(project));
+        }
+
+        return projectsOut;
     }
 
     @Transactional
@@ -191,5 +202,19 @@ public class ProjectService {
         projectRepository.save(project);
 
         return mapper.toProjectOut(project);
+    }
+
+    public List<UserOut> getProjectMembers(long projectId){
+        Project project = projectRepository.findById(projectId)
+                .orElseThrow(() -> new NotFoundException("Проект с id=%d не найдено".formatted(projectId)));
+
+        List<User> users = projectMemberRepository.findMembersUniqueByProjectId(projectId);
+        List<UserOut> usersOut = new ArrayList<>();
+
+        for (User user: users){
+            usersOut.add(mapperUser.toUserOut(user));
+        }
+
+        return usersOut;
     }
 }

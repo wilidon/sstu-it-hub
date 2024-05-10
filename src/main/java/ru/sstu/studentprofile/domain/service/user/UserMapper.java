@@ -6,6 +6,8 @@ import org.mapstruct.MappingConstants;
 import ru.sstu.studentprofile.data.models.user.User;
 import ru.sstu.studentprofile.domain.service.user.dto.UserOut;
 
+import java.util.List;
+
 @Mapper(
         componentModel = MappingConstants.ComponentModel.SPRING
 )

@@ -15,9 +15,8 @@ import java.util.List;
 
 @Mapper(componentModel = MappingConstants.ComponentModel.SPRING)
 public interface ProjectMapper {
+    @Mapping(target = "actualRoles", expression = "java(project.getActualRoleForProject().stream().map(actualRole -> actualRole.getRole().getName()).toList())")
     ProjectOut toProjectOut(Project project);
-
-    List<ProjectOut> toProjectOut(List<Project> projects);
 
     @Mapping(target = "avatar", ignore = true)
     @Mapping(target = "id", ignore = true)

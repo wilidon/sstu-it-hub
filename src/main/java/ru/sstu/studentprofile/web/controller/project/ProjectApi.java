@@ -302,4 +302,25 @@ public interface ProjectApi {
                     )}
     )
     ResponseEntity<ProjectOut> deleteProjectEvent(@PathVariable("projectId") long projectId, Authentication authentication);
+
+    @GetMapping("/{projectId}/members")
+    @SecurityRequirement(name = "bearerAuth")
+    @ApiResponses(
+            value = {@ApiResponse(
+                    responseCode = "200",
+                    description = "Получение участников проекта. Возвращает массив с участниками проекта",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = UserOut.class))
+            ),
+                    @ApiResponse(
+                            responseCode = "404",
+                            description = "Проект не найден",
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = ru.sstu.studentprofile.web.exp.ErrorMessage.class)
+                            )
+                    ),}
+    )
+    ResponseEntity<List<UserOut>> getProjectMembers(@PathVariable("projectId") long projectId);
 }

@@ -7,6 +7,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import ru.sstu.studentprofile.data.models.project.Project;
+import ru.sstu.studentprofile.data.models.project.ProjectMember;
 import ru.sstu.studentprofile.domain.service.event.dto.EventOut;
 import ru.sstu.studentprofile.domain.service.event.dto.EventStatusIn;
 import ru.sstu.studentprofile.domain.service.project.ProjectService;
@@ -78,6 +79,11 @@ public class ProjectController implements ProjectApi {
     @Override
     public ResponseEntity<ProjectOut> deleteProjectEvent(long projectId, Authentication authentication) {
         return ResponseEntity.ok(projectService.deleteProjectEvent(projectId, authentication));
+    }
+
+    @Override
+    public ResponseEntity<List<UserOut>> getProjectMembers(long projectId) {
+        return ResponseEntity.ok(projectService.getProjectMembers(projectId));
     }
 }
 
