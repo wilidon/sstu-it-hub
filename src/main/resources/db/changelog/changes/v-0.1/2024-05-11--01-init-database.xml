@@ -1,0 +1,255 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.27.xsd"
+        objectQuotingStrategy="QUOTE_ONLY_RESERVED_WORDS">
+    <changeSet id="1715418811969-1" author="ildar (generated)">
+        <createSequence incrementBy="1" sequenceName="actual_role_for_project_id_seq"/>
+    </changeSet>
+    <changeSet id="1715418811969-2" author="ildar (generated)">
+        <createSequence incrementBy="1" sequenceName="event_id_seq"/>
+    </changeSet>
+    <changeSet id="1715418811969-3" author="ildar (generated)">
+        <createSequence incrementBy="1" sequenceName="project_id_seq"/>
+    </changeSet>
+    <changeSet id="1715418811969-4" author="ildar (generated)">
+        <createSequence incrementBy="1" sequenceName="project_member_id_seq"/>
+    </changeSet>
+    <changeSet id="1715418811969-5" author="ildar (generated)">
+        <createSequence incrementBy="1" sequenceName="project_member_role_for_project_id_seq"/>
+    </changeSet>
+    <changeSet id="1715418811969-6" author="ildar (generated)">
+        <createSequence incrementBy="1" sequenceName="role_for_project_id_seq"/>
+    </changeSet>
+    <changeSet id="1715418811969-7" author="ildar (generated)">
+        <createSequence incrementBy="1" sequenceName="role_id_seq"/>
+    </changeSet>
+    <changeSet id="1715418811969-8" author="ildar (generated)">
+        <createSequence incrementBy="1" sequenceName="user_id_seq"/>
+    </changeSet>
+    <changeSet id="1715418811969-9" author="ildar (generated)">
+        <createSequence incrementBy="1" sequenceName="user_role_for_project_id_seq"/>
+    </changeSet>
+    <changeSet id="1715418811969-10" author="ildar (generated)">
+        <createSequence incrementBy="1" sequenceName="user_role_id_seq"/>
+    </changeSet>
+    <changeSet id="1715418811969-11" author="ildar (generated)">
+        <createTable tableName="actual_role_for_project">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="actual_role_for_project_pkey"/>
+            </column>
+            <column name="project_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="role_for_project_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet id="1715418811969-12" author="ildar (generated)">
+        <createTable tableName="event">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="event_pkey"/>
+            </column>
+            <column name="avatar" type="VARCHAR(512)"/>
+            <column name="description" type="VARCHAR(2048)"/>
+            <column name="end_date" type="timestamp">
+                <constraints nullable="false"/>
+            </column>
+            <column name="name" type="VARCHAR(128)"/>
+            <column name="start_date" type="timestamp">
+                <constraints nullable="false"/>
+            </column>
+            <column name="status" type="VARCHAR(255)"/>
+            <column name="author_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet id="1715418811969-13" author="ildar (generated)">
+        <createTable tableName="project">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="project_pkey"/>
+            </column>
+            <column name="avatar" type="VARCHAR(512)"/>
+            <column name="create_date" type="timestamp">
+                <constraints nullable="false"/>
+            </column>
+            <column name="description" type="VARCHAR(2048)"/>
+            <column name="name" type="VARCHAR(128)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="status" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="event_id" type="BIGINT"/>
+            <column name="leader_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet id="1715418811969-14" author="ildar (generated)">
+        <createTable tableName="project_member">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="project_member_pkey"/>
+            </column>
+            <column name="project_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="user_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet id="1715418811969-15" author="ildar (generated)">
+        <createTable tableName="project_member_role_for_project">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="project_member_role_for_project_pkey"/>
+            </column>
+            <column name="project_member_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="role_for_project_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet id="1715418811969-16" author="ildar (generated)">
+        <createTable tableName="role">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="role_pkey"/>
+            </column>
+            <column name="name" type="VARCHAR(128)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet id="1715418811969-17" author="ildar (generated)">
+        <createTable tableName="role_for_project">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="role_for_project_pkey"/>
+            </column>
+            <column name="name" type="VARCHAR(128)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet id="1715418811969-18" author="ildar (generated)">
+        <createTable tableName="user">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="user_pkey"/>
+            </column>
+            <column name="created_at" type="timestamp"/>
+            <column name="email" type="VARCHAR(128)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="last_activity_time" type="timestamp"/>
+            <column name="login" type="VARCHAR(128)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="password" type="VARCHAR(128)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet id="1715418811969-19" author="ildar (generated)">
+        <createTable tableName="user_role">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="user_role_pkey"/>
+            </column>
+            <column name="role_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="user_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet id="1715418811969-20" author="ildar (generated)">
+        <createTable tableName="user_role_for_project">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="user_role_for_project_pkey"/>
+            </column>
+            <column name="role_for_project_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="user_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet id="1715418811969-21" author="ildar (generated)">
+        <addUniqueConstraint columnNames="login" constraintName="uk_ew1hvam8uwaknuaellwhqchhb" tableName="user"/>
+    </changeSet>
+    <changeSet id="1715418811969-22" author="ildar (generated)">
+        <addUniqueConstraint columnNames="email" constraintName="uk_ob8kqyqqgmefl0aco34akdtpe" tableName="user"/>
+    </changeSet>
+    <changeSet id="1715418811969-23" author="ildar (generated)">
+        <addForeignKeyConstraint baseColumnNames="project_id" baseTableName="project_member"
+                                 constraintName="fk103dwxad12nbaxtmnwus4eft2" onDelete="NO ACTION"
+                                 referencedColumnNames="id" referencedTableName="project"/>
+    </changeSet>
+    <changeSet id="1715418811969-24" author="ildar (generated)">
+        <addForeignKeyConstraint baseColumnNames="event_id" baseTableName="project"
+                                 constraintName="fk56e9e5a0q65vu4ep2qfuy50h6" onDelete="NO ACTION"
+                                 referencedColumnNames="id" referencedTableName="event"/>
+    </changeSet>
+    <changeSet id="1715418811969-25" author="ildar (generated)">
+        <addForeignKeyConstraint baseColumnNames="author_id" baseTableName="event"
+                                 constraintName="fk5wd7nwhqlu1i052rnqydxhtf4" onDelete="NO ACTION"
+                                 referencedColumnNames="id" referencedTableName="user"/>
+    </changeSet>
+    <changeSet id="1715418811969-26" author="ildar (generated)">
+        <addForeignKeyConstraint baseColumnNames="role_id" baseTableName="user_role"
+                                 constraintName="fka68196081fvovjhkek5m97n3y" onDelete="NO ACTION"
+                                 referencedColumnNames="id" referencedTableName="role"/>
+    </changeSet>
+    <changeSet id="1715418811969-27" author="ildar (generated)">
+        <addForeignKeyConstraint baseColumnNames="role_for_project_id" baseTableName="actual_role_for_project"
+                                 constraintName="fkaaaqo3b53k5mi9pvdaqtd4hyt" onDelete="NO ACTION"
+                                 referencedColumnNames="id" referencedTableName="role_for_project"/>
+    </changeSet>
+    <changeSet id="1715418811969-28" author="ildar (generated)">
+        <addForeignKeyConstraint baseColumnNames="project_id" baseTableName="actual_role_for_project"
+                                 constraintName="fkc9nliohpqqttl01xcalpueu06" onDelete="NO ACTION"
+                                 referencedColumnNames="id" referencedTableName="project"/>
+    </changeSet>
+    <changeSet id="1715418811969-29" author="ildar (generated)">
+        <addForeignKeyConstraint baseColumnNames="role_for_project_id" baseTableName="project_member_role_for_project"
+                                 constraintName="fkdhngu86yb16ck4heypprca7nc" onDelete="NO ACTION"
+                                 referencedColumnNames="id" referencedTableName="role_for_project"/>
+    </changeSet>
+    <changeSet id="1715418811969-30" author="ildar (generated)">
+        <addForeignKeyConstraint baseColumnNames="user_id" baseTableName="user_role"
+                                 constraintName="fkfgsgxvihks805qcq8sq26ab7c" onDelete="NO ACTION"
+                                 referencedColumnNames="id" referencedTableName="user"/>
+    </changeSet>
+    <changeSet id="1715418811969-31" author="ildar (generated)">
+        <addForeignKeyConstraint baseColumnNames="user_id" baseTableName="project_member"
+                                 constraintName="fkg52l1e32htqaytsis91bi4j35" onDelete="NO ACTION"
+                                 referencedColumnNames="id" referencedTableName="user"/>
+    </changeSet>
+    <changeSet id="1715418811969-32" author="ildar (generated)">
+        <addForeignKeyConstraint baseColumnNames="leader_id" baseTableName="project"
+                                 constraintName="fkgx78eifsp8myxf2l9olb4b98r" onDelete="NO ACTION"
+                                 referencedColumnNames="id" referencedTableName="user"/>
+    </changeSet>
+    <changeSet id="1715418811969-33" author="ildar (generated)">
+        <addForeignKeyConstraint baseColumnNames="project_member_id" baseTableName="project_member_role_for_project"
+                                 constraintName="fknsjbx633px93x9pxnb7xmwexx" onDelete="NO ACTION"
+                                 referencedColumnNames="id" referencedTableName="project_member"/>
+    </changeSet>
+    <changeSet id="1715418811969-34" author="ildar (generated)">
+        <addForeignKeyConstraint baseColumnNames="role_for_project_id" baseTableName="user_role_for_project"
+                                 constraintName="fkpjmtjb92xja993ohs1xb8aoy" onDelete="NO ACTION"
+                                 referencedColumnNames="id" referencedTableName="role_for_project"/>
+    </changeSet>
+    <changeSet id="1715418811969-35" author="ildar (generated)">
+        <addForeignKeyConstraint baseColumnNames="user_id" baseTableName="user_role_for_project"
+                                 constraintName="fkpxd2kmo3ipke5orymna5rq9ef" onDelete="NO ACTION"
+                                 referencedColumnNames="id" referencedTableName="user"/>
+    </changeSet>
+
+</databaseChangeLog>
