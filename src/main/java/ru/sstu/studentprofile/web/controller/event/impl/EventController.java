@@ -3,7 +3,6 @@ package ru.sstu.studentprofile.web.controller.event.impl;
 
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RestController;
@@ -12,7 +11,6 @@ import ru.sstu.studentprofile.domain.service.event.EventService;
 import ru.sstu.studentprofile.domain.service.event.dto.EventIn;
 import ru.sstu.studentprofile.domain.service.event.dto.EventOut;
 import ru.sstu.studentprofile.domain.service.event.dto.EventStatusIn;
-import ru.sstu.studentprofile.domain.service.user.dto.UserOut;
 import ru.sstu.studentprofile.web.controller.event.EventApi;
 
 import java.io.IOException;
@@ -20,7 +18,7 @@ import java.util.List;
 
 @RestController
 @AllArgsConstructor
-@CrossOrigin("*")
+@CrossOrigin(origins = "*")
 public class EventController implements EventApi {
 
     private final EventService eventService;

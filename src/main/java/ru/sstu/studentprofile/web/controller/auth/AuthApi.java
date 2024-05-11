@@ -1,4 +1,5 @@
 package ru.sstu.studentprofile.web.controller.auth;
+
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -17,7 +18,7 @@ import ru.sstu.studentprofile.domain.service.auth.dto.RegisterIn;
 
 @Tag(name = "1. Авторизация")
 @RequestMapping("/auth")
-@CrossOrigin("*")
+@CrossOrigin(origins = "*")
 public interface AuthApi {
     @PostMapping("/login")
     @ApiResponses(value = {

@@ -12,16 +12,13 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import ru.sstu.studentprofile.data.models.user.User;
 import ru.sstu.studentprofile.domain.security.JwtAuthentication;
 import ru.sstu.studentprofile.domain.service.user.dto.UserOut;
 
 @Tag(name = "2. Пользователи")
 @RequestMapping("/users")
-@CrossOrigin("*")
+@CrossOrigin(origins = "*")
 public interface UserApi {
-
-    @SuppressWarnings("checkstyle:Indentation")
     @GetMapping("/{userId}")
     @ApiResponses(value = {
             @ApiResponse(
@@ -42,7 +39,6 @@ public interface UserApi {
     })
     ResponseEntity<UserOut> getUserById(@PathVariable long userId);
 
-    @SuppressWarnings("checkstyle:Indentation")
     @SecurityRequirement(name = "bearerAuth")
     @GetMapping("/me")
     @ApiResponses(value = @ApiResponse(

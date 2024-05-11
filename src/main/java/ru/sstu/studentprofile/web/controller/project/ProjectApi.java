@@ -30,10 +30,8 @@ import java.util.List;
 
 @Tag(name = "4. Проекты")
 @RequestMapping("/projects")
-@CrossOrigin("*")
+@CrossOrigin(origins = "*")
 public interface ProjectApi {
-
-    @SuppressWarnings("checkstyle:Indentation")
     @PostMapping()
     @SecurityRequirement(name = "bearerAuth")
     @ApiResponses(
@@ -55,7 +53,6 @@ public interface ProjectApi {
     ResponseEntity<?> create(@RequestBody @Valid ProjectIn projectIn,
                              Authentication authentication);
 
-    @SuppressWarnings("checkstyle:Indentation")
     @SecurityRequirement(name = "bearerAuth")
     @GetMapping("/all")
     @ApiResponses(value = {
@@ -66,7 +63,6 @@ public interface ProjectApi {
     })
     ResponseEntity<List<ProjectOut>> getAllProjects(@RequestParam int page);
 
-    @SuppressWarnings("checkstyle:Indentation")
     @SecurityRequirement(name = "bearerAuth")
     @GetMapping("/{projectId}")
     @ApiResponses(value = {
@@ -88,7 +84,6 @@ public interface ProjectApi {
     })
     ResponseEntity<ProjectOut> getProjectById(@PathVariable long projectId);
 
-    @SuppressWarnings("checkstyle:Indentation")
     @SecurityRequirement(name = "bearerAuth")
     @PutMapping("/{projectId}")
     @ApiResponses(value = {
