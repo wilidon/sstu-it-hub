@@ -9,8 +9,9 @@ public record ProjectOut (
     String name,
     String description,
     String status,
-
-    List<String> actualRoles,
+    ProjectEventOut event,
+    List<ProjectMemberOut> members,
+    List<ProjectActualRoleOut> actualRoles,
     LocalDateTime createDate
 ) {
 }

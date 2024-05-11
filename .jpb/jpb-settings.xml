@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DatabaseMigrationSettings">
+    <database-infos>
+      <database-info>
+        <option name="enabled" value="true" />
+        <dbms-id>postgres</dbms-id>
+      </database-info>
+    </database-infos>
+  </component>
+  <component name="JpaLiquibaseChangesConfig">
+    <exclude-change idName="actual_role_for_project_id_seq" tagName="dropSequence" />
+    <exclude-change idName="event_id_seq" tagName="dropSequence" />
+    <exclude-change idName="project_id_seq" tagName="dropSequence" />
+    <exclude-change idName="project_member_id_seq" tagName="dropSequence" />
+    <exclude-change idName="project_member_role_for_project_id_seq" tagName="dropSequence" />
+    <exclude-change idName="role_for_project_id_seq" tagName="dropSequence" />
+    <exclude-change idName="role_id_seq" tagName="dropSequence" />
+    <exclude-change idName="user_id_seq" tagName="dropSequence" />
+    <exclude-change idName="user_role_for_project_id_seq" tagName="dropSequence" />
+    <exclude-change idName="user_role_id_seq" tagName="dropSequence" />
+  </component>
+  <component name="PersistenceUnitSettings">
+    <persistence-units>
+      <persistence-unit name="Default" defaultIncludeChangeLogFile="src/main/resources/db/changelog/changelog.xml">
+        <packages>
+          <package value="ru.sstu.studentprofile" />
+        </packages>
+      </persistence-unit>
+    </persistence-units>
+  </component>
+</project>
