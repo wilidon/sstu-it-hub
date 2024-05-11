@@ -12,10 +12,7 @@ import ru.sstu.studentprofile.domain.service.event.dto.EventOut;
 import ru.sstu.studentprofile.domain.service.event.dto.EventStatusIn;
 import ru.sstu.studentprofile.domain.service.event.dto.ShortEventOut;
 import ru.sstu.studentprofile.domain.service.project.ProjectService;
-import ru.sstu.studentprofile.domain.service.project.dto.ProjectIn;
-import ru.sstu.studentprofile.domain.service.project.dto.ProjectMemberOut;
-import ru.sstu.studentprofile.domain.service.project.dto.ProjectOut;
-import ru.sstu.studentprofile.domain.service.project.dto.ProjectStatusIn;
+import ru.sstu.studentprofile.domain.service.project.dto.*;
 import ru.sstu.studentprofile.domain.service.user.dto.UserOut;
 import ru.sstu.studentprofile.web.controller.project.ProjectApi;
 
@@ -65,28 +62,13 @@ public class ProjectController implements ProjectApi {
     }
 
     @Override
-    public ResponseEntity<UserOut> getProjectLeader(long projectId) {
-        return ResponseEntity.ok(projectService.getProjectLeader(projectId));
-    }
-
-    @Override
-    public ResponseEntity<ShortEventOut> getProjectEvent(long projectId) {
-        return ResponseEntity.ok(projectService.getProjectEvent(projectId));
-    }
-
-    @Override
-    public ResponseEntity<ShortEventOut> updateProjectEvent(long projectId, long eventId, Authentication authentication) {
+    public ResponseEntity<ProjectEventOut> updateProjectEvent(long projectId, long eventId, Authentication authentication) {
         return ResponseEntity.ok(projectService.updateProjectEvent(projectId, eventId, authentication));
     }
 
     @Override
     public ResponseEntity<ProjectOut> deleteProjectEvent(long projectId, Authentication authentication) {
         return ResponseEntity.ok(projectService.deleteProjectEvent(projectId, authentication));
-    }
-
-    @Override
-    public ResponseEntity<List<ProjectMemberOut>> getProjectMembers(long projectId) {
-        return ResponseEntity.ok(projectService.getProjectMembers(projectId));
     }
 }
 

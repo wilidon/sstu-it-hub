@@ -1,4 +1,4 @@
-package ru.sstu.studentprofile.domain.service.project;
+package ru.sstu.studentprofile.domain.service.project.mappers;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -10,11 +10,16 @@ import ru.sstu.studentprofile.domain.service.project.dto.ProjectIn;
 import ru.sstu.studentprofile.domain.service.project.dto.ProjectMemberOut;
 import ru.sstu.studentprofile.domain.service.project.dto.ProjectOut;
 
+import java.util.List;
+
 @Mapper(componentModel = MappingConstants.ComponentModel.SPRING)
 public interface ProjectMemberMapper {
     @Mapping(target = "id", expression = "java(projectMember.getId())")
+    @Mapping(target = "avatar", expression = "java(projectMember.getUser().getAvatar())")
     @Mapping(target = "login", expression = "java(projectMember.getUser().getLogin())")
-    @Mapping(target = "email", expression = "java(projectMember.getUser().getEmail())")
+    @Mapping(target = "lastName", expression = "java(projectMember.getUser().getLastName())")
+    @Mapping(target = "firstName", expression = "java(projectMember.getUser().getFirstName())")
+    @Mapping(target = "middleName", expression = "java(projectMember.getUser().getMiddleName())")
     @Mapping(target = "rolesForProject", expression = "java(projectMember.getProjectMemberRoles().stream().map(role -> role.getRole().getName()).toList())")
     ProjectMemberOut toProjectMemberOut(ProjectMember projectMember);
 }

@@ -16,10 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import ru.sstu.studentprofile.domain.service.event.dto.EventOut;
 import ru.sstu.studentprofile.domain.service.event.dto.ShortEventOut;
-import ru.sstu.studentprofile.domain.service.project.dto.ProjectIn;
-import ru.sstu.studentprofile.domain.service.project.dto.ProjectMemberOut;
-import ru.sstu.studentprofile.domain.service.project.dto.ProjectOut;
-import ru.sstu.studentprofile.domain.service.project.dto.ProjectStatusIn;
+import ru.sstu.studentprofile.domain.service.project.dto.*;
 import ru.sstu.studentprofile.domain.service.user.dto.UserOut;
 
 import java.io.IOException;
@@ -193,32 +190,6 @@ public interface ProjectApi {
             @PathVariable("projectId") long projectId,
             @NotNull Authentication authentication);
 
-    @GetMapping("/{projectId}/leader")
-    @SecurityRequirement(name = "bearerAuth")
-    @ApiResponses(
-            value = @ApiResponse(
-                    responseCode = "200",
-                    description = "Возвращает данные лидера",
-                    content = @Content(
-                            mediaType = "application/json",
-                            schema = @Schema(implementation = UserOut.class))
-            )
-    )
-    ResponseEntity<UserOut> getProjectLeader(@PathVariable("projectId") long projectId);
-
-    @GetMapping("/{projectId}/event")
-    @SecurityRequirement(name = "bearerAuth")
-    @ApiResponses(
-            value = @ApiResponse(
-                    responseCode = "200",
-                    description = "Возвращает данные мероприятия",
-                    content = @Content(
-                            mediaType = "application/json",
-                            schema = @Schema(implementation = EventOut.class))
-            )
-    )
-    ResponseEntity<?> getProjectEvent(@PathVariable("projectId") long projectId);
-
     @PatchMapping("/{projectId}/event")
     @SecurityRequirement(name = "bearerAuth")
     @ApiResponses(
@@ -227,7 +198,7 @@ public interface ProjectApi {
                     description = "Обновление мероприятия проекта. Возвращает модель проекта",
                     content = @Content(
                             mediaType = "application/json",
-                            schema = @Schema(implementation = EventOut.class))
+                            schema = @Schema(implementation = ProjectEventOut.class))
             ),
                     @ApiResponse(
                             responseCode = "404",
@@ -255,9 +226,9 @@ public interface ProjectApi {
 
                     )}
     )
-    ResponseEntity<ShortEventOut> updateProjectEvent(@PathVariable("projectId") long projectId,
-                                                     long eventId,
-                                                     Authentication authentication);
+    ResponseEntity<ProjectEventOut> updateProjectEvent(@PathVariable("projectId") long projectId,
+                                                       long eventId,
+                                                       Authentication authentication);
 
     @DeleteMapping("/{projectId}/event")
     @SecurityRequirement(name = "bearerAuth")
@@ -296,25 +267,4 @@ public interface ProjectApi {
                     )}
     )
     ResponseEntity<ProjectOut> deleteProjectEvent(@PathVariable("projectId") long projectId, Authentication authentication);
-
-    @GetMapping("/{projectId}/members")
-    @SecurityRequirement(name = "bearerAuth")
-    @ApiResponses(
-            value = {@ApiResponse(
-                    responseCode = "200",
-                    description = "Получение участников проекта. Возвращает массив с участниками проекта",
-                    content = @Content(
-                            mediaType = "application/json",
-                            schema = @Schema(implementation = ProjectMemberOut.class))
-            ),
-                    @ApiResponse(
-                            responseCode = "404",
-                            description = "Проект не найден",
-                            content = @Content(
-                                    mediaType = "application/json",
-                                    schema = @Schema(implementation = ru.sstu.studentprofile.web.exp.ErrorMessage.class)
-                            )
-                    ),}
-    )
-    ResponseEntity<List<ProjectMemberOut>> getProjectMembers(@PathVariable("projectId") long projectId);
 }
