@@ -37,6 +37,7 @@ public class SwaggerConfig {
                 .servers(
                         List.of(new Server().url("http://localhost:8080")
                                 .description("Local service"),
-                                new Server().url("http://217.18.62.13:8080/")));
+                                new Server().url("https://it-hub.fita.cc")
+                                        .description("Production service")));
     }
 }
