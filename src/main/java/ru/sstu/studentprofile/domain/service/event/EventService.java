@@ -3,20 +3,17 @@ package ru.sstu.studentprofile.domain.service.event;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.http.client.MultipartBodyBuilder;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import ru.sstu.studentprofile.data.models.event.Event;
 import ru.sstu.studentprofile.data.models.event.EventStatus;
 import ru.sstu.studentprofile.data.models.user.User;
-import ru.sstu.studentprofile.data.models.user.UserRole;
 import ru.sstu.studentprofile.data.repository.event.EventRepository;
+import ru.sstu.studentprofile.data.repository.event.projection.EventMembers;
 import ru.sstu.studentprofile.data.repository.user.UserRepository;
 import ru.sstu.studentprofile.domain.exception.ForbiddenException;
 import ru.sstu.studentprofile.domain.exception.NotFoundException;
@@ -25,20 +22,11 @@ import ru.sstu.studentprofile.domain.security.JwtAuthentication;
 import ru.sstu.studentprofile.domain.service.event.dto.EventIn;
 import ru.sstu.studentprofile.domain.service.event.dto.EventOut;
 import ru.sstu.studentprofile.domain.service.event.dto.EventStatusIn;
+import ru.sstu.studentprofile.domain.service.event.dto.ShortEventOut;
 import ru.sstu.studentprofile.domain.service.storage.FileLoader;
-import ru.sstu.studentprofile.domain.service.user.UserService;
-import software.amazon.awssdk.auth.credentials.AwsSessionCredentials;
-import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
-import software.amazon.awssdk.core.sync.RequestBody;
-import software.amazon.awssdk.regions.Region;
-import software.amazon.awssdk.services.s3.S3Client;
-import software.amazon.awssdk.services.s3.model.PutObjectRequest;
-import software.amazon.awssdk.services.s3.model.S3Exception;
 
 import java.io.IOException;
-import java.net.URI;
 import java.util.List;
-import java.util.UUID;
 
 @Service
 public class EventService {
@@ -57,11 +45,12 @@ public class EventService {
         this.userRepository = userRepository;
     }
 
-    public List<EventOut> all(int page) {
-        short PAGE_SIZE = 25;
-        Pageable pageable = PageRequest.of(page - 1, PAGE_SIZE, Sort.by("startDate").descending());
+    public List<ShortEventOut> all(int page, int limit) {
+        Pageable pageable = PageRequest.of(page - 1,
+                limit,
+                Sort.by("startDate").descending());
         List<Event> events = eventRepository.findAllByOrderByStartDateDesc(pageable);
-        return mapper.toEventOut(events);
+        return mapper.toShortEventOut(events);
     }
 
     public EventOut findById(long id) {
@@ -69,7 +58,9 @@ public class EventService {
                 () -> new NotFoundException("Мероприятие с id=%d не найдено".formatted(id))
         );
 
-        return mapper.toEventOut(event, 100L);
+        List<EventMembers> eventMembers = eventRepository.findMembersById(id,
+                PageRequest.of(0, 6));
+        return mapper.toEventOut(event, 100L, eventMembers);
     }
 
     @Transactional
@@ -82,8 +73,8 @@ public class EventService {
 
         Event event = mapper.toEvent(eventIn, user);
 
-        eventRepository.save(event);
-        return mapper.toEventOut(event, 100L);
+        Event savedEvent = eventRepository.save(event);
+        return findById(savedEvent.getId());
     }
 
     @Transactional
@@ -107,6 +98,7 @@ public class EventService {
         eventRepository.save(event);
         return this.findById(eventId);
     }
+
     @Transactional
     public EventOut updateStatus(long eventId,
                                  EventStatusIn eventStatusIn,

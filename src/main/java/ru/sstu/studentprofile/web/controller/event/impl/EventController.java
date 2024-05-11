@@ -11,6 +11,7 @@ import ru.sstu.studentprofile.domain.service.event.EventService;
 import ru.sstu.studentprofile.domain.service.event.dto.EventIn;
 import ru.sstu.studentprofile.domain.service.event.dto.EventOut;
 import ru.sstu.studentprofile.domain.service.event.dto.EventStatusIn;
+import ru.sstu.studentprofile.domain.service.event.dto.ShortEventOut;
 import ru.sstu.studentprofile.web.controller.event.EventApi;
 
 import java.io.IOException;
@@ -24,8 +25,9 @@ public class EventController implements EventApi {
     private final EventService eventService;
 
     @Override
-    public ResponseEntity<List<EventOut>> getAllEvents(final int page) {
-        return ResponseEntity.ok(eventService.all(page));
+    public ResponseEntity<List<ShortEventOut>> getAllEvents(final int page,
+                                                            final int limit) {
+        return ResponseEntity.ok(eventService.all(page, limit));
     }
 
     @Override

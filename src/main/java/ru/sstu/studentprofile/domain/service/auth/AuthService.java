@@ -9,11 +9,15 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import ru.sstu.studentprofile.data.models.user.Role;
 import ru.sstu.studentprofile.data.models.user.User;
+import ru.sstu.studentprofile.data.models.user.UserRole;
 import ru.sstu.studentprofile.data.repository.user.AuthRepository;
+import ru.sstu.studentprofile.data.repository.user.RoleRepository;
 import ru.sstu.studentprofile.data.repository.user.UserRepository;
 import ru.sstu.studentprofile.domain.exception.ConflictException;
 import ru.sstu.studentprofile.domain.exception.ForbiddenException;
+import ru.sstu.studentprofile.domain.exception.NotFoundException;
 import ru.sstu.studentprofile.domain.security.JwtProvider;
 import ru.sstu.studentprofile.domain.security.UserDetailsImpl;
 import ru.sstu.studentprofile.domain.security.dto.TokenOut;
@@ -22,6 +26,7 @@ import ru.sstu.studentprofile.domain.service.auth.dto.LoginIn;
 import ru.sstu.studentprofile.domain.service.auth.dto.RefreshAccessTokenIn;
 import ru.sstu.studentprofile.domain.service.auth.dto.RegisterIn;
 
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -32,6 +37,7 @@ public class AuthService {
     private final AuthenticationManager authManager;
     private final JwtProvider jwtProvider;
     private final UserRepository userRepository;
+    private final RoleRepository roleRepository;
 
     private final UserDetailsService userDetailsService;
 
@@ -75,8 +81,30 @@ public class AuthService {
         }
         user.setPassword(passwordEncoder.encode(registerIn.password()));
 
+        user.setUserRoles(Set.of(getRoleToUser(user)));
+
         userRepository.save(user);
         return login(new LoginIn(user.getLogin(), registerIn.password()));
+    }
+
+    /**
+     * Этот метод вызывается при регистрации пользователя и возвращает класс UserRole,
+     * в котором содержится связка пользователь - роль.
+     * По умолчанию пользователю присваивается роль USER.
+     * @param user - объект пользователя, который регистрируется
+     * @return UserRole - связка пользователя и роли
+     * @throws NotFoundException - если роль не найдена
+     */
+    private UserRole getRoleToUser(User user) {
+        final String roleName = "USER";
+        final Role role = roleRepository.findByName(roleName)
+                .orElseThrow(() -> new NotFoundException("Роль %s не найдена".formatted(roleName)));
+
+        final UserRole userRole = new UserRole();
+        userRole.setUser(user);
+        userRole.setRole(role);
+
+        return userRole;
     }
 
     @Transactional

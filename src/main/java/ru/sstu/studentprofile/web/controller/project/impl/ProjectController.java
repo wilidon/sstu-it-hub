@@ -10,6 +10,7 @@ import ru.sstu.studentprofile.data.models.project.Project;
 import ru.sstu.studentprofile.data.models.project.ProjectMember;
 import ru.sstu.studentprofile.domain.service.event.dto.EventOut;
 import ru.sstu.studentprofile.domain.service.event.dto.EventStatusIn;
+import ru.sstu.studentprofile.domain.service.event.dto.ShortEventOut;
 import ru.sstu.studentprofile.domain.service.project.ProjectService;
 import ru.sstu.studentprofile.domain.service.project.dto.ProjectIn;
 import ru.sstu.studentprofile.domain.service.project.dto.ProjectMemberOut;
@@ -69,12 +70,12 @@ public class ProjectController implements ProjectApi {
     }
 
     @Override
-    public ResponseEntity<EventOut> getProjectEvent(long projectId) {
+    public ResponseEntity<ShortEventOut> getProjectEvent(long projectId) {
         return ResponseEntity.ok(projectService.getProjectEvent(projectId));
     }
 
     @Override
-    public ResponseEntity<EventOut> updateProjectEvent(long projectId, long eventId, Authentication authentication) {
+    public ResponseEntity<ShortEventOut> updateProjectEvent(long projectId, long eventId, Authentication authentication) {
         return ResponseEntity.ok(projectService.updateProjectEvent(projectId, eventId, authentication));
     }
 

@@ -32,7 +32,8 @@ public interface EventApi {
                     @ApiResponse(responseCode = "200", description = "Список мероприятий")
             }
     )
-    ResponseEntity<?> getAllEvents(@RequestParam("page") int page);
+    ResponseEntity<?> getAllEvents(@RequestParam(value = "page", defaultValue = "1") int page,
+                                   @RequestParam(value = "limit", defaultValue = "25") int limit);
 
     @GetMapping("/{id}")
     @ApiResponses(

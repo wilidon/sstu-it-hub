@@ -23,6 +23,7 @@ import ru.sstu.studentprofile.domain.exception.UnprocessableEntityException;
 import ru.sstu.studentprofile.domain.security.JwtAuthentication;
 import ru.sstu.studentprofile.domain.service.event.EventMapper;
 import ru.sstu.studentprofile.domain.service.event.dto.EventOut;
+import ru.sstu.studentprofile.domain.service.event.dto.ShortEventOut;
 import ru.sstu.studentprofile.domain.service.project.dto.ProjectIn;
 import ru.sstu.studentprofile.domain.service.project.dto.ProjectMemberOut;
 import ru.sstu.studentprofile.domain.service.project.dto.ProjectOut;
@@ -48,7 +49,14 @@ public class ProjectService {
 
 
     @Autowired
-    public ProjectService(ProjectRepository projectRepository, UserRepository userRepository, EventRepository eventRepository, EventMapper mapperEvent, UserMapper mapperUser, ProjectMapper mapper, @Qualifier("projectAvatarLoader") FileLoader fileLoader, ProjectMemberMapper mapperProjectMember) {
+    public ProjectService(ProjectRepository projectRepository,
+                          UserRepository userRepository,
+                          EventRepository eventRepository,
+                          EventMapper mapperEvent,
+                          UserMapper mapperUser,
+                          ProjectMapper mapper,
+                          @Qualifier("projectAvatarLoader") FileLoader fileLoader,
+                          ProjectMemberMapper mapperProjectMember) {
         this.projectRepository = projectRepository;
         this.userRepository = userRepository;
         this.eventRepository = eventRepository;
@@ -162,15 +170,15 @@ public class ProjectService {
         return mapperUser.toUserOut(leader);
     }
 
-    public EventOut getProjectEvent(long projectId){
+    public ShortEventOut getProjectEvent(long projectId){
         Project project =  projectRepository.findById(projectId).orElseThrow(() -> new NotFoundException("Проект не найден"));
         Event event = project.getEvent();
 
-        return mapperEvent.toEventOut(event, 100L);
+        return mapperEvent.toShortEventOut(event, 100L);
     }
 
     @Transactional
-    public EventOut updateProjectEvent(long projectId, long eventId, Authentication authentication){
+    public ShortEventOut updateProjectEvent(long projectId, long eventId, Authentication authentication){
         Project project = projectRepository.findById(projectId)
                 .orElseThrow(() -> new NotFoundException("Проект с id=%d не найдено".formatted(projectId)));
         long userId = ((JwtAuthentication) authentication).getUserId();
@@ -184,7 +192,7 @@ public class ProjectService {
         project.setEvent(event);
         projectRepository.save(project);
 
-        return mapperEvent.toEventOut(event, 100L);
+        return mapperEvent.toShortEventOut(event, 100L);
     }
 
     @Transactional

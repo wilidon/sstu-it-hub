@@ -11,14 +11,11 @@ import jakarta.validation.constraints.NotNull;
 import org.springdoc.api.ErrorMessage;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import ru.sstu.studentprofile.data.models.project.Project;
-import ru.sstu.studentprofile.domain.service.event.dto.EventIn;
 import ru.sstu.studentprofile.domain.service.event.dto.EventOut;
-import ru.sstu.studentprofile.domain.service.event.dto.EventStatusIn;
+import ru.sstu.studentprofile.domain.service.event.dto.ShortEventOut;
 import ru.sstu.studentprofile.domain.service.project.dto.ProjectIn;
 import ru.sstu.studentprofile.domain.service.project.dto.ProjectMemberOut;
 import ru.sstu.studentprofile.domain.service.project.dto.ProjectOut;
@@ -45,7 +42,7 @@ public interface ProjectApi {
                             description = "Неверные данные",
                             content = @Content(
                                     mediaType = "application/json",
-                                    schema = @Schema(implementation = ru.sstu.studentprofile.web.exp.ErrorMessage.class)
+                                    schema = @Schema(implementation = ErrorMessage.class)
                             )
                     )
             }
@@ -120,7 +117,7 @@ public interface ProjectApi {
 
             )
     })
-    ResponseEntity<ProjectOut> updateProjectById(@PathVariable long projectId, @RequestBody @Valid ProjectIn projectIn,  Authentication authentication);
+    ResponseEntity<ProjectOut> updateProjectById(@PathVariable long projectId, @RequestBody @Valid ProjectIn projectIn, Authentication authentication);
 
     @PatchMapping("/{projectId}/status")
     @SecurityRequirement(name = "bearerAuth")
@@ -159,8 +156,8 @@ public interface ProjectApi {
                     )}
     )
     ResponseEntity<ProjectOut> updateProjectStatus(@PathVariable("projectId") long projectId,
-                                        ProjectStatusIn projectStatusIn,
-                                        Authentication authentication);
+                                                   ProjectStatusIn projectStatusIn,
+                                                   Authentication authentication);
 
     @RequestMapping(value = "/{projectId}/avatar",
             method = RequestMethod.PATCH,
@@ -220,7 +217,7 @@ public interface ProjectApi {
                             schema = @Schema(implementation = EventOut.class))
             )
     )
-    ResponseEntity<EventOut> getProjectEvent(@PathVariable("projectId") long projectId);
+    ResponseEntity<?> getProjectEvent(@PathVariable("projectId") long projectId);
 
     @PatchMapping("/{projectId}/event")
     @SecurityRequirement(name = "bearerAuth")
@@ -258,9 +255,9 @@ public interface ProjectApi {
 
                     )}
     )
-    ResponseEntity<EventOut> updateProjectEvent(@PathVariable("projectId") long projectId,
-                                                   long eventId,
-                                                Authentication authentication);
+    ResponseEntity<ShortEventOut> updateProjectEvent(@PathVariable("projectId") long projectId,
+                                                     long eventId,
+                                                     Authentication authentication);
 
     @DeleteMapping("/{projectId}/event")
     @SecurityRequirement(name = "bearerAuth")
