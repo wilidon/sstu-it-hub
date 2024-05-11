@@ -17,6 +17,6 @@ public interface ProjectMapper {
 
     @Mapping(target = "avatar", ignore = true)
     @Mapping(target = "id", ignore = true)
-    @Mapping(target = "leader", source = "user")
-    Project toProject(ProjectIn projectIn, User user);
+    @Mapping(target = "leader", expression = "java(leader)")
+    Project toProject(ProjectIn projectIn, User leader);
 }
