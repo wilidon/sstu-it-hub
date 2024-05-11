@@ -45,11 +45,15 @@ public class EventService {
         this.userRepository = userRepository;
     }
 
-    public List<ShortEventOut> all(int page, int limit) {
+    public List<ShortEventOut> all(int page, int limit, EventStatusIn eventStatusIn) {
         Pageable pageable = PageRequest.of(page - 1,
                 limit,
                 Sort.by("startDate").descending());
-        List<Event> events = eventRepository.findAllByOrderByStartDateDesc(pageable);
+        if (eventStatusIn == EventStatusIn.ALL) {
+            return mapper.toShortEventOut(eventRepository.findAll(pageable).getContent());
+        }
+        EventStatus eventStatus = EventStatus.fromEventStatusIn(eventStatusIn);
+        List<Event> events = eventRepository.findAllByStatusOrderByStartDateDesc(eventStatus, pageable);
         return mapper.toShortEventOut(events);
     }
 

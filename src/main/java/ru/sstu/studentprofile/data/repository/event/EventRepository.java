@@ -4,12 +4,14 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import ru.sstu.studentprofile.data.models.event.Event;
+import ru.sstu.studentprofile.data.models.event.EventStatus;
 import ru.sstu.studentprofile.data.repository.event.projection.EventMembers;
 
 import java.util.List;
 
 public interface EventRepository extends JpaRepository<Event, Long> {
-    List<Event> findAllByOrderByStartDateDesc(Pageable pageable);
+    List<Event> findAllByStatusOrderByStartDateDesc(EventStatus eventStatus,
+                                                       Pageable pageable);
 
     @Query("""
             select u.id as id, u.login as name, u.email as avatar

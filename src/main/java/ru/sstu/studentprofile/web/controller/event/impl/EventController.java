@@ -26,8 +26,9 @@ public class EventController implements EventApi {
 
     @Override
     public ResponseEntity<List<ShortEventOut>> getAllEvents(final int page,
-                                                            final int limit) {
-        return ResponseEntity.ok(eventService.all(page, limit));
+                                                            final int limit,
+                                                            EventStatusIn eventStatusIn) {
+        return ResponseEntity.ok(eventService.all(page, limit, eventStatusIn));
     }
 
     @Override
