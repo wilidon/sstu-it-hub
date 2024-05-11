@@ -9,6 +9,9 @@ import java.io.Serializable;
 
 
 public record RegisterIn(@NotNull @Size(max = 128) @Email @NotBlank String email,
-                         @Size(max = 32) String login,
+                         @Size(max = 32) @NotNull @NotBlank String login,
+                         @Size(min = 1, max = 128) @NotNull @NotBlank String lastName,
+                         @Size(min = 1, max = 128) @NotNull @NotBlank String firstName,
+                         @Size(max = 128) @NotBlank String middleName,
                          @NotNull @Size(max = 128) @NotBlank String password) implements Serializable {
 }

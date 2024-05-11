@@ -16,4 +16,21 @@ public enum EventStatus {
             default -> throw new IllegalArgumentException("Неизвестный статус мероприятия: " + eventStatusIn);
         };
     }
+
+    public static EventStatusIn toEventStatusIn(EventStatus eventStatus) {
+        return switch (eventStatus) {
+            case PLANNED -> EventStatusIn.PLANNED;
+            case OPEN -> EventStatusIn.OPEN;
+            case COMPLETED -> EventStatusIn.COMPLETED;
+        };
+    }
+
+    public static EventStatus fromString(String status) {
+        return switch (status) {
+            case "PLANNED" -> PLANNED;
+            case "OPEN" -> OPEN;
+            case "COMPLETED" -> COMPLETED;
+            default -> throw new IllegalArgumentException("Неизвестный статус мероприятия: " + status);
+        };
+    }
 }

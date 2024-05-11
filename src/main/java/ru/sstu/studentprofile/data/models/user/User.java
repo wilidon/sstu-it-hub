@@ -10,6 +10,7 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
@@ -40,6 +41,19 @@ public class User {
     @Size(max = 128)
     @NotBlank
     private String email;
+
+    @Column(name = "avatar", length = 512)
+    private String avatar;
+
+    @Column(length = 128, nullable = false)
+    @NotBlank
+    private String lastName; // Фамилия
+    @NotBlank
+    @Column(length = 128, nullable = false)
+    private String firstName; // Имя
+    @NotBlank
+    @Column(length = 128, nullable = true)
+    private String middleName; // Отчество
 
     @Column(length = 128, nullable = false)
     @Size(max = 128)

@@ -17,6 +17,7 @@ import org.springframework.web.multipart.MultipartFile;
 import ru.sstu.studentprofile.domain.service.event.dto.EventIn;
 import ru.sstu.studentprofile.domain.service.event.dto.EventOut;
 import ru.sstu.studentprofile.domain.service.event.dto.EventStatusIn;
+import ru.sstu.studentprofile.domain.service.event.dto.FilterStatusIn;
 import ru.sstu.studentprofile.web.exp.ErrorMessage;
 
 import java.io.IOException;
@@ -34,7 +35,7 @@ public interface EventApi {
     )
     ResponseEntity<?> getAllEvents(@RequestParam(value = "page", defaultValue = "1") int page,
                                    @RequestParam(value = "limit", defaultValue = "25") int limit,
-                                   @RequestParam(value = "status") EventStatusIn eventStatusIn);
+                                   @RequestParam(value = "status") FilterStatusIn eventStatusIn);
 
     @GetMapping("/{id}")
     @ApiResponses(

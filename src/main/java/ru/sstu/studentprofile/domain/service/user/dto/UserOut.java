@@ -6,6 +6,10 @@ public record UserOut(
         long id,
         String login,
         String email,
+        String avatar,
+        String lastName,
+        String firstName,
+        String middleName,
         List<String> roles,
         List<String> rolesForProject
 ) {

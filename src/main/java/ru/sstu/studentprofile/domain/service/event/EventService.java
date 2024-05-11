@@ -22,6 +22,7 @@ import ru.sstu.studentprofile.domain.security.JwtAuthentication;
 import ru.sstu.studentprofile.domain.service.event.dto.EventIn;
 import ru.sstu.studentprofile.domain.service.event.dto.EventOut;
 import ru.sstu.studentprofile.domain.service.event.dto.EventStatusIn;
+import ru.sstu.studentprofile.domain.service.event.dto.FilterStatusIn;
 import ru.sstu.studentprofile.domain.service.event.dto.ShortEventOut;
 import ru.sstu.studentprofile.domain.service.storage.FileLoader;
 
@@ -45,14 +46,14 @@ public class EventService {
         this.userRepository = userRepository;
     }
 
-    public List<ShortEventOut> all(int page, int limit, EventStatusIn eventStatusIn) {
+    public List<ShortEventOut> all(int page, int limit, FilterStatusIn eventStatusIn) {
         Pageable pageable = PageRequest.of(page - 1,
                 limit,
                 Sort.by("startDate").descending());
-        if (eventStatusIn == EventStatusIn.ALL) {
+        if (eventStatusIn == FilterStatusIn.ALL) {
             return mapper.toShortEventOut(eventRepository.findAll(pageable).getContent());
         }
-        EventStatus eventStatus = EventStatus.fromEventStatusIn(eventStatusIn);
+        EventStatus eventStatus = EventStatus.fromString(eventStatusIn.name());
         List<Event> events = eventRepository.findAllByStatusOrderByStartDateDesc(eventStatus, pageable);
         return mapper.toShortEventOut(events);
     }

@@ -72,6 +72,9 @@ public class AuthService {
         }
 
         user.setEmail(registerIn.email());
+        user.setLastName(registerIn.lastName());
+        user.setFirstName(registerIn.firstName());
+        user.setMiddleName(registerIn.middleName());
 
         if (registerIn.login() != null) {
             if (authRepository.existsByLogin(registerIn.login())) {
