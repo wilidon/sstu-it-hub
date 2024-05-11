@@ -10,31 +10,30 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import ru.sstu.studentprofile.data.models.event.Event;
-import ru.sstu.studentprofile.data.models.project.Project;
-import ru.sstu.studentprofile.data.models.project.ProjectMember;
+import ru.sstu.studentprofile.data.models.project.*;
+import ru.sstu.studentprofile.data.repository.project.ActualRoleForProjectRepository;
 import ru.sstu.studentprofile.data.repository.project.ProjectMemberRepository;
-import ru.sstu.studentprofile.data.models.project.ProjectStatus;
 import ru.sstu.studentprofile.data.models.user.User;
 import ru.sstu.studentprofile.data.repository.event.EventRepository;
 import ru.sstu.studentprofile.data.repository.project.ProjectRepository;
+import ru.sstu.studentprofile.data.repository.project.RoleForProjectRepository;
 import ru.sstu.studentprofile.data.repository.user.UserRepository;
 import ru.sstu.studentprofile.domain.exception.ForbiddenException;
 import ru.sstu.studentprofile.domain.exception.NotFoundException;
 import ru.sstu.studentprofile.domain.exception.UnprocessableEntityException;
 import ru.sstu.studentprofile.domain.security.JwtAuthentication;
-import ru.sstu.studentprofile.domain.service.project.dto.ProjectEventOut;
-import ru.sstu.studentprofile.domain.service.project.dto.ProjectIn;
-import ru.sstu.studentprofile.domain.service.project.dto.ProjectOut;
-import ru.sstu.studentprofile.domain.service.project.dto.ProjectStatusIn;
+import ru.sstu.studentprofile.domain.service.project.dto.*;
 import ru.sstu.studentprofile.domain.service.project.mappers.ProjectActualRoleMapper;
 import ru.sstu.studentprofile.domain.service.project.mappers.ProjectEventMapper;
 import ru.sstu.studentprofile.domain.service.project.mappers.ProjectMapper;
 import ru.sstu.studentprofile.domain.service.project.mappers.ProjectMemberMapper;
+import ru.sstu.studentprofile.domain.service.roleForProject.dto.RoleForProjectOut;
 import ru.sstu.studentprofile.domain.service.storage.FileLoader;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ProjectService {
@@ -47,6 +46,8 @@ public class ProjectService {
     private final ProjectMemberRepository projectMemberRepository;
     private final ProjectActualRoleMapper mapperActualRoleMapper;
     private final ProjectEventMapper mapperProjectEvent;
+    private final ActualRoleForProjectRepository actualRoleForProjectRepository;
+    private final RoleForProjectRepository roleForProjectRepository;
 
 
     @Autowired
@@ -58,7 +59,9 @@ public class ProjectService {
                           ProjectMemberMapper mapperProjectMember,
                           ProjectMemberRepository projectMemberRepository,
                           ProjectActualRoleMapper mapperActualRoleMapper,
-                          ProjectEventMapper mapperProjectEvent) {
+                          ProjectEventMapper mapperProjectEvent,
+                          ActualRoleForProjectRepository actualRoleForProjectRepository,
+                          RoleForProjectRepository roleForProjectRepository) {
         this.projectRepository = projectRepository;
         this.userRepository = userRepository;
         this.eventRepository = eventRepository;
@@ -68,6 +71,8 @@ public class ProjectService {
         this.projectMemberRepository = projectMemberRepository;
         this.mapperActualRoleMapper = mapperActualRoleMapper;
         this.mapperProjectEvent = mapperProjectEvent;
+        this.actualRoleForProjectRepository = actualRoleForProjectRepository;
+        this.roleForProjectRepository = roleForProjectRepository;
     }
 
     @Transactional
@@ -203,5 +208,30 @@ public class ProjectService {
         projectRepository.save(project);
 
         return mapper.toProjectOut(project, mapperProjectMember, mapperActualRoleMapper, mapperProjectEvent);
+    }
+
+    @Transactional
+    public List<ProjectActualRoleOut> updateProjectActualRole(List<ProjectActualRoleOut> roles, long projectId, Authentication authentication){
+        Project project = projectRepository.findById(projectId)
+                .orElseThrow(() -> new NotFoundException("Проект с id=%d не найдено".formatted(projectId)));
+        long userId = ((JwtAuthentication) authentication).getUserId();
+
+        if (project.getLeader().getId() != userId)
+            throw new ForbiddenException("Вы не лидер проекта");
+
+        actualRoleForProjectRepository.deleteByIdProject(projectId);
+
+        for (ProjectActualRoleOut roleActual : roles){
+            RoleForProject roleForProject = roleForProjectRepository.findById(roleActual.id())
+                    .orElseThrow(() -> new NotFoundException("Роль для проекта с id=%d не найдено".formatted(roleActual.id())));;
+
+            ActualRoleForProject roleActualNew = new ActualRoleForProject();
+            roleActualNew.setProject(project);
+            roleActualNew.setRole(roleForProject);
+
+            actualRoleForProjectRepository.save(roleActualNew);
+        }
+
+        return roles;
     }
 }

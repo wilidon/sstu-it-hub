@@ -9,6 +9,7 @@ import ru.sstu.studentprofile.domain.service.project.dto.ProjectActualRoleOut;
 
 @Mapper(componentModel = MappingConstants.ComponentModel.SPRING)
 public interface ProjectActualRoleMapper {
+    @Mapping(target = "id", expression = "java(role.getRole().getId())")
     @Mapping(target = "name", expression = "java(role.getRole().getName())")
     ProjectActualRoleOut toProjectActualRoleOut(ActualRoleForProject role);
 }
