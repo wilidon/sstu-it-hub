@@ -8,10 +8,7 @@ import org.springframework.stereotype.Service;
 import ru.sstu.studentprofile.data.models.event.Event;
 import ru.sstu.studentprofile.data.models.project.Project;
 import ru.sstu.studentprofile.data.repository.event.EventRepository;
-import ru.sstu.studentprofile.data.repository.project.ActualRoleForProjectRepository;
-import ru.sstu.studentprofile.data.repository.project.MemberRoleForProjectRepository;
-import ru.sstu.studentprofile.data.repository.project.ProjectMemberRepository;
-import ru.sstu.studentprofile.data.repository.project.ProjectRepository;
+import ru.sstu.studentprofile.data.repository.project.*;
 import ru.sstu.studentprofile.data.repository.user.UserRepository;
 import ru.sstu.studentprofile.domain.service.statistic.dto.*;
 import ru.sstu.studentprofile.domain.service.statistic.mappers.StatisitcProjectMapper;
@@ -27,6 +24,7 @@ public class StatisticService {
     private final ProjectRepository projectRepository;
     private final UserRepository userRepository;
     private final ProjectMemberRepository projectMemberRepository;
+    private final RoleForProjectRepository roleForProjectRepository;
     private final MemberRoleForProjectRepository memberRoleForProjectRepository;
     private final ActualRoleForProjectRepository actualRoleForProjectRepository;
     private final EventRepository eventRepository;
@@ -80,14 +78,15 @@ public class StatisticService {
 
         String topRole = memberRoleForProjectRepository.getTopRole();
         String rareRole = memberRoleForProjectRepository.getRareRole();
-        String findRole = actualRoleForProjectRepository.getFindestRole();
+        Long findRoleId = actualRoleForProjectRepository.getFindestRole();
+        String findRoleName = roleForProjectRepository.findById(findRoleId).get().getName();
 
         return new StatisticsHotOut(
                 projects,
                 event,
                 topRole,
                 rareRole,
-                findRole
+                findRoleName
         );
     }
 }
