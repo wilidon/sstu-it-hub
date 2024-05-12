@@ -3,6 +3,7 @@ package ru.sstu.studentprofile.domain.service.event;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -25,6 +26,7 @@ import ru.sstu.studentprofile.domain.service.event.dto.EventStatusIn;
 import ru.sstu.studentprofile.domain.service.event.dto.FilterStatusIn;
 import ru.sstu.studentprofile.domain.service.event.dto.ShortEventOut;
 import ru.sstu.studentprofile.domain.service.storage.FileLoader;
+import ru.sstu.studentprofile.domain.service.util.PageableOut;
 
 import java.io.IOException;
 import java.util.List;
@@ -46,16 +48,27 @@ public class EventService {
         this.userRepository = userRepository;
     }
 
-    public List<ShortEventOut> all(int page, int limit, FilterStatusIn eventStatusIn) {
+    public PageableOut<ShortEventOut> all(int page, int limit, FilterStatusIn eventStatusIn) {
         Pageable pageable = PageRequest.of(page - 1,
                 limit,
                 Sort.by("startDate").descending());
         if (eventStatusIn == FilterStatusIn.ALL) {
-            return mapper.toShortEventOut(eventRepository.findAll(pageable).getContent());
+            Page<Event> events = eventRepository.findAll(pageable);
+            return new PageableOut<>(
+                    page,
+                    events.getSize(),
+                    events.getTotalPages(),
+                    mapper.toShortEventOut(events.getContent())
+            );
         }
         EventStatus eventStatus = EventStatus.fromString(eventStatusIn.name());
-        List<Event> events = eventRepository.findAllByStatusOrderByStartDateDesc(eventStatus, pageable);
-        return mapper.toShortEventOut(events);
+        Page<Event> events = eventRepository.findAllByStatusOrderByStartDateDesc(eventStatus, pageable);
+        return new PageableOut<>(
+                page,
+                events.getSize(),
+                events.getTotalPages(),
+                mapper.toShortEventOut(events.getContent())
+        );
     }
 
     public EventOut findById(long id) {

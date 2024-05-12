@@ -13,6 +13,7 @@ import ru.sstu.studentprofile.domain.service.event.dto.EventOut;
 import ru.sstu.studentprofile.domain.service.event.dto.EventStatusIn;
 import ru.sstu.studentprofile.domain.service.event.dto.FilterStatusIn;
 import ru.sstu.studentprofile.domain.service.event.dto.ShortEventOut;
+import ru.sstu.studentprofile.domain.service.util.PageableOut;
 import ru.sstu.studentprofile.web.controller.event.EventApi;
 
 import java.io.IOException;
@@ -26,9 +27,9 @@ public class EventController implements EventApi {
     private final EventService eventService;
 
     @Override
-    public ResponseEntity<List<ShortEventOut>> getAllEvents(final int page,
-                                                            final int limit,
-                                                            FilterStatusIn eventStatusIn) {
+    public ResponseEntity<PageableOut<ShortEventOut>> getAllEvents(final int page,
+                                                                   final int limit,
+                                                                   FilterStatusIn eventStatusIn) {
         return ResponseEntity.ok(eventService.all(page, limit, eventStatusIn));
     }
 
