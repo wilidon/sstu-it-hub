@@ -8,4 +8,6 @@
     <include file="db/changelog/changes/v-0.1/2024-05-11--01-init-database.xml"/>
     <include file="db/changelog/changes/v-0.1/2024-05-11--02-adding-default-roles.xml"/>
     <include file="db/changelog/changes/v-0.1/2024-05-11--03-adding-user-fullname-and-avatar.xml"/>
+    <include file="/db/changelog/changes/v-0.1/2024-05-12--4--create-request.xml"/>
+    <include file="/db/changelog/changes/v-0.1/2024-05-12--fix-request.xml"/>
 </databaseChangeLog>
