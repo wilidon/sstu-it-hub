@@ -7,6 +7,7 @@ public record UserOut(
         String login,
         String email,
         String avatar,
+        String background,
         String lastName,
         String firstName,
         String middleName,

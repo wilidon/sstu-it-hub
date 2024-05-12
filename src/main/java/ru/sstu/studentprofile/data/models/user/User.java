@@ -45,6 +45,9 @@ public class User {
     @Column(name = "avatar", length = 512)
     private String avatar;
 
+    @Column(name = "background", length = 512)
+    private String background;
+
     @Column(length = 128, nullable = false)
     @NotBlank
     private String lastName; // Фамилия

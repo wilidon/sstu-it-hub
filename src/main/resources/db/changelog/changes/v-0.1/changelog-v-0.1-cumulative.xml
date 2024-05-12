@@ -10,4 +10,5 @@
     <include file="db/changelog/changes/v-0.1/2024-05-11--03-adding-user-fullname-and-avatar.xml"/>
     <include file="/db/changelog/changes/v-0.1/2024-05-12--4--create-request.xml"/>
     <include file="/db/changelog/changes/v-0.1/2024-05-12--fix-request.xml"/>
+    <include file="/db/changelog/changes/v-0.1/2024-05-12--05-adding-user-background.xml"/>
 </databaseChangeLog>

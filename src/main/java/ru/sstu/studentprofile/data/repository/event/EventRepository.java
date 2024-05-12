@@ -24,4 +24,7 @@ public interface EventRepository extends JpaRepository<Event, Long> {
 """)
     List<EventMembers> findMembersById(long eventId, Pageable pageable);
 
+    @Query("SELECT e FROM Event e WHERE e.id = (SELECT p.event.id FROM Project p GROUP BY p.event.id ORDER BY COUNT(p) DESC LIMIT 1)")
+    Event findTopEventByMembers();
+
 }

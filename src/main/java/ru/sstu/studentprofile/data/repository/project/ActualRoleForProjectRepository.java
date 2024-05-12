@@ -11,4 +11,7 @@ public interface ActualRoleForProjectRepository extends JpaRepository<ActualRole
     @Modifying
     @Query("DELETE FROM ActualRoleForProject ar WHERE ar.project.id = :projectId")
     public void deleteByIdProject(long projectId);
+
+    @Query("SELECT ar.role.id FROM ActualRoleForProject ar GROUP BY ar.role.id ORDER BY COUNT(ar.role.id) DESC LIMIT 1")
+    String getFindestRole();
 }

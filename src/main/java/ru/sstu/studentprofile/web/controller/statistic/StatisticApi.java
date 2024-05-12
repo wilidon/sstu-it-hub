@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import ru.sstu.studentprofile.domain.service.statistic.dto.StatisticOut;
 import ru.sstu.studentprofile.domain.service.statistic.dto.StatisticPeopleOut;
 import ru.sstu.studentprofile.domain.service.statistic.dto.StatisticProjectOut;
+import ru.sstu.studentprofile.domain.service.statistic.dto.StatisticsHotOut;
 
 @Tag(name = "7. Статистика")
 @RequestMapping("/statistic")
@@ -56,4 +57,17 @@ public interface StatisticApi {
             ),
     })
     ResponseEntity<StatisticOut> getStatistic();
+
+    @GetMapping("/hot")
+    @SecurityRequirement(name = "bearerAuth")
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Получение горячей статистики",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = StatisticsHotOut.class))
+            ),
+    })
+    ResponseEntity<StatisticsHotOut> getStatisticHot();
 }
