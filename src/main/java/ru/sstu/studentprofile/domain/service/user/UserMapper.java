@@ -3,8 +3,12 @@ package ru.sstu.studentprofile.domain.service.user;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingConstants;
+import ru.sstu.studentprofile.data.models.event.Event;
+import ru.sstu.studentprofile.data.models.project.Project;
 import ru.sstu.studentprofile.data.models.user.User;
+import ru.sstu.studentprofile.domain.service.user.dto.UserEvent;
 import ru.sstu.studentprofile.domain.service.user.dto.UserOut;
+import ru.sstu.studentprofile.domain.service.user.dto.UserProject;
 
 import java.util.List;
 
@@ -15,4 +19,11 @@ public interface UserMapper {
     @Mapping(target = "roles", expression = "java(user.getUserRoles().stream().map(userRole -> userRole.getRole().getName()).toList())")
     @Mapping(target = "rolesForProject", expression = "java(user.getUserRolesForProject().stream().map(userRoleForProject -> userRoleForProject.getRole().getName()).toList())")
     UserOut toUserOut(User user);
+
+    @Mapping(target = "membersCount", source = "membersCount")
+    UserEvent toUserEvent(Event event, Long membersCount);
+
+    List<UserEvent> toUserEvent(List<Event> events);
+
+    UserProject toUserProject(Project project);
 }

@@ -1,8 +1,10 @@
 package ru.sstu.studentprofile.data.repository.project;
 
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import ru.sstu.studentprofile.data.models.event.Event;
 import ru.sstu.studentprofile.data.models.project.Project;
@@ -28,4 +30,13 @@ public interface ProjectRepository extends JpaRepository<Project, Long> {
 
     @Query("SELECT COUNT(p) FROM Project p WHERE p.status = 'COMPLETED'")
     long getCountAllProjectCompleted();
+
+    @Query("""
+    select p from Project p 
+    join ProjectMember pm on p.id = pm.project.id
+    where pm.user.id = :userId
+""")
+    Page<Project> findAllProjectsByUserId(@Param("userId") long userId, Pageable pageable);
+
+
 }

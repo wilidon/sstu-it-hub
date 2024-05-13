@@ -34,6 +34,18 @@ public class UserController implements UserApi {
     }
 
     @Override
+    public ResponseEntity<?> userEvents(long userId,
+                                        int size,
+                                        int limit) {
+        return ResponseEntity.ok(userService.findAllUserEvents(userId, size, limit));
+    }
+
+    @Override
+    public ResponseEntity<?> userProjects(long userId, int size, int limit) {
+        return ResponseEntity.ok(userService.findAllUserProjects(userId, size, limit));
+    }
+
+    @Override
     public ResponseEntity<List<UserRoleForProjectOut>> updateUserRoleForProjectById(long userId, List<UserRoleForProjectOut> roles, Authentication authentication) {
         return ResponseEntity.ok(userService.updateUserRoleForProjectById(userId, roles, authentication));
     }

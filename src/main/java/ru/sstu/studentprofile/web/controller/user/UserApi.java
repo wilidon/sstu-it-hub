@@ -12,8 +12,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import ru.sstu.studentprofile.domain.security.JwtAuthentication;
+import ru.sstu.studentprofile.domain.service.user.dto.UserEvent;
 import ru.sstu.studentprofile.domain.service.user.dto.UserOut;
 import ru.sstu.studentprofile.domain.service.user.dto.UserRoleForProjectOut;
+import ru.sstu.studentprofile.domain.service.util.PageableOut;
 
 import java.util.List;
 
@@ -22,7 +24,6 @@ import java.util.List;
 @CrossOrigin(origins = "*")
 public interface UserApi {
     @GetMapping("/{userId}")
-    @SecurityRequirement(name = "bearerAuth")
     @ApiResponses(value = {
             @ApiResponse(
                     responseCode = "200",
@@ -53,6 +54,36 @@ public interface UserApi {
     )
     )
     ResponseEntity<UserOut> me(JwtAuthentication authentication);
+
+    @GetMapping("/{userId}/events")
+    @ApiResponses(
+            value = @ApiResponse(
+                    responseCode = "200",
+                    description = "Возвращает мероприятия пользователя",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = PageableOut.class)
+                    )
+            )
+    )
+    ResponseEntity<?> userEvents(@PathVariable("userId") long userId,
+                                 @RequestParam(value = "page", defaultValue ="1") int size,
+                                 @RequestParam(value = "limit", defaultValue = "25") int limit);
+
+    @GetMapping("/{userId}/projects")
+    @ApiResponses(
+            value = @ApiResponse(
+                    responseCode = "200",
+                    description = "Возвращает проекты пользователя, в которых он участвует",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = PageableOut.class)
+                    )
+            )
+    )
+    ResponseEntity<?> userProjects(@PathVariable("userId") long userId,
+                                   @RequestParam(value = "page", defaultValue = "1") int size,
+                                   @RequestParam(value = "limit", defaultValue = "25") int limit);
 
     @PatchMapping("/roleForProject/{userId}")
     @SecurityRequirement(name = "bearerAuth")
