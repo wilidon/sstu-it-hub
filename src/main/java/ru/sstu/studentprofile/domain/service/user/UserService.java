@@ -16,6 +16,7 @@ import ru.sstu.studentprofile.data.models.project.Project;
 import ru.sstu.studentprofile.data.models.project.RoleForProject;
 import ru.sstu.studentprofile.data.models.user.User;
 import ru.sstu.studentprofile.data.models.user.UserRating;
+import ru.sstu.studentprofile.data.models.user.UserRatingType;
 import ru.sstu.studentprofile.data.models.user.UserReview;
 import ru.sstu.studentprofile.data.models.user.UserRoleForProject;
 import ru.sstu.studentprofile.data.repository.event.EventRepository;
@@ -42,6 +43,7 @@ import ru.sstu.studentprofile.domain.service.user.dto.UserProject;
 import ru.sstu.studentprofile.domain.service.user.dto.UserReviewOut;
 import ru.sstu.studentprofile.domain.service.user.dto.UserRoleForProjectOut;
 import ru.sstu.studentprofile.domain.service.user.dto.rating.UserRatingIn;
+import ru.sstu.studentprofile.domain.service.user.dto.rating.UserRatingOut;
 import ru.sstu.studentprofile.domain.service.util.PageableOut;
 
 import java.io.IOException;
@@ -96,7 +98,8 @@ public class UserService {
                 pageable);
 
         final List<UserRatingProjection> userRating = userRatingRepository.findUserRatingProjectionUsingRecipientId(id);
-        return userMapper.toUserOut(user, reviews.getContent(), userRating);
+
+        return userMapper.toUserOut(user, reviews.getContent(), getUserRatingOut(userRating));
     }
 
 
@@ -104,6 +107,37 @@ public class UserService {
         final User user = ((UserDetailsImpl) authentication.getPrincipal()).user();
 
         return findUserById(user.getId());
+    }
+
+    /**
+     * Метод, который потом нужно переписать в более нормальную форму.
+     * Сейчас здесь захардкожено
+     */
+    private UserRatingOut getUserRatingOut(List<UserRatingProjection> userRatingOut) {
+        long politeness = 0;
+        long learningAbility = 0;
+        long responsibility = 0;
+        long creativity = 0;
+
+        for (UserRatingProjection userRatingProjection : userRatingOut) {
+            if (userRatingProjection.getRatingType().equals(UserRatingType.POLITENESS)) {
+                politeness = userRatingProjection.getCount();
+            } else if (userRatingProjection.getRatingType().equals(UserRatingType.LEARNING_ABILITY)) {
+                learningAbility = userRatingProjection.getCount();
+            } else if (userRatingProjection.getRatingType().equals(UserRatingType.RESPONSIBILITY)) {
+                responsibility = userRatingProjection.getCount();
+            } else if (userRatingProjection.getRatingType().equals(UserRatingType.CREATIVITY)) {
+                creativity = userRatingProjection.getCount();
+            }
+        }
+
+        return new UserRatingOut(
+                politeness,
+                learningAbility,
+                responsibility,
+                creativity
+
+        );
     }
 
     public PageableOut<UserEvent> findAllUserEvents(long userId, int page, int limit) {

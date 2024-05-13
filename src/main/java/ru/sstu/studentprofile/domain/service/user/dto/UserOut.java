@@ -17,7 +17,7 @@ public record UserOut(
         List<String> rolesForProject,
         List<UserReviewOut> reviews,
         UserMediaOut media,
-        List<UserRatingOut> ratings
+        UserRatingOut ratings
 ) {
 
 }
