@@ -3,8 +3,17 @@ package ru.sstu.studentprofile.domain.service.user;
 import jakarta.transaction.Transactional;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+import ru.sstu.studentprofile.data.models.event.Event;
+import ru.sstu.studentprofile.data.models.project.Project;
 import ru.sstu.studentprofile.data.models.project.RoleForProject;
 import ru.sstu.studentprofile.data.models.user.User;
 import ru.sstu.studentprofile.data.models.user.UserRoleForProject;
@@ -17,11 +26,16 @@ import ru.sstu.studentprofile.domain.exception.ForbiddenException;
 import ru.sstu.studentprofile.domain.exception.NotFoundException;
 import ru.sstu.studentprofile.domain.security.JwtAuthentication;
 import ru.sstu.studentprofile.domain.security.UserDetailsImpl;
+import ru.sstu.studentprofile.domain.service.storage.UserAvatarLoader;
+import ru.sstu.studentprofile.domain.service.storage.UserBackgroundLoader;
+import ru.sstu.studentprofile.domain.service.user.dto.UserEvent;
 import ru.sstu.studentprofile.domain.service.user.dto.UserOut;
 import ru.sstu.studentprofile.domain.service.user.dto.UserProject;
 import ru.sstu.studentprofile.domain.service.user.dto.UserRoleForProjectOut;
 import ru.sstu.studentprofile.domain.service.util.PageableOut;
 
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -39,13 +53,15 @@ public class UserService {
     public UserService(UserRepository userRepository,
                        UserMapper userMapper,
                        UserRoleForProjectRepository userRoleForProjectRepository,
-                       RoleForProjectRepository roleForProjectRepository,
+                       RoleForProjectRepository roleForProjectRepository, EventRepository eventRepository, ProjectRepository projectRepository,
                        @Qualifier("userAvatarLoader") UserAvatarLoader userAvatarLoader,
                        @Qualifier("userBackgroundLoader") UserBackgroundLoader userBackgroundLoader) {
         this.userRepository = userRepository;
         this.userMapper = userMapper;
         this.userRoleForProjectRepository = userRoleForProjectRepository;
         this.roleForProjectRepository = roleForProjectRepository;
+        this.eventRepository = eventRepository;
+        this.projectRepository = projectRepository;
         this.userAvatarLoader = userAvatarLoader;
         this.userBackgroundLoader = userBackgroundLoader;
     }
