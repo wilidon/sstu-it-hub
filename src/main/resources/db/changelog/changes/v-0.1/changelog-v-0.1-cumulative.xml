@@ -11,6 +11,7 @@
     <include file="/db/changelog/changes/v-0.1/2024-05-12--4--create-request.xml"/>
     <include file="/db/changelog/changes/v-0.1/2024-05-12--fix-request.xml"/>
     <include file="/db/changelog/changes/v-0.1/2024-05-12--05-adding-user-background.xml"/>
-    <include file="db/changelog/changes/v-0.1/2024-05-11--07-added-user-review.xml"/>
+    <include file="/db/changelog/changes/v-0.1/2024-05-11--07-added-user-review.xml"/>
+    <include file="/db/changelog/changes/v-0.1/2024-05-11--08-adding-user-about.xml"/>
     <include file="/db/changelog/changes/v-0.1/2024-05-13--06-create.xml"/>
 </databaseChangeLog>

@@ -11,6 +11,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import ru.sstu.studentprofile.data.models.user.Role;
 import ru.sstu.studentprofile.data.models.user.User;
+import ru.sstu.studentprofile.data.models.user.UserMedia;
 import ru.sstu.studentprofile.data.models.user.UserRole;
 import ru.sstu.studentprofile.data.repository.user.AuthRepository;
 import ru.sstu.studentprofile.data.repository.user.RoleRepository;
@@ -25,6 +26,7 @@ import ru.sstu.studentprofile.domain.service.auth.dto.BearerLoginOut;
 import ru.sstu.studentprofile.domain.service.auth.dto.LoginIn;
 import ru.sstu.studentprofile.domain.service.auth.dto.RefreshAccessTokenIn;
 import ru.sstu.studentprofile.domain.service.auth.dto.RegisterIn;
+import ru.sstu.studentprofile.domain.service.user.dto.UserMediaOut;
 
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -85,6 +87,7 @@ public class AuthService {
         user.setPassword(passwordEncoder.encode(registerIn.password()));
 
         user.setUserRoles(Set.of(getRoleToUser(user)));
+        user.setUserMedia(getUserMedia(user));
 
         userRepository.save(user);
         return login(new LoginIn(user.getLogin(), registerIn.password()));
@@ -108,6 +111,17 @@ public class AuthService {
         userRole.setRole(role);
 
         return userRole;
+    }
+
+    /**
+     * Вызывается при регистрации пользователя и возвращает пустой объект UserMedia
+     * @param user
+     * @return
+     */
+    private UserMedia getUserMedia(User user) {
+        final UserMedia userMedia = new UserMedia();
+        userMedia.setUser(user);
+        return userMedia;
     }
 
     @Transactional

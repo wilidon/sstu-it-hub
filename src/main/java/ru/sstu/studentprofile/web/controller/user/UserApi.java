@@ -14,6 +14,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import ru.sstu.studentprofile.domain.security.JwtAuthentication;
+import ru.sstu.studentprofile.domain.service.user.dto.UserAboutIn;
 import ru.sstu.studentprofile.domain.service.user.dto.UserEvent;
 import ru.sstu.studentprofile.domain.service.user.dto.UserOut;
 import ru.sstu.studentprofile.domain.service.user.dto.UserRoleForProjectOut;
@@ -131,7 +132,21 @@ public interface UserApi {
                     )
             )
     })
-    ResponseEntity<List<UserRoleForProjectOut>> updateUserRoleForProjectById(@PathVariable long userId, @RequestBody @Valid List<UserRoleForProjectOut> roles, Authentication authentication);
+    ResponseEntity<List<UserRoleForProjectOut>> updateUserRoleForProjectById(@PathVariable long userId,
+                                                                             @RequestBody @Valid List<UserRoleForProjectOut> roles, Authentication authentication);
+
+    @PutMapping("/about")
+    @SecurityRequirement(name = "bearerAuth")
+    @ApiResponses(
+            value = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = ""
+                    )
+            }
+    )
+    ResponseEntity<?> updateUserAbout(@RequestBody @Valid UserAboutIn aboutIn,
+                                      JwtAuthentication authentication);
 
     @SecurityRequirement(name = "bearerAuth")
     @RequestMapping(value = "/background",
