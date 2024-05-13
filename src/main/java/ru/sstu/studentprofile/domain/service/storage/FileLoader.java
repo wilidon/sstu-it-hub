@@ -56,7 +56,7 @@ public abstract class FileLoader implements Loader  {
         } catch (S3Exception | IOException e) {
             throw new RuntimeException(e);
         }
-        return endpoint + "/" + filePath;
+        return endpoint + filePath;
     }
 
     String loadFile(String filePath, InputStream file) {
