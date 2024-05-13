@@ -26,6 +26,7 @@ import ru.sstu.studentprofile.data.repository.user.UserRatingRepository;
 import ru.sstu.studentprofile.data.repository.user.UserRepository;
 import ru.sstu.studentprofile.data.repository.user.UserReviewRepository;
 import ru.sstu.studentprofile.data.repository.user.UserRoleForProjectRepository;
+import ru.sstu.studentprofile.data.repository.user.projection.UserRatingProjection;
 import ru.sstu.studentprofile.domain.exception.ConflictException;
 import ru.sstu.studentprofile.domain.exception.ForbiddenException;
 import ru.sstu.studentprofile.domain.exception.NotFoundException;
@@ -94,7 +95,8 @@ public class UserService {
         final Page<UserReview> reviews = userReviewRepository.findAllByRecipientId(id,
                 pageable);
 
-        return userMapper.toUserOut(user, reviews.getContent());
+        final List<UserRatingProjection> userRating = userRatingRepository.findUserRatingProjectionUsingRecipientId(id);
+        return userMapper.toUserOut(user, reviews.getContent(), userRating);
     }
 
 

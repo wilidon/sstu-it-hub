@@ -10,11 +10,13 @@ import ru.sstu.studentprofile.data.models.user.UserMedia;
 import ru.sstu.studentprofile.data.models.user.UserRating;
 import ru.sstu.studentprofile.data.models.user.UserRatingType;
 import ru.sstu.studentprofile.data.models.user.UserReview;
+import ru.sstu.studentprofile.data.repository.user.projection.UserRatingProjection;
 import ru.sstu.studentprofile.domain.service.user.dto.UserEvent;
 import ru.sstu.studentprofile.domain.service.user.dto.UserMediaOut;
 import ru.sstu.studentprofile.domain.service.user.dto.UserOut;
 import ru.sstu.studentprofile.domain.service.user.dto.UserProject;
 import ru.sstu.studentprofile.domain.service.user.dto.UserReviewOut;
+import ru.sstu.studentprofile.domain.service.user.dto.rating.UserRatingOut;
 
 import java.util.List;
 
@@ -25,7 +27,12 @@ public interface UserMapper {
     @Mapping(target = "roles", expression = "java(user.getUserRoles().stream().map(userRole -> userRole.getRole().getName()).toList())")
     @Mapping(target = "rolesForProject", expression = "java(user.getUserRolesForProject().stream().map(userRoleForProject -> userRoleForProject.getRole().getName()).toList())")
     @Mapping(target = "media", source = "user")
-    UserOut toUserOut(User user, List<UserReview> userReviews);
+    @Mapping(target = "ratings", source = "userRating")
+    UserOut toUserOut(User user, List<UserReview> userReviews, List<UserRatingProjection> userRating);
+
+//    @Mapping(target = "count", source = "value.count")
+//    @Mapping(target = "ratingType", source = "value.ratingType")
+//    UserRatingOut map(UserRatingProjection value);
 
     @Mapping(target = "membersCount", source = "membersCount")
     UserEvent toUserEvent(Event event, Long membersCount);
