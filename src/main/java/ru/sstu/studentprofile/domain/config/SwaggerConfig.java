@@ -36,7 +36,9 @@ public class SwaggerConfig {
                         .description(appDescription))
                 .servers(
                         List.of(new Server().url("http://192.168.101.112:8080")
-                                .description("Local service"),
+                                        .description("Local service"),
+                                new Server().url("http://127.0.0.1:8080")
+                                        .description("Local service"),
                                 new Server().url("https://it-hub.fita.cc")
                                         .description("Production service")));
     }
