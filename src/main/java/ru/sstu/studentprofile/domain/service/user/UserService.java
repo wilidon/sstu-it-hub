@@ -137,7 +137,7 @@ public class UserService {
     public PageableOut<UserProject> findAllUserProjects(long userId, int page, int limit) {
         Pageable pageable = PageRequest.of(page - 1,
                 limit,
-                Sort.by("id").descending());
+                Sort.by("createDate").descending());
 
         Page<Project> projects = projectRepository.findAllProjectsByUserId(
                 userId, pageable
