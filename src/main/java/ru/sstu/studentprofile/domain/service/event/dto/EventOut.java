@@ -1,6 +1,8 @@
 package ru.sstu.studentprofile.domain.service.event.dto;
 
 
+import ru.sstu.studentprofile.domain.service.project.dto.ProjectOut;
+
 import java.util.List;
 
 public record EventOut(
@@ -12,7 +14,8 @@ public record EventOut(
         String endDate,
         String status,
         Long membersCount,
-        List<EventMemberOut> members
+        List<EventMemberOut> members,
+        List<ProjectOut> projects
 ) {
 
 }

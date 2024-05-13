@@ -4,6 +4,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingConstants;
 import ru.sstu.studentprofile.data.models.event.Event;
+import ru.sstu.studentprofile.data.models.project.Project;
 import ru.sstu.studentprofile.data.models.user.User;
 import ru.sstu.studentprofile.data.repository.event.projection.EventMembers;
 import ru.sstu.studentprofile.domain.service.event.dto.EventIn;
@@ -19,7 +20,9 @@ public interface EventMapper {
     EventMemberOut toEventMemberOut(EventMembers eventMembers);
 
     @Mapping(target = "membersCount", source = "membersCount")
-    EventOut toEventOut(Event event, Long membersCount, List<EventMembers> members);
+    @Mapping(target = "projects", source = "projects")
+    EventOut toEventOut(Event event, Long membersCount, List<EventMembers> members,
+                        List<Project> projects);
 
     List<EventOut> toEventOut(List<Event> events);
 

@@ -149,7 +149,8 @@ public class UserService {
 
         List<UserEvent> userEvents = new ArrayList<>();
         for (Event event : events.getContent()) {
-            userEvents.add(userMapper.toUserEvent(event, 100L));
+            long membersCount = eventRepository.countMembersById(event.getId());
+            userEvents.add(userMapper.toUserEvent(event, membersCount));
         }
 
         return new PageableOut<>(page,

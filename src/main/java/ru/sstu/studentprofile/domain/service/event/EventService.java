@@ -12,9 +12,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import ru.sstu.studentprofile.data.models.event.Event;
 import ru.sstu.studentprofile.data.models.event.EventStatus;
+import ru.sstu.studentprofile.data.models.project.Project;
 import ru.sstu.studentprofile.data.models.user.User;
 import ru.sstu.studentprofile.data.repository.event.EventRepository;
 import ru.sstu.studentprofile.data.repository.event.projection.EventMembers;
+import ru.sstu.studentprofile.data.repository.project.ProjectRepository;
 import ru.sstu.studentprofile.data.repository.user.UserRepository;
 import ru.sstu.studentprofile.domain.exception.ForbiddenException;
 import ru.sstu.studentprofile.domain.exception.NotFoundException;
@@ -25,6 +27,8 @@ import ru.sstu.studentprofile.domain.service.event.dto.EventOut;
 import ru.sstu.studentprofile.domain.service.event.dto.EventStatusIn;
 import ru.sstu.studentprofile.domain.service.event.dto.FilterStatusIn;
 import ru.sstu.studentprofile.domain.service.event.dto.ShortEventOut;
+import ru.sstu.studentprofile.domain.service.project.dto.ProjectOut;
+import ru.sstu.studentprofile.domain.service.project.mappers.ProjectMapper;
 import ru.sstu.studentprofile.domain.service.storage.FileLoader;
 import ru.sstu.studentprofile.domain.service.util.PageableOut;
 
@@ -34,16 +38,20 @@ import java.util.List;
 @Service
 public class EventService {
     private final EventRepository eventRepository;
+    private final ProjectRepository projectRepository;
     private final EventMapper mapper;
+    private final ProjectMapper projectMapper;
     private final FileLoader fileLoader;
     private final UserRepository userRepository;
 
     @Autowired
-    public EventService(EventRepository eventRepository,
-                        EventMapper mapper,
+    public EventService(EventRepository eventRepository, ProjectRepository projectRepository,
+                        EventMapper mapper, ProjectMapper projectMapper,
                         @Qualifier("eventAvatarLoader") FileLoader fileLoader, UserRepository userRepository) {
         this.eventRepository = eventRepository;
+        this.projectRepository = projectRepository;
         this.mapper = mapper;
+        this.projectMapper = projectMapper;
         this.fileLoader = fileLoader;
         this.userRepository = userRepository;
     }
@@ -80,7 +88,24 @@ public class EventService {
 
         List<EventMembers> eventMembers = eventRepository.findMembersById(id,
                 PageRequest.of(0, 6));
-        return mapper.toEventOut(event, 100L, eventMembers);
+        long membersCount = eventRepository.countMembersById(id);
+
+        Page<Project> projects =
+                projectRepository.findAllProjectsByEventId(id, PageRequest.of(0, 6));
+        return mapper.toEventOut(event, membersCount, eventMembers, projects.getContent());
+    }
+
+    public PageableOut<ProjectOut> getProjects(long eventId, int page, int limit) {
+        Pageable pageable = PageRequest.of(page-1, limit);
+        Page<Project> projects = projectRepository.findAllProjectsByEventId(eventId, pageable);
+
+        return new PageableOut<>(
+                page,
+                projects.getSize(),
+                projects.getTotalPages(),
+                projects.getTotalElements(),
+                projectMapper.toProjectOut(projects.getContent())
+        );
     }
 
     @Transactional

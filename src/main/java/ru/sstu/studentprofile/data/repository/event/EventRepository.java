@@ -37,4 +37,13 @@ public interface EventRepository extends JpaRepository<Event, Long> {
             """)
     Page<Event> findEventByUserId(@Param("userId") long userId, Pageable pageable);
 
+    @Query("""
+                        select count(u.id) from Event e
+                            join Project p on e.id = p.event.id
+                            join ProjectMember pm on p.id = pm.project.id
+                            join User u on pm.user.id = u.id
+                        where e.id = :eventId
+            """)
+    long countMembersById(long eventId);
+
 }

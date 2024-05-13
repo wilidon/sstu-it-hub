@@ -56,6 +56,11 @@ public interface EventApi {
     )
     ResponseEntity<?> getEventById(@PathVariable long id);
 
+    @GetMapping("/{id}/projects")
+    ResponseEntity<?> getEventProjects(@PathVariable("id") long id,
+                                       @RequestParam(value = "page", defaultValue = "1") int page,
+                                       @RequestParam(value = "limit", defaultValue = "25") int limit);
+
     @PostMapping()
     @SecurityRequirement(name = "bearerAuth")
     @PreAuthorize("hasAnyAuthority('ADMIN')")
@@ -89,35 +94,35 @@ public interface EventApi {
                             mediaType = "application/json",
                             schema = @Schema(implementation = EventOut.class))
             ),
-            @ApiResponse(
-                    responseCode = "404",
-                    description = "Мероприятие не найдено",
-                    content = @Content(
-                            mediaType = "application/json",
-                            schema = @Schema(implementation = ErrorMessage.class)
-                    )
-            ),
-            @ApiResponse(
-                    responseCode = "422",
-                    description = "Неверные данные",
-                    content = @Content(
-                            mediaType = "application/json",
-                            schema = @Schema(implementation = ErrorMessage.class)
-                    )
-            ),
-            @ApiResponse(
-                    responseCode = "403",
-                    description = "Недостаточно прав",
-                    content = @Content(
-                            mediaType = "application/json",
-                            schema = @Schema(implementation = ErrorMessage.class)
-                    )
+                    @ApiResponse(
+                            responseCode = "404",
+                            description = "Мероприятие не найдено",
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = ErrorMessage.class)
+                            )
+                    ),
+                    @ApiResponse(
+                            responseCode = "422",
+                            description = "Неверные данные",
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = ErrorMessage.class)
+                            )
+                    ),
+                    @ApiResponse(
+                            responseCode = "403",
+                            description = "Недостаточно прав",
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = ErrorMessage.class)
+                            )
 
-            )}
+                    )}
     )
     ResponseEntity<?> updateEvent(@PathVariable("eventId") long eventId,
-                                        @RequestBody @Valid EventIn eventIn,
-                                        Authentication authentication);
+                                  @RequestBody @Valid EventIn eventIn,
+                                  Authentication authentication);
 
     @PatchMapping("/{eventId}/status")
     @SecurityRequirement(name = "bearerAuth")
@@ -130,31 +135,31 @@ public interface EventApi {
                             mediaType = "application/json",
                             schema = @Schema(implementation = EventOut.class))
             ),
-            @ApiResponse(
-                    responseCode = "404",
-                    description = "Мероприятие не найдено",
-                    content = @Content(
-                            mediaType = "application/json",
-                            schema = @Schema(implementation = ErrorMessage.class)
-                    )
-            ),
-            @ApiResponse(
-                    responseCode = "422",
-                    description = "Неверные данные",
-                    content = @Content(
-                            mediaType = "application/json",
-                            schema = @Schema(implementation = ErrorMessage.class)
-                    )
-            ),
-            @ApiResponse(
-                    responseCode = "403",
-                    description = "Недостаточно прав",
-                    content = @Content(
-                            mediaType = "application/json",
-                            schema = @Schema(implementation = ErrorMessage.class)
-                    )
+                    @ApiResponse(
+                            responseCode = "404",
+                            description = "Мероприятие не найдено",
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = ErrorMessage.class)
+                            )
+                    ),
+                    @ApiResponse(
+                            responseCode = "422",
+                            description = "Неверные данные",
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = ErrorMessage.class)
+                            )
+                    ),
+                    @ApiResponse(
+                            responseCode = "403",
+                            description = "Недостаточно прав",
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = ErrorMessage.class)
+                            )
 
-            )}
+                    )}
     )
     ResponseEntity<?> updateEventStatus(@PathVariable("eventId") long eventId,
                                         EventStatusIn eventStatusIn,

@@ -39,6 +39,11 @@ public class EventController implements EventApi {
     }
 
     @Override
+    public ResponseEntity<?> getEventProjects(long id, int page, int limit) {
+        return ResponseEntity.ok(eventService.getProjects(id, page, limit));
+    }
+
+    @Override
     public ResponseEntity<?> create(final EventIn eventIn,
                                     Authentication authentication) {
         return ResponseEntity.ok(eventService.create(eventIn, authentication));

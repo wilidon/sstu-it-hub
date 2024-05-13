@@ -38,5 +38,11 @@ public interface ProjectRepository extends JpaRepository<Project, Long> {
 """)
     Page<Project> findAllProjectsByUserId(@Param("userId") long userId, Pageable pageable);
 
+    @Query("""
+        select p from Project p
+        where p.event.id = :eventId
+""")
+    Page<Project> findAllProjectsByEventId(long eventId, Pageable pageable);
+
 
 }
