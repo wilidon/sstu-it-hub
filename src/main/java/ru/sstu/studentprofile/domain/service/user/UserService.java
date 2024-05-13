@@ -15,14 +15,18 @@ import ru.sstu.studentprofile.data.models.event.Event;
 import ru.sstu.studentprofile.data.models.project.Project;
 import ru.sstu.studentprofile.data.models.project.RoleForProject;
 import ru.sstu.studentprofile.data.models.user.User;
+import ru.sstu.studentprofile.data.models.user.UserRating;
 import ru.sstu.studentprofile.data.models.user.UserReview;
 import ru.sstu.studentprofile.data.models.user.UserRoleForProject;
 import ru.sstu.studentprofile.data.repository.event.EventRepository;
+import ru.sstu.studentprofile.data.repository.project.ProjectMemberRepository;
 import ru.sstu.studentprofile.data.repository.project.ProjectRepository;
 import ru.sstu.studentprofile.data.repository.project.RoleForProjectRepository;
+import ru.sstu.studentprofile.data.repository.user.UserRatingRepository;
 import ru.sstu.studentprofile.data.repository.user.UserRepository;
 import ru.sstu.studentprofile.data.repository.user.UserReviewRepository;
 import ru.sstu.studentprofile.data.repository.user.UserRoleForProjectRepository;
+import ru.sstu.studentprofile.domain.exception.ConflictException;
 import ru.sstu.studentprofile.domain.exception.ForbiddenException;
 import ru.sstu.studentprofile.domain.exception.NotFoundException;
 import ru.sstu.studentprofile.domain.security.JwtAuthentication;
@@ -36,6 +40,7 @@ import ru.sstu.studentprofile.domain.service.user.dto.UserOut;
 import ru.sstu.studentprofile.domain.service.user.dto.UserProject;
 import ru.sstu.studentprofile.domain.service.user.dto.UserReviewOut;
 import ru.sstu.studentprofile.domain.service.user.dto.UserRoleForProjectOut;
+import ru.sstu.studentprofile.domain.service.user.dto.rating.UserRatingIn;
 import ru.sstu.studentprofile.domain.service.util.PageableOut;
 
 import java.io.IOException;
@@ -53,6 +58,8 @@ public class UserService {
     private final UserAvatarLoader userAvatarLoader;
     private final UserBackgroundLoader userBackgroundLoader;
     private final UserReviewRepository userReviewRepository;
+    private final ProjectMemberRepository projectMemberRepository;
+    private final UserRatingRepository userRatingRepository;
 
     @Autowired
     public UserService(UserRepository userRepository,
@@ -60,7 +67,7 @@ public class UserService {
                        UserRoleForProjectRepository userRoleForProjectRepository,
                        RoleForProjectRepository roleForProjectRepository, EventRepository eventRepository, ProjectRepository projectRepository,
                        @Qualifier("userAvatarLoader") UserAvatarLoader userAvatarLoader,
-                       @Qualifier("userBackgroundLoader") UserBackgroundLoader userBackgroundLoader, UserReviewRepository userReviewRepository) {
+                       @Qualifier("userBackgroundLoader") UserBackgroundLoader userBackgroundLoader, UserReviewRepository userReviewRepository, ProjectMemberRepository projectMemberRepository, UserRatingRepository userRatingRepository) {
         this.userRepository = userRepository;
         this.userMapper = userMapper;
         this.userRoleForProjectRepository = userRoleForProjectRepository;
@@ -70,6 +77,8 @@ public class UserService {
         this.userAvatarLoader = userAvatarLoader;
         this.userBackgroundLoader = userBackgroundLoader;
         this.userReviewRepository = userReviewRepository;
+        this.projectMemberRepository = projectMemberRepository;
+        this.userRatingRepository = userRatingRepository;
     }
 
     public UserOut findUserById(final long id) {
@@ -155,6 +164,29 @@ public class UserService {
                 projects.getNumberOfElements(),
                 userProject
         );
+    }
+
+    public void setRatingToUser(long userId, UserRatingIn userRatingIn, JwtAuthentication authentication) {
+        final long userOwnerId = authentication.getUserId();
+        final User recipient = userRepository.findById(userId)
+                .orElseThrow(() -> new NotFoundException("Пользователь не найден"));
+        final User sender = userRepository.findById(userOwnerId)
+                .orElseThrow(() -> new NotFoundException("Пользователь не найден"));
+        // Если переменная isValid равна true, то пользователь может оценить другого пользователя
+        boolean isValid = projectMemberRepository.existsByRecipientIdAndSenderId(userId, userOwnerId);
+        if (!isValid) {
+            throw new ConflictException("Вы не можете оценить этого пользователя");
+        }
+
+        if (!userRatingRepository.findBySenderIdAndRecipientId(userOwnerId, userId).isEmpty()) {
+            throw new ConflictException("Вы уже оценили этого пользователя");
+        }
+
+        List<UserRating> userRatings = new ArrayList<>();
+        for (int i = 0; i < userRatingIn.types().size(); i++) {
+           userRatings.add(userMapper.toUserRating(sender, recipient, userRatingIn.types().get(i)));
+        }
+        userRatingRepository.saveAll(userRatings);
     }
 
     @Transactional

@@ -18,6 +18,7 @@ import ru.sstu.studentprofile.domain.service.user.dto.UserAboutIn;
 import ru.sstu.studentprofile.domain.service.user.dto.UserMediaIn;
 import ru.sstu.studentprofile.domain.service.user.dto.UserOut;
 import ru.sstu.studentprofile.domain.service.user.dto.UserRoleForProjectOut;
+import ru.sstu.studentprofile.domain.service.user.dto.rating.UserRatingIn;
 import ru.sstu.studentprofile.domain.service.util.PageableOut;
 
 import java.io.IOException;
@@ -160,6 +161,12 @@ public interface UserApi {
     )
     ResponseEntity<?> updateUserAbout(@RequestBody @Valid UserAboutIn aboutIn,
                                       JwtAuthentication authentication);
+
+    @PostMapping("/{userId}/rating")
+    @SecurityRequirement(name = "bearerAuth")
+    ResponseEntity<?> addRating(@PathVariable long userId,
+                                @RequestBody UserRatingIn userRatingIn,
+                                JwtAuthentication authentication);
 
     @SecurityRequirement(name = "bearerAuth")
     @RequestMapping(value = "/background",

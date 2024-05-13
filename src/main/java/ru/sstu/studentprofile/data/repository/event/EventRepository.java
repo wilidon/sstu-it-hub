@@ -16,7 +16,7 @@ public interface EventRepository extends JpaRepository<Event, Long> {
                                                     Pageable pageable);
 
     @Query("""
-            select u.id as id, u.login as name, u.email as avatar
+            select u.id as id, u.login as name, u.avatar as avatar
             from Event e
                 join Project p on e.id = p.event.id
                 join ProjectMember pm on p.id = pm.project.id

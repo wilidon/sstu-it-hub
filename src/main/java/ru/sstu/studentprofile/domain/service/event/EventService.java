@@ -51,7 +51,7 @@ public class EventService {
     public PageableOut<ShortEventOut> all(int page, int limit, FilterStatusIn eventStatusIn) {
         Pageable pageable = PageRequest.of(page - 1,
                 limit,
-                Sort.by("startDate").descending());
+                Sort.by("endDate").ascending());
         if (eventStatusIn == FilterStatusIn.ALL) {
             Page<Event> events = eventRepository.findAll(pageable);
             return new PageableOut<>(

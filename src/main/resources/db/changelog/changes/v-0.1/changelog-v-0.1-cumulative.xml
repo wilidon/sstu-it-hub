@@ -14,4 +14,5 @@
     <include file="/db/changelog/changes/v-0.1/2024-05-11--07-added-user-review.xml"/>
     <include file="/db/changelog/changes/v-0.1/2024-05-11--08-adding-user-about.xml"/>
     <include file="/db/changelog/changes/v-0.1/2024-05-13--06-create.xml"/>
+    <include file="db/changelog/changes/v-0.1/2024-05-13--09-added-user-rating.xml"/>
 </databaseChangeLog>

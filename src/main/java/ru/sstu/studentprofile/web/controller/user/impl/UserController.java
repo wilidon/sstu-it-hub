@@ -13,6 +13,7 @@ import ru.sstu.studentprofile.domain.service.user.dto.UserAboutIn;
 import ru.sstu.studentprofile.domain.service.user.dto.UserMediaIn;
 import ru.sstu.studentprofile.domain.service.user.dto.UserOut;
 import ru.sstu.studentprofile.domain.service.user.dto.UserRoleForProjectOut;
+import ru.sstu.studentprofile.domain.service.user.dto.rating.UserRatingIn;
 import ru.sstu.studentprofile.web.controller.user.UserApi;
 
 import java.io.IOException;
@@ -68,6 +69,12 @@ public class UserController implements UserApi {
     @Override
     public ResponseEntity<?> updateUserAbout(UserAboutIn aboutIn, JwtAuthentication authentication) {
         userService.updateUserAbout(aboutIn, authentication);
+        return ResponseEntity.ok(null);
+    }
+
+    @Override
+    public ResponseEntity<?> addRating(long userId, UserRatingIn userRatingIn, JwtAuthentication authentication) {
+        userService.setRatingToUser(userId, userRatingIn, authentication);
         return ResponseEntity.ok(null);
     }
 

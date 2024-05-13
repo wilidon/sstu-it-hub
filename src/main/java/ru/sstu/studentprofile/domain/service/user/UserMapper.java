@@ -7,6 +7,8 @@ import ru.sstu.studentprofile.data.models.event.Event;
 import ru.sstu.studentprofile.data.models.project.Project;
 import ru.sstu.studentprofile.data.models.user.User;
 import ru.sstu.studentprofile.data.models.user.UserMedia;
+import ru.sstu.studentprofile.data.models.user.UserRating;
+import ru.sstu.studentprofile.data.models.user.UserRatingType;
 import ru.sstu.studentprofile.data.models.user.UserReview;
 import ru.sstu.studentprofile.domain.service.user.dto.UserEvent;
 import ru.sstu.studentprofile.domain.service.user.dto.UserMediaOut;
@@ -38,5 +40,8 @@ public interface UserMapper {
     @Mapping(target = "email", source = "user.email")
     @Mapping(target = ".", source = "user.userMedia")
     UserMediaOut toUserMediaOut(User user);
+
+    @Mapping(target = "id", ignore = true)
+    UserRating toUserRating(User recipient, User sender, UserRatingType ratingType);
 
 }
