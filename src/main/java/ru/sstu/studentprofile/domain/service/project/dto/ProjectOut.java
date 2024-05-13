@@ -8,6 +8,7 @@ public record ProjectOut (
     String avatar,
     String name,
     String description,
+    ProjectLeaderOut leader,
     String status,
     ProjectEventOut event,
     List<ProjectMemberOut> members,

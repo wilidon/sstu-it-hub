@@ -13,6 +13,7 @@ public interface ProjectMapper {
     @Mapping(target = "actualRoles", expression = "java(project.getActualRoleForProject().stream().map(actualRole -> mapperProjectActualRole.toProjectActualRoleOut(actualRole)).toList())")
     @Mapping(target = "members", expression = "java(project.getProjectMembers().stream().map(member -> mapperProjectMember.toProjectMemberOut(member)).toList())")
     @Mapping(target = "event", expression = "java(mapperProjectEvent.toProjectEventOut(project.getEvent()))")
+    @Mapping(target = "leader", expression = "java(mapperProjectMember.toProjectLeaderOut(project.getLeader()))")
     ProjectOut toProjectOut(Project project, ProjectMemberMapper mapperProjectMember, ProjectActualRoleMapper mapperProjectActualRole, ProjectEventMapper mapperProjectEvent);
 
     @Mapping(target = "avatar", ignore = true)
