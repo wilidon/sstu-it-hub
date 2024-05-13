@@ -1,6 +1,7 @@
 package ru.sstu.studentprofile.domain.service.statistic;
 
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -70,8 +71,8 @@ public class StatisticService {
 
     public StatisticsHotOut getStatisticHot(){
         Pageable pageable = PageRequest.of(0, 6, Sort.by("createDate").descending());
-        List<Project> projectSource = projectRepository.findAllByOrderByCreateDateDesc(pageable);
-        List<StatisticHotProjectOut> projects = mapperProject.toProjectOut(projectSource);
+        Page<Project> projectSource = projectRepository.findAllByOrderByCreateDateDesc(pageable);
+        List<StatisticHotProjectOut> projects = mapperProject.toProjectOut(projectSource.getContent());
 
         Event eventSource = eventRepository.findTopEventByMembers();
         StatisticsEventOut event = mapperEvent.toEventOut(eventSource);

@@ -14,6 +14,7 @@ import ru.sstu.studentprofile.domain.service.event.dto.ShortEventOut;
 import ru.sstu.studentprofile.domain.service.project.ProjectService;
 import ru.sstu.studentprofile.domain.service.project.dto.*;
 import ru.sstu.studentprofile.domain.service.user.dto.UserOut;
+import ru.sstu.studentprofile.domain.service.util.PageableOut;
 import ru.sstu.studentprofile.web.controller.project.ProjectApi;
 
 import java.io.IOException;
@@ -37,7 +38,7 @@ public class ProjectController implements ProjectApi {
     }
 
     @Override
-    public ResponseEntity<List<ProjectOut>> getAllProjects(int page){
+    public ResponseEntity<PageableOut<ProjectOut>> getAllProjects(int page){
         return ResponseEntity.ok(projectService.all(page));
     }
 

@@ -14,7 +14,7 @@ import java.util.List;
 
 @Repository
 public interface ProjectRepository extends JpaRepository<Project, Long> {
-    List<Project> findAllByOrderByCreateDateDesc(Pageable pageable);
+    Page<Project> findAllByOrderByCreateDateDesc(Pageable pageable);
 
     @Query("SELECT COUNT(p) FROM Project p")
     long getCountAllProject();

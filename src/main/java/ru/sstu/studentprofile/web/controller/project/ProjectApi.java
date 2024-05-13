@@ -18,6 +18,7 @@ import ru.sstu.studentprofile.domain.service.event.dto.EventOut;
 import ru.sstu.studentprofile.domain.service.event.dto.ShortEventOut;
 import ru.sstu.studentprofile.domain.service.project.dto.*;
 import ru.sstu.studentprofile.domain.service.user.dto.UserOut;
+import ru.sstu.studentprofile.domain.service.util.PageableOut;
 
 import java.io.IOException;
 import java.util.List;
@@ -55,7 +56,7 @@ public interface ProjectApi {
                     description = "Возвращает все проекты"
             ),
     })
-    ResponseEntity<List<ProjectOut>> getAllProjects(@RequestParam int page);
+    ResponseEntity<?> getAllProjects(@RequestParam int page);
 
     @SecurityRequirement(name = "bearerAuth")
     @GetMapping("/{projectId}")

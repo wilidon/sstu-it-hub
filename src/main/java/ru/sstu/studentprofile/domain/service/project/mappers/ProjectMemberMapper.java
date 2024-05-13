@@ -15,6 +15,7 @@ import java.util.List;
 @Mapper(componentModel = MappingConstants.ComponentModel.SPRING)
 public interface ProjectMemberMapper {
     @Mapping(target = "id", expression = "java(projectMember.getId())")
+    @Mapping(target = "userId", expression = "java(projectMember.getUser().getId())")
     @Mapping(target = "avatar", expression = "java(projectMember.getUser().getAvatar())")
     @Mapping(target = "login", expression = "java(projectMember.getUser().getLogin())")
     @Mapping(target = "lastName", expression = "java(projectMember.getUser().getLastName())")

@@ -3,6 +3,7 @@ package ru.sstu.studentprofile.domain.service.project;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -29,6 +30,7 @@ import ru.sstu.studentprofile.domain.service.project.mappers.ProjectMapper;
 import ru.sstu.studentprofile.domain.service.project.mappers.ProjectMemberMapper;
 import ru.sstu.studentprofile.domain.service.roleForProject.dto.RoleForProjectOut;
 import ru.sstu.studentprofile.domain.service.storage.FileLoader;
+import ru.sstu.studentprofile.domain.service.util.PageableOut;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -99,17 +101,22 @@ public class ProjectService {
         return mapper.toProjectOut(project, mapperProjectMember, mapperActualRoleMapper, mapperProjectEvent);
     }
 
-    public List<ProjectOut> all(int page){
+    public PageableOut<ProjectOut> all(int page){
         final short PAGE_SIZE = 25;
         Pageable pageable = PageRequest.of(page - 1, PAGE_SIZE, Sort.by("createDate").descending());
-        List<Project> projects = projectRepository.findAllByOrderByCreateDateDesc(pageable);
+        Page<Project> projects = projectRepository.findAllByOrderByCreateDateDesc(pageable);
 
         List<ProjectOut> projectsOut = new ArrayList<>();
-        for (Project project : projects){
+        for (Project project : projects.getContent()){
             projectsOut.add(mapper.toProjectOut(project, mapperProjectMember, mapperActualRoleMapper, mapperProjectEvent));
         }
 
-        return projectsOut;
+        return new PageableOut<>(
+                page,
+                projects.getSize(),
+                projects.getTotalPages(),
+                projectsOut
+        );
     }
 
     @Transactional
