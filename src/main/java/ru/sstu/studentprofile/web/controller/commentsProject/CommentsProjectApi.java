@@ -23,7 +23,8 @@ public interface CommentsProjectApi {
             }
     )
     ResponseEntity<?> getCommentsByProjectId(@RequestParam(value = "page", defaultValue = "1") int page,
-                                             @RequestParam(value = "limit", defaultValue = "25") int limit, @PathVariable long projectId);
+                                             @RequestParam(value = "limit", defaultValue = "25") int limit,
+                                             @PathVariable("projectId") long projectId);
 
     @PostMapping("/{projectId}")
     @SecurityRequirement(name = "bearerAuth")
@@ -32,7 +33,8 @@ public interface CommentsProjectApi {
                     @ApiResponse(responseCode = "200", description = "Список мероприятий")
             }
     )
-    ResponseEntity<?> create(@RequestBody CommentProjectIn commentProjectIn, long projectId, JwtAuthentication authentication);
+    ResponseEntity<?> create(@RequestBody CommentProjectIn commentProjectIn,
+                             @PathVariable("projectId") long projectId, JwtAuthentication authentication);
 
     @DeleteMapping("/{commentId}")
     @SecurityRequirement(name = "bearerAuth")
