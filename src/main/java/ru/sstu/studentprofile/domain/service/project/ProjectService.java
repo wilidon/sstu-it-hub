@@ -101,9 +101,8 @@ public class ProjectService {
         return mapper.toProjectOut(project, mapperProjectMember, mapperActualRoleMapper, mapperProjectEvent);
     }
 
-    public PageableOut<ProjectOut> all(int page){
-        final short PAGE_SIZE = 25;
-        Pageable pageable = PageRequest.of(page - 1, PAGE_SIZE, Sort.by("createDate").descending());
+    public PageableOut<ProjectOut> all(int page, int limit){
+        Pageable pageable = PageRequest.of(page - 1, limit, Sort.by("createDate").descending());
         Page<Project> projects = projectRepository.findAllByOrderByCreateDateDesc(pageable);
 
         List<ProjectOut> projectsOut = new ArrayList<>();

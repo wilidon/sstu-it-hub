@@ -56,7 +56,8 @@ public interface ProjectApi {
                     description = "Возвращает все проекты"
             ),
     })
-    ResponseEntity<?> getAllProjects(@RequestParam int page);
+    ResponseEntity<?> getAllProjects(@RequestParam("page") int page,
+                                     @RequestParam("limit") int limit);
 
     @SecurityRequirement(name = "bearerAuth")
     @GetMapping("/{projectId}")
