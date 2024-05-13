@@ -18,7 +18,7 @@ jobs:
 
     - name: SSH Command
       run: |
-        sshpass -p ${{ secrets.SSH_PASSWORD }} ssh root@{{ secrets.SSH_IP }} 'cd /root/it-hub/sstu-it-hub && \
+        sshpass -p ${{ secrets.SSH_PASSWORD }} ssh root@147.45.138.159 'cd /root/it-hub/sstu-it-hub && \
                                   git pull && \
                                   docker-compose down && \
                                   docker-compose up -d --build'
