@@ -13,7 +13,8 @@ public record UserOut(
         String middleName,
         List<String> roles,
         List<String> rolesForProject,
-        List<UserReviewOut> reviews
+        List<UserReviewOut> reviews,
+        UserMediaOut media
 ) {
 
 }

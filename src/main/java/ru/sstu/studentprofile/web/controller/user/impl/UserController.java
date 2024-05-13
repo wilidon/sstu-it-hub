@@ -10,6 +10,7 @@ import org.springframework.web.multipart.MultipartFile;
 import ru.sstu.studentprofile.data.models.user.User;
 import ru.sstu.studentprofile.domain.security.JwtAuthentication;
 import ru.sstu.studentprofile.domain.service.user.UserService;
+import ru.sstu.studentprofile.domain.service.user.dto.UserAboutIn;
 import ru.sstu.studentprofile.domain.service.user.dto.UserOut;
 import ru.sstu.studentprofile.domain.service.user.dto.UserRoleForProjectOut;
 import ru.sstu.studentprofile.web.controller.user.UserApi;
@@ -55,6 +56,13 @@ public class UserController implements UserApi {
     @Override
     public ResponseEntity<List<UserRoleForProjectOut>> updateUserRoleForProjectById(long userId, List<UserRoleForProjectOut> roles, Authentication authentication) {
         return ResponseEntity.ok(userService.updateUserRoleForProjectById(userId, roles, authentication));
+    }
+
+    @Override
+    public ResponseEntity<?> updateUserAbout(UserAboutIn aboutIn,
+                                             JwtAuthentication authentication) {
+        userService.updateUserAbout(aboutIn, authentication);
+        return ResponseEntity.ok(null);
     }
 
     @Override

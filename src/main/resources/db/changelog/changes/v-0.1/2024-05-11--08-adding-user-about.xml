@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.27.xsd"
+        objectQuotingStrategy="QUOTE_ONLY_RESERVED_WORDS">
+    <changeSet id="1715594717214-3" author="ildar (generated)">
+        <createTable tableName="user_media">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_usermedia"/>
+            </column>
+            <column name="user_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="vk_url" type="VARCHAR(128)"/>
+            <column name="tg_url" type="VARCHAR(128)"/>
+            <column name="phone" type="VARCHAR(11)"/>
+            <column name="about" type="VARCHAR(512)"/>
+        </createTable>
+    </changeSet>
+    <changeSet id="1715594717214-4" author="ildar (generated)">
+        <addUniqueConstraint columnNames="user_id" constraintName="uc_usermedia_user" tableName="user_media"/>
+    </changeSet>
+    <changeSet id="1715594717214-5" author="ildar (generated)">
+        <addForeignKeyConstraint baseColumnNames="user_id" baseTableName="user_media"
+                                 constraintName="FK_USERMEDIA_ON_USER" referencedColumnNames="id"
+                                 referencedTableName="user"/>
+    </changeSet>
+
+</databaseChangeLog>

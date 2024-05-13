@@ -30,7 +30,9 @@ import ru.sstu.studentprofile.domain.security.JwtAuthentication;
 import ru.sstu.studentprofile.domain.security.UserDetailsImpl;
 import ru.sstu.studentprofile.domain.service.storage.UserAvatarLoader;
 import ru.sstu.studentprofile.domain.service.storage.UserBackgroundLoader;
+import ru.sstu.studentprofile.domain.service.user.dto.UserAboutIn;
 import ru.sstu.studentprofile.domain.service.user.dto.UserEvent;
+import ru.sstu.studentprofile.domain.service.user.dto.UserMediaOut;
 import ru.sstu.studentprofile.domain.service.user.dto.UserOut;
 import ru.sstu.studentprofile.domain.service.user.dto.UserProject;
 import ru.sstu.studentprofile.domain.service.user.dto.UserReviewOut;
@@ -83,6 +85,7 @@ public class UserService {
                 Sort.by("createdAt").descending());
         final Page<UserReview> reviews = userReviewRepository.findAllByRecipientId(id,
                 pageable);
+
         return userMapper.toUserOut(user, reviews.getContent());
     }
 
@@ -156,7 +159,25 @@ public class UserService {
     }
 
     @Transactional
-    public List<UserRoleForProjectOut> updateUserRoleForProjectById(long userId, List<UserRoleForProjectOut> roles, Authentication authentication) {
+    public void updateUserAbout(UserAboutIn userAboutIn,
+                                Authentication authentication
+                                ) {
+        long userIdOwner = ((JwtAuthentication) authentication).getUserId();
+        User user = userRepository.findById(userIdOwner).orElseThrow(() ->
+                new NotFoundException("Пользователь не найден"));
+
+        user.getUserMedia().setPhone(userAboutIn.phone());
+        user.getUserMedia().setVkUrl(userAboutIn.vkUrl());
+        user.getUserMedia().setTgUrl(userAboutIn.tgUrl());
+        user.getUserMedia().setAbout(userAboutIn.about());
+
+        userRepository.save(user);
+    }
+
+    @Transactional
+    public List<UserRoleForProjectOut> updateUserRoleForProjectById(long userId,
+                                                                    List<UserRoleForProjectOut> roles,
+                                                                    Authentication authentication) {
         long userIdOwner = ((JwtAuthentication) authentication).getUserId();
         if (userId != userIdOwner)
             throw new ForbiddenException("Вы не лидер проекта");
