@@ -5,6 +5,7 @@ import java.util.Set;
 
 public record ProjectMemberOut(
         long id,
+        long userId,
         String avatar,
         String login,
         String email,
