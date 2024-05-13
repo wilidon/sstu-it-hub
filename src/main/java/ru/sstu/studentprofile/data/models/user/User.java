@@ -64,7 +64,7 @@ public class User {
     @NotBlank
     private String password;
 
-    @OneToMany(mappedBy = "user", orphanRemoval = true)
+    @OneToMany(mappedBy = "user", orphanRemoval = true, cascade = CascadeType.ALL)
     private Set<UserRole> userRoles = new LinkedHashSet<>();
 
     @OneToMany(mappedBy = "leader", orphanRemoval = true)
