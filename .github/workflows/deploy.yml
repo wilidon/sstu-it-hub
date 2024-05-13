@@ -13,14 +13,12 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v2
 
-    - name: Setup SSH
-      uses: webfactory/ssh-agent@v0.5.3
-      with:
-        ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+    - name: Install SSH client
+      run: sudo apt-get install -y openssh-client
 
     - name: SSH Command
       run: |
-        ssh root@${{ secrets.SSH_IP }} 'cd /root/it-hub/sstu-it-hub && \
+        sshpass -p ${{ secrets.SSH_PASSWORD }} ssh root@{{ secrets.SSH_IP }} 'cd /root/it-hub/sstu-it-hub && \
                                   git pull && \
                                   docker-compose down && \
                                   docker-compose up -d --build'
