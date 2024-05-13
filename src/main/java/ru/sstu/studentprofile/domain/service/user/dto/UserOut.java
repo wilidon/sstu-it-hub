@@ -12,7 +12,8 @@ public record UserOut(
         String firstName,
         String middleName,
         List<String> roles,
-        List<String> rolesForProject
+        List<String> rolesForProject,
+        List<UserReviewOut> reviews
 ) {
 
 }

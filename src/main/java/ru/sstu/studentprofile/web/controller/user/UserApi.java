@@ -70,7 +70,7 @@ public interface UserApi {
             )
     )
     ResponseEntity<?> userEvents(@PathVariable("userId") long userId,
-                                 @RequestParam(value = "page", defaultValue ="1") int size,
+                                 @RequestParam(value = "page", defaultValue = "1") int size,
                                  @RequestParam(value = "limit", defaultValue = "25") int limit);
 
     @GetMapping("/{userId}/projects")
@@ -87,6 +87,21 @@ public interface UserApi {
     ResponseEntity<?> userProjects(@PathVariable("userId") long userId,
                                    @RequestParam(value = "page", defaultValue = "1") int size,
                                    @RequestParam(value = "limit", defaultValue = "25") int limit);
+
+    @GetMapping("/{userId}/reviews")
+    @ApiResponses(
+            value = @ApiResponse(
+                    responseCode = "200",
+                    description = "Возвращает отзывы, которые имеются у этого пользователя",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = PageableOut.class)
+                    )
+            )
+    )
+    ResponseEntity<?> userReviews(@PathVariable("userId") long userId,
+                                  @RequestParam(value = "page", defaultValue = "1") int size,
+                                  @RequestParam(value = "limit", defaultValue = "25") int limit);
 
     @PatchMapping("/roleForProject/{userId}")
     @SecurityRequirement(name = "bearerAuth")

@@ -16,11 +16,13 @@ import ru.sstu.studentprofile.data.models.event.Event;
 import ru.sstu.studentprofile.data.models.project.Project;
 import ru.sstu.studentprofile.data.models.project.RoleForProject;
 import ru.sstu.studentprofile.data.models.user.User;
+import ru.sstu.studentprofile.data.models.user.UserReview;
 import ru.sstu.studentprofile.data.models.user.UserRoleForProject;
 import ru.sstu.studentprofile.data.repository.event.EventRepository;
 import ru.sstu.studentprofile.data.repository.project.ProjectRepository;
 import ru.sstu.studentprofile.data.repository.project.RoleForProjectRepository;
 import ru.sstu.studentprofile.data.repository.user.UserRepository;
+import ru.sstu.studentprofile.data.repository.user.UserReviewRepository;
 import ru.sstu.studentprofile.data.repository.user.UserRoleForProjectRepository;
 import ru.sstu.studentprofile.domain.exception.ForbiddenException;
 import ru.sstu.studentprofile.domain.exception.NotFoundException;
@@ -31,6 +33,7 @@ import ru.sstu.studentprofile.domain.service.storage.UserBackgroundLoader;
 import ru.sstu.studentprofile.domain.service.user.dto.UserEvent;
 import ru.sstu.studentprofile.domain.service.user.dto.UserOut;
 import ru.sstu.studentprofile.domain.service.user.dto.UserProject;
+import ru.sstu.studentprofile.domain.service.user.dto.UserReviewOut;
 import ru.sstu.studentprofile.domain.service.user.dto.UserRoleForProjectOut;
 import ru.sstu.studentprofile.domain.service.util.PageableOut;
 
@@ -48,6 +51,7 @@ public class UserService {
     private final ProjectRepository projectRepository;
     private final UserAvatarLoader userAvatarLoader;
     private final UserBackgroundLoader userBackgroundLoader;
+    private final UserReviewRepository userReviewRepository;
 
     @Autowired
     public UserService(UserRepository userRepository,
@@ -55,7 +59,7 @@ public class UserService {
                        UserRoleForProjectRepository userRoleForProjectRepository,
                        RoleForProjectRepository roleForProjectRepository, EventRepository eventRepository, ProjectRepository projectRepository,
                        @Qualifier("userAvatarLoader") UserAvatarLoader userAvatarLoader,
-                       @Qualifier("userBackgroundLoader") UserBackgroundLoader userBackgroundLoader) {
+                       @Qualifier("userBackgroundLoader") UserBackgroundLoader userBackgroundLoader, UserReviewRepository userReviewRepository) {
         this.userRepository = userRepository;
         this.userMapper = userMapper;
         this.userRoleForProjectRepository = userRoleForProjectRepository;
@@ -64,13 +68,22 @@ public class UserService {
         this.projectRepository = projectRepository;
         this.userAvatarLoader = userAvatarLoader;
         this.userBackgroundLoader = userBackgroundLoader;
+        this.userReviewRepository = userReviewRepository;
     }
 
     public UserOut findUserById(final long id) {
+        final int REVIEW_LIMIT = 3;
+        final int REVIEW_PAGE = 1;
+
         final User user = userRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Пользователь не найден"));
 
-       return userMapper.toUserOut(user);
+        Pageable pageable = PageRequest.of(REVIEW_PAGE - 1,
+                REVIEW_LIMIT,
+                Sort.by("createdAt").descending());
+        final Page<UserReview> reviews = userReviewRepository.findAllByRecipientId(id,
+                pageable);
+        return userMapper.toUserOut(user, reviews.getContent());
     }
 
 
@@ -99,8 +112,28 @@ public class UserService {
                 userEvents);
     }
 
+    public PageableOut<UserReviewOut> findAllUserReviews(long userId,
+                                                         int page,
+                                                         int limit) {
+        Pageable pageable = PageRequest.of(page - 1,
+                limit,
+                Sort.by("createdAt").descending());
+
+        Page<UserReview> reviews = userReviewRepository.findAllByRecipientId(
+                userId,
+                pageable
+        );
+        return new PageableOut<>(
+                page,
+                reviews.getSize(),
+                reviews.getTotalPages(),
+                reviews.getNumberOfElements(),
+                userMapper.toUserReviewOut(reviews.getContent())
+        );
+    }
+
     public PageableOut<UserProject> findAllUserProjects(long userId, int page, int limit) {
-        Pageable pageable = PageRequest.of(page-1,
+        Pageable pageable = PageRequest.of(page - 1,
                 limit,
                 Sort.by("id").descending());
 
@@ -122,9 +155,8 @@ public class UserService {
         );
     }
 
-
     @Transactional
-    public List<UserRoleForProjectOut> updateUserRoleForProjectById(long userId, List<UserRoleForProjectOut> roles, Authentication authentication){
+    public List<UserRoleForProjectOut> updateUserRoleForProjectById(long userId, List<UserRoleForProjectOut> roles, Authentication authentication) {
         long userIdOwner = ((JwtAuthentication) authentication).getUserId();
         if (userId != userIdOwner)
             throw new ForbiddenException("Вы не лидер проекта");
@@ -134,7 +166,7 @@ public class UserService {
 
         userRoleForProjectRepository.deleteByUserId(userIdOwner);
 
-        for (UserRoleForProjectOut role : roles){
+        for (UserRoleForProjectOut role : roles) {
             RoleForProject roleSource = roleForProjectRepository.findById(role.id())
                     .orElseThrow(() -> new NotFoundException("Роль не найдена"));
 
@@ -159,7 +191,7 @@ public class UserService {
         user.setAvatar(filePath);
         userRepository.save(user);
 
-        return userMapper.toUserOut(user);
+        return findUserById(userId);
     }
 
     @Transactional
@@ -173,6 +205,6 @@ public class UserService {
         user.setBackground(filePath);
         userRepository.save(user);
 
-        return userMapper.toUserOut(user);
+        return findUserById(userId);
     }
 }

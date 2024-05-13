@@ -37,14 +37,19 @@ public class UserController implements UserApi {
 
     @Override
     public ResponseEntity<?> userEvents(long userId,
-                                        int size,
+                                        int page,
                                         int limit) {
-        return ResponseEntity.ok(userService.findAllUserEvents(userId, size, limit));
+        return ResponseEntity.ok(userService.findAllUserEvents(userId, page, limit));
     }
 
     @Override
-    public ResponseEntity<?> userProjects(long userId, int size, int limit) {
-        return ResponseEntity.ok(userService.findAllUserProjects(userId, size, limit));
+    public ResponseEntity<?> userProjects(long userId, int page, int limit) {
+        return ResponseEntity.ok(userService.findAllUserProjects(userId, page, limit));
+    }
+
+    @Override
+    public ResponseEntity<?> userReviews(long userId, int page, int limit) {
+        return ResponseEntity.ok(userService.findAllUserReviews(userId, page, limit));
     }
 
     @Override
