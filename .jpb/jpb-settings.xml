@@ -19,6 +19,12 @@
     <exclude-change idName="user_id_seq" tagName="dropSequence" />
     <exclude-change idName="user_role_for_project_id_seq" tagName="dropSequence" />
     <exclude-change idName="user_role_id_seq" tagName="dropSequence" />
+    <exclude-change idName="FK_USERREVIEW_ON_RECIPIENT" tagName="addForeignKeyConstraint" />
+    <exclude-change idName="FK_USERREVIEW_ON_AUTHOR" tagName="addForeignKeyConstraint" />
+    <exclude-change idName="user_review" tagName="createTable" />
+    <exclude-change idName="event#project_id" tagName="dropColumn" />
+    <exclude-change idName="event#text" tagName="dropColumn" />
+    <exclude-change idName="event#create_date" tagName="dropColumn" />
   </component>
   <component name="PersistenceUnitSettings">
     <persistence-units>
