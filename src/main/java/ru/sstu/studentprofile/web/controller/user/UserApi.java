@@ -8,13 +8,16 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springdoc.api.ErrorMessage;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import ru.sstu.studentprofile.domain.security.JwtAuthentication;
 import ru.sstu.studentprofile.domain.service.user.dto.UserOut;
 import ru.sstu.studentprofile.domain.service.user.dto.UserRoleForProjectOut;
 
+import java.io.IOException;
 import java.util.List;
 
 @Tag(name = "2. Пользователи")
@@ -83,4 +86,34 @@ public interface UserApi {
             )
     })
     ResponseEntity<List<UserRoleForProjectOut>> updateUserRoleForProjectById(@PathVariable long userId, @RequestBody @Valid List<UserRoleForProjectOut> roles, Authentication authentication);
+
+    @SecurityRequirement(name = "bearerAuth")
+    @RequestMapping(value = "/background",
+            method = RequestMethod.PATCH,
+            consumes = MediaType.MULTIPART_FORM_DATA_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    @ApiResponses(value = @ApiResponse(
+            responseCode = "200",
+            description = "Обновляет фон пользователя.",
+            content = @Content(
+                    mediaType = "application/json",
+                    schema = @Schema(implementation = UserOut.class))
+    )
+    )
+    ResponseEntity<UserOut> updateBackground(@RequestPart(name = "background") MultipartFile avatar, JwtAuthentication authentication) throws IOException;
+
+    @SecurityRequirement(name = "bearerAuth")
+    @RequestMapping(value = "/avatar",
+            method = RequestMethod.PATCH,
+            consumes = MediaType.MULTIPART_FORM_DATA_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    @ApiResponses(value = @ApiResponse(
+            responseCode = "200",
+            description = "Обновляет аватар пользователя.",
+            content = @Content(
+                    mediaType = "application/json",
+                    schema = @Schema(implementation = UserOut.class))
+    )
+    )
+    ResponseEntity<UserOut> updateAvatar(@RequestPart(name = "avatar") MultipartFile avatar, JwtAuthentication authentication) throws IOException;
 }

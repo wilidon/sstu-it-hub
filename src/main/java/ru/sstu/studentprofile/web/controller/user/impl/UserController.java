@@ -6,6 +6,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 import ru.sstu.studentprofile.data.models.user.User;
 import ru.sstu.studentprofile.domain.security.JwtAuthentication;
 import ru.sstu.studentprofile.domain.service.user.UserService;
@@ -13,6 +14,7 @@ import ru.sstu.studentprofile.domain.service.user.dto.UserOut;
 import ru.sstu.studentprofile.domain.service.user.dto.UserRoleForProjectOut;
 import ru.sstu.studentprofile.web.controller.user.UserApi;
 
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -36,5 +38,15 @@ public class UserController implements UserApi {
     @Override
     public ResponseEntity<List<UserRoleForProjectOut>> updateUserRoleForProjectById(long userId, List<UserRoleForProjectOut> roles, Authentication authentication) {
         return ResponseEntity.ok(userService.updateUserRoleForProjectById(userId, roles, authentication));
+    }
+
+    @Override
+    public ResponseEntity<UserOut> updateAvatar(MultipartFile avatar, JwtAuthentication authentication) throws IOException {
+        return ResponseEntity.ok(userService.updateAvatar(avatar, authentication));
+    }
+
+    @Override
+    public ResponseEntity<UserOut> updateBackground(MultipartFile background, JwtAuthentication authentication) throws IOException {
+        return ResponseEntity.ok(userService.updateBackground(background, authentication));
     }
 }

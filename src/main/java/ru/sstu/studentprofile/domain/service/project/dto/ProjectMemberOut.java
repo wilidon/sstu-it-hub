@@ -12,6 +12,7 @@ public record ProjectMemberOut(
         String lastName,
         String firstName,
         String middleName,
+        String role,
         List<String> rolesForProject
 ) {
 }
