@@ -56,7 +56,6 @@ public class User {
     @NotBlank
     @Column(length = 128, nullable = false)
     private String firstName; // Имя
-    @NotBlank
     @Column(length = 128, nullable = true)
     private String middleName; // Отчество
 

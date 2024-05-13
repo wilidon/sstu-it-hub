@@ -48,7 +48,7 @@ public class CommentsProjectService {
                 page,
                 comments.getSize(),
                 comments.getTotalPages(),
-                comments.getNumberOfElements(),
+                comments.getTotalElements(),
                 commentsOut
         );
     }

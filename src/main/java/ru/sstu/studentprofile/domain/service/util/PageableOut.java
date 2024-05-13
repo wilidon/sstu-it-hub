@@ -5,6 +5,6 @@ import java.util.Collection;
 public record PageableOut<T>(int page,
                              int size,
                              int totalPages,
-                             int totalItems,
+                             long totalItems,
                              Collection<T> content) {
 }

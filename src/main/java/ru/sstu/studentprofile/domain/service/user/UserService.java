@@ -121,7 +121,7 @@ public class UserService {
         return new PageableOut<>(page,
                 events.getSize(),
                 events.getTotalPages(),
-                events.getNumberOfElements(),
+                events.getTotalElements(),
                 userEvents);
     }
 
@@ -140,7 +140,7 @@ public class UserService {
                 page,
                 reviews.getSize(),
                 reviews.getTotalPages(),
-                reviews.getNumberOfElements(),
+                reviews.getTotalElements(),
                 userMapper.toUserReviewOut(reviews.getContent())
         );
     }
@@ -163,7 +163,7 @@ public class UserService {
                 page,
                 projects.getSize(),
                 projects.getTotalPages(),
-                projects.getNumberOfElements(),
+                projects.getTotalElements(),
                 userProject
         );
     }
@@ -202,6 +202,14 @@ public class UserService {
         user.getUserMedia().setPhone(userMediaIn.phone());
         user.getUserMedia().setVkUrl(userMediaIn.vkUrl());
         user.getUserMedia().setTgUrl(userMediaIn.tgUrl());
+        if (!user.getEmail().equals(userMediaIn.email())) {
+            if (userRepository.findByEmail(userMediaIn.email()).isPresent()) {
+                throw new ConflictException("Такая почта уже занята");
+            }
+            if (userMediaIn.email() != null && !userMediaIn.email().isEmpty()) {
+                user.setEmail(userMediaIn.email());
+            }
+        }
 
         userRepository.save(user);
     }
