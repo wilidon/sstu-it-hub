@@ -115,6 +115,7 @@ public class ProjectService {
                 page,
                 projects.getSize(),
                 projects.getTotalPages(),
+                projects.getNumberOfElements(),
                 projectsOut
         );
     }

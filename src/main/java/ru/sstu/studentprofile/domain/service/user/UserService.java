@@ -95,6 +95,7 @@ public class UserService {
         return new PageableOut<>(page,
                 events.getSize(),
                 events.getTotalPages(),
+                events.getNumberOfElements(),
                 userEvents);
     }
 
@@ -116,6 +117,7 @@ public class UserService {
                 page,
                 projects.getSize(),
                 projects.getTotalPages(),
+                projects.getNumberOfElements(),
                 userProject
         );
     }

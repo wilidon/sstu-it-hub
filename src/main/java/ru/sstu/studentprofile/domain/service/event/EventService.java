@@ -58,6 +58,7 @@ public class EventService {
                     page,
                     events.getSize(),
                     events.getTotalPages(),
+                    events.getNumberOfElements(),
                     mapper.toShortEventOut(events.getContent())
             );
         }
@@ -67,6 +68,7 @@ public class EventService {
                 page,
                 events.getSize(),
                 events.getTotalPages(),
+                events.getNumberOfElements(),
                 mapper.toShortEventOut(events.getContent())
         );
     }
