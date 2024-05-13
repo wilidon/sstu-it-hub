@@ -1,5 +1,6 @@
 package ru.sstu.studentprofile.data.models.user;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -76,7 +77,7 @@ public class User {
     @OneToMany(mappedBy = "user", orphanRemoval = true)
     private Set<UserRoleForProject> userRolesForProject = new LinkedHashSet<>();
 
-    @OneToOne(mappedBy = "user")
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
     private UserMedia userMedia;
 
     private LocalDateTime lastActivityTime = LocalDateTime.now();
