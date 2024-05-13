@@ -2,7 +2,6 @@ package ru.sstu.studentprofile.domain.service.user;
 
 import jakarta.transaction.Transactional;
 import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Page;
@@ -31,8 +30,8 @@ import ru.sstu.studentprofile.domain.security.UserDetailsImpl;
 import ru.sstu.studentprofile.domain.service.storage.UserAvatarLoader;
 import ru.sstu.studentprofile.domain.service.storage.UserBackgroundLoader;
 import ru.sstu.studentprofile.domain.service.user.dto.UserAboutIn;
+import ru.sstu.studentprofile.domain.service.user.dto.UserMediaIn;
 import ru.sstu.studentprofile.domain.service.user.dto.UserEvent;
-import ru.sstu.studentprofile.domain.service.user.dto.UserMediaOut;
 import ru.sstu.studentprofile.domain.service.user.dto.UserOut;
 import ru.sstu.studentprofile.domain.service.user.dto.UserProject;
 import ru.sstu.studentprofile.domain.service.user.dto.UserReviewOut;
@@ -159,17 +158,27 @@ public class UserService {
     }
 
     @Transactional
-    public void updateUserAbout(UserAboutIn userAboutIn,
+    public void updateUserMedia(UserMediaIn userMediaIn,
                                 Authentication authentication
                                 ) {
         long userIdOwner = ((JwtAuthentication) authentication).getUserId();
         User user = userRepository.findById(userIdOwner).orElseThrow(() ->
                 new NotFoundException("Пользователь не найден"));
 
-        user.getUserMedia().setPhone(userAboutIn.phone());
-        user.getUserMedia().setVkUrl(userAboutIn.vkUrl());
-        user.getUserMedia().setTgUrl(userAboutIn.tgUrl());
-        user.getUserMedia().setAbout(userAboutIn.about());
+        user.getUserMedia().setPhone(userMediaIn.phone());
+        user.getUserMedia().setVkUrl(userMediaIn.vkUrl());
+        user.getUserMedia().setTgUrl(userMediaIn.tgUrl());
+
+        userRepository.save(user);
+    }
+
+    public void updateUserAbout(UserAboutIn aboutIn,
+                                Authentication authentication) {
+        long userIdOwner = ((JwtAuthentication) authentication).getUserId();
+        User user = userRepository.findById(userIdOwner).orElseThrow(() ->
+                new NotFoundException("Пользователь не найден"));
+
+        user.getUserMedia().setAbout(aboutIn.about());
 
         userRepository.save(user);
     }

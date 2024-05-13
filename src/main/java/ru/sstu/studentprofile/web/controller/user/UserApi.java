@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import ru.sstu.studentprofile.domain.security.JwtAuthentication;
 import ru.sstu.studentprofile.domain.service.user.dto.UserAboutIn;
-import ru.sstu.studentprofile.domain.service.user.dto.UserEvent;
+import ru.sstu.studentprofile.domain.service.user.dto.UserMediaIn;
 import ru.sstu.studentprofile.domain.service.user.dto.UserOut;
 import ru.sstu.studentprofile.domain.service.user.dto.UserRoleForProjectOut;
 import ru.sstu.studentprofile.domain.service.util.PageableOut;
@@ -134,6 +134,19 @@ public interface UserApi {
     })
     ResponseEntity<List<UserRoleForProjectOut>> updateUserRoleForProjectById(@PathVariable long userId,
                                                                              @RequestBody @Valid List<UserRoleForProjectOut> roles, Authentication authentication);
+
+    @PutMapping("/media")
+    @SecurityRequirement(name = "bearerAuth")
+    @ApiResponses(
+            value = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = ""
+                    )
+            }
+    )
+    ResponseEntity<?> updateUserMedia(@RequestBody @Valid UserMediaIn mediaIn,
+                                      JwtAuthentication authentication);
 
     @PutMapping("/about")
     @SecurityRequirement(name = "bearerAuth")

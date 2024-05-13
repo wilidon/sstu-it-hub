@@ -7,10 +7,10 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
-import ru.sstu.studentprofile.data.models.user.User;
 import ru.sstu.studentprofile.domain.security.JwtAuthentication;
 import ru.sstu.studentprofile.domain.service.user.UserService;
 import ru.sstu.studentprofile.domain.service.user.dto.UserAboutIn;
+import ru.sstu.studentprofile.domain.service.user.dto.UserMediaIn;
 import ru.sstu.studentprofile.domain.service.user.dto.UserOut;
 import ru.sstu.studentprofile.domain.service.user.dto.UserRoleForProjectOut;
 import ru.sstu.studentprofile.web.controller.user.UserApi;
@@ -59,8 +59,14 @@ public class UserController implements UserApi {
     }
 
     @Override
-    public ResponseEntity<?> updateUserAbout(UserAboutIn aboutIn,
+    public ResponseEntity<?> updateUserMedia(UserMediaIn aboutIn,
                                              JwtAuthentication authentication) {
+        userService.updateUserMedia(aboutIn, authentication);
+        return ResponseEntity.ok(null);
+    }
+
+    @Override
+    public ResponseEntity<?> updateUserAbout(UserAboutIn aboutIn, JwtAuthentication authentication) {
         userService.updateUserAbout(aboutIn, authentication);
         return ResponseEntity.ok(null);
     }
