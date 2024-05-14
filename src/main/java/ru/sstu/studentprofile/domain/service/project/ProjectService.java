@@ -303,6 +303,10 @@ public class ProjectService {
                 projectsOut.add(mapper.toProjectOut(project, mapperProjectMember, mapperActualRoleMapper, mapperProjectEvent));
             }
 
+            if (projects.getTotalElements() == 0){
+                return this.all("", true, page, limit, ProjectStatusSearchIn.ALL);
+            }
+
             return new PageableOut<>(
                     page,
                     projects.getSize(),
