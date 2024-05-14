@@ -8,8 +8,10 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import ru.sstu.studentprofile.data.models.event.Event;
 import ru.sstu.studentprofile.data.models.project.Project;
+import ru.sstu.studentprofile.data.models.project.RoleForProject;
 import ru.sstu.studentprofile.data.repository.event.EventRepository;
 import ru.sstu.studentprofile.data.repository.project.*;
+import ru.sstu.studentprofile.data.repository.project.proection.Role;
 import ru.sstu.studentprofile.data.repository.user.UserRepository;
 import ru.sstu.studentprofile.domain.service.project.dto.ProjectStatusSearchIn;
 import ru.sstu.studentprofile.domain.service.statistic.dto.*;
@@ -63,10 +65,12 @@ public class StatisticService {
     public StatisticOut getStatistic(){
         StatisticPeopleOut statisticPeople = this.getStatisticPeople();
         StatisticProjectOut statisticProject = this.getStatisticProjects();
+        StatisticsHotOut statisticsHot = this.getStatisticHot();
 
         return new StatisticOut(
                 statisticPeople,
-                statisticProject
+                statisticProject,
+                statisticsHot
         );
     }
 
@@ -78,17 +82,16 @@ public class StatisticService {
         Event eventSource = eventRepository.findTopEventByMembers();
         StatisticsEventOut event = mapperEvent.toEventOut(eventSource);
 
-        String topRole = memberRoleForProjectRepository.getTopRole();
-        String rareRole = memberRoleForProjectRepository.getRareRole();
-        Long findRoleId = actualRoleForProjectRepository.getFindestRole();
-        String findRoleName = roleForProjectRepository.findById(findRoleId).get().getName();
+        Role topRole = memberRoleForProjectRepository.getTopRole();
+        Role rareRole = memberRoleForProjectRepository.getRareRole();
+        Role findRole = actualRoleForProjectRepository.getFindestRole();
 
         return new StatisticsHotOut(
                 projects,
                 event,
-                topRole,
-                rareRole,
-                findRoleName
+                new StatisticRoleOut(topRole.getName(), topRole.getCount()),
+                new StatisticRoleOut(rareRole.getName(), rareRole.getCount()),
+                new StatisticRoleOut(findRole.getName(), findRole.getCount())
         );
     }
 }
