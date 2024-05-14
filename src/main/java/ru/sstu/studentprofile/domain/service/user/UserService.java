@@ -379,7 +379,8 @@ public class UserService {
         List<UserOut> usersOut = new ArrayList<>();
         for (User user : users){
             final Page<UserReview> reviews = userReviewRepository.findAllByRecipientId(user.getId(), pageable);
-            usersOut.add(userMapper.toUserOut(user, reviews.getContent(), null));
+            final List<UserRatingProjection> userRating = userRatingRepository.findUserRatingProjectionUsingRecipientId(user.getId());
+            usersOut.add(userMapper.toUserOut(user, reviews.getContent(), getUserRatingOut(userRating)));
         }
 
         return new PageableOut<>(
