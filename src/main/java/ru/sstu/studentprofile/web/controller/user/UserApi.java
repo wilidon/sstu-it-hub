@@ -207,4 +207,16 @@ public interface UserApi {
     )
     )
     ResponseEntity<UserOut> updateAvatar(@RequestPart(name = "avatar") MultipartFile avatar, JwtAuthentication authentication) throws IOException;
+
+    @GetMapping("/all")
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Возвращает профиль пользователя по id.",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = UserOut.class))
+            )
+    })
+    ResponseEntity<?> all(@RequestParam("page") int page, @RequestParam("limit") int limit, @RequestParam("roles") String roles);
 }

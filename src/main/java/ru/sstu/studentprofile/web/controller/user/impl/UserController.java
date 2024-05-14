@@ -99,4 +99,9 @@ public class UserController implements UserApi {
     public ResponseEntity<UserOut> updateBackground(MultipartFile background, JwtAuthentication authentication) throws IOException {
         return ResponseEntity.ok(userService.updateBackground(background, authentication));
     }
+
+    @Override
+    public ResponseEntity<?> all(int page, int limit, String roles) {
+        return ResponseEntity.ok(userService.findAll(page, limit, roles));
+    }
 }

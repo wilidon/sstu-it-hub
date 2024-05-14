@@ -48,6 +48,7 @@ import ru.sstu.studentprofile.domain.service.util.PageableOut;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @Service
@@ -349,5 +350,21 @@ public class UserService {
         userRepository.save(user);
 
         return findUserById(userId);
+    }
+
+    public List<UserOut> findAll(int page, int limit, String rolesSource){
+        List<Integer> rolesList = Arrays.asList(rolesSource.split(";"))
+                .stream().map(item -> Integer.parseInt(item)).toList();
+
+        Pageable pageable = PageRequest.of(page - 1, limit);
+        Page<User> users = userRepository.findAllByRoleForProject(pageable, rolesList);
+
+        List<UserOut> usersOut = new ArrayList<>();
+
+        for (User user : users){
+            usersOut.add(userMapper.toUserOut(user, null, null));
+        }
+
+        return usersOut;
     }
 }
