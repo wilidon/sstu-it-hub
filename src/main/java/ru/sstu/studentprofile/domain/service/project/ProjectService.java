@@ -34,8 +34,10 @@ import ru.sstu.studentprofile.domain.service.util.PageableOut;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class ProjectService {
@@ -120,6 +122,10 @@ public class ProjectService {
         List<ProjectOut> projectsOut = new ArrayList<>();
         for (Project project : projects.getContent()) {
             ProjectOut projectOut = mapper.toProjectOut(project, mapperProjectMember, mapperActualRoleMapper, mapperProjectEvent);
+
+            List<ProjectMemberOut> membersOld = projectOut.members();
+            membersOld.stream().sorted(Comparator.comparing(ProjectMemberOut::id)).collect(Collectors.toList());
+
             projectsOut.add(projectOut);
         }
 
