@@ -353,14 +353,20 @@ public class UserService {
     }
 
     public List<UserOut> findAll(int page, int limit, String rolesSource){
-        List<Integer> rolesList = Arrays.asList(rolesSource.split(";"))
-                .stream().map(item -> Integer.parseInt(item)).toList();
-
         Pageable pageable = PageRequest.of(page - 1, limit);
-        Page<User> users = userRepository.findAllByRoleForProject(pageable, rolesList);
+        Page<User> users = null;
+
+        if (rolesSource.equals("all")){
+            users = userRepository.findAll(pageable);
+        }
+        else{
+            List<Integer> rolesList = Arrays.asList(rolesSource.split(";"))
+                    .stream().map(item -> Integer.parseInt(item)).toList();
+
+            users = userRepository.findAllByRoleForProject(pageable, rolesList);
+        }
 
         List<UserOut> usersOut = new ArrayList<>();
-
         for (User user : users){
             usersOut.add(userMapper.toUserOut(user, null, null));
         }

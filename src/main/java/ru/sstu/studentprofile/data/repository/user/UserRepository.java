@@ -23,4 +23,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
         WHERE ur.role.id IN :roles
 """)
     Page<User> findAllByRoleForProject(Pageable pageable, List<Integer> roles);
+
+    Page<User> findAll(Pageable pageable);
 }
