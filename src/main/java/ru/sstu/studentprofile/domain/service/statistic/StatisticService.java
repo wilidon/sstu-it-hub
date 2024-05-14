@@ -35,7 +35,7 @@ public class StatisticService {
     private final StatisitcProjectMapper mapperProject;
     private final StatisticEventMapper mapperEvent;
 
-    public StatisticProjectOut getStatisticProjects(){
+    public StatisticProjectOut getStatisticProjects() {
         long allProject = projectRepository.getCountAllProject();
 
         LocalDateTime localDateTime = LocalDateTime.now();
@@ -55,14 +55,14 @@ public class StatisticService {
         );
     }
 
-    public StatisticPeopleOut getStatisticPeople(){
+    public StatisticPeopleOut getStatisticPeople() {
         long countPeople = userRepository.getCountAllUsers();
         return new StatisticPeopleOut(
                 countPeople
         );
     }
 
-    public StatisticOut getStatistic(){
+    public StatisticOut getStatistic() {
         StatisticPeopleOut statisticPeople = this.getStatisticPeople();
         StatisticProjectOut statisticProject = this.getStatisticProjects();
         StatisticsHotOut statisticsHot = this.getStatisticHot();
@@ -74,7 +74,7 @@ public class StatisticService {
         );
     }
 
-    public StatisticsHotOut getStatisticHot(){
+    public StatisticsHotOut getStatisticHot() {
         Pageable pageable = PageRequest.of(0, 6, Sort.by("createDate").descending());
         Page<Project> projectSource = projectRepository.findAllByOrderByCreateDateDesc(pageable, null);
         List<StatisticHotProjectOut> projects = mapperProject.toProjectOut(projectSource.getContent());
@@ -85,13 +85,25 @@ public class StatisticService {
         Role topRole = memberRoleForProjectRepository.getTopRole();
         Role rareRole = memberRoleForProjectRepository.getRareRole();
         Role findRole = actualRoleForProjectRepository.getFindestRole();
+        StatisticRoleOut topRoleOut = null;
+        if (topRole != null) {
+            topRoleOut = new StatisticRoleOut(topRole.getName(), topRole.getCount());
+        }
+        StatisticRoleOut rareRoleOut = null;
+        if (rareRole != null) {
+            rareRoleOut = new StatisticRoleOut(rareRole.getName(), rareRole.getCount());
+        }
+        StatisticRoleOut findRoleOut = null;
+        if (findRole != null) {
+            findRoleOut = new StatisticRoleOut(findRole.getName(), findRole.getCount());
+        }
 
         return new StatisticsHotOut(
                 projects,
                 event,
-                new StatisticRoleOut(topRole.getName(), topRole.getCount()),
-                new StatisticRoleOut(rareRole.getName(), rareRole.getCount()),
-                new StatisticRoleOut(findRole.getName(), findRole.getCount())
+                topRoleOut,
+                rareRoleOut,
+                findRoleOut
         );
     }
 }
