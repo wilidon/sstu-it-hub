@@ -11,6 +11,7 @@ import ru.sstu.studentprofile.data.models.project.Project;
 import ru.sstu.studentprofile.data.repository.event.EventRepository;
 import ru.sstu.studentprofile.data.repository.project.*;
 import ru.sstu.studentprofile.data.repository.user.UserRepository;
+import ru.sstu.studentprofile.domain.service.project.dto.ProjectStatusSearchIn;
 import ru.sstu.studentprofile.domain.service.statistic.dto.*;
 import ru.sstu.studentprofile.domain.service.statistic.mappers.StatisitcProjectMapper;
 import ru.sstu.studentprofile.domain.service.statistic.mappers.StatisticEventMapper;
@@ -71,7 +72,7 @@ public class StatisticService {
 
     public StatisticsHotOut getStatisticHot(){
         Pageable pageable = PageRequest.of(0, 6, Sort.by("createDate").descending());
-        Page<Project> projectSource = projectRepository.findAllByOrderByCreateDateDesc(pageable);
+        Page<Project> projectSource = projectRepository.findAllByOrderByCreateDateDesc(pageable, null);
         List<StatisticHotProjectOut> projects = mapperProject.toProjectOut(projectSource.getContent());
 
         Event eventSource = eventRepository.findTopEventByMembers();
