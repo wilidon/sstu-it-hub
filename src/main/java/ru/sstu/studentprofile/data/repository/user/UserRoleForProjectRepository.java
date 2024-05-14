@@ -7,9 +7,13 @@ import org.springframework.stereotype.Repository;
 import ru.sstu.studentprofile.data.models.project.RoleForProject;
 import ru.sstu.studentprofile.data.models.user.UserRoleForProject;
 
+import java.util.Optional;
+
 @Repository
 public interface UserRoleForProjectRepository extends JpaRepository<UserRoleForProject, Long> {
     @Modifying
     @Query("DELETE FROM UserRoleForProject r WHERE r.user.id = :userId")
     public void deleteByUserId(long userId);
+
+    Optional<UserRoleForProject> findByUserIdAndRoleId(long userId, long roleId);
 }

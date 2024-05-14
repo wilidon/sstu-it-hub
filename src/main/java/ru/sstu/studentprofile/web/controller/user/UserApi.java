@@ -90,6 +90,16 @@ public interface UserApi {
                                    @RequestParam(value = "page", defaultValue = "1") int size,
                                    @RequestParam(value = "limit", defaultValue = "25") int limit);
 
+    @PatchMapping("/rolesForProject/{roleId}")
+    @SecurityRequirement(name = "bearerAuth")
+    ResponseEntity<?> addRoleForProjects(@PathVariable("roleId") long roleId,
+                                         JwtAuthentication authentication);
+
+    @DeleteMapping("/rolesForProject/{roleId}")
+    @SecurityRequirement(name = "bearerAuth")
+    ResponseEntity<?> deleteRoleForProjects(@PathVariable("roleId") long roleId,
+                                            JwtAuthentication authentication);
+
     @GetMapping("/{userId}/reviews")
     @ApiResponses(
             value = @ApiResponse(
