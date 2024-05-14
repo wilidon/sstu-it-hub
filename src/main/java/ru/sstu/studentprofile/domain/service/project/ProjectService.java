@@ -102,7 +102,7 @@ public class ProjectService {
     }
 
     public PageableOut<ProjectOut> all(String query, boolean needActualRoles, int page, int limit) {
-        Pageable pageable = PageRequest.of(page - 1, limit, Sort.by("createDate").descending());
+        Pageable pageable = PageRequest.of(page - 1, limit);
         Page<Project> projects;
         if (needActualRoles) {
             projects = projectRepository.findAllByActualRoleProject(pageable);
