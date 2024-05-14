@@ -131,7 +131,7 @@ public class EventService {
         long membersCount = eventRepository.countMembersById(id);
 
         Page<Project> projects =
-                projectRepository.findAllProjectsByEventId(id, PageRequest.of(0, 6));
+                projectRepository.findAllProjectsByEventId(id, PageRequest.of(0, 6, Sort.by("createDate").descending()));
 
         return mapper.toEventOut(event, membersCount, eventMembers, projects.getContent());
     }
