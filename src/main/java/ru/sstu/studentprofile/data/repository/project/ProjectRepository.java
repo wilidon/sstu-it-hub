@@ -69,6 +69,6 @@ public interface ProjectRepository extends JpaRepository<Project, Long> {
     )
     Page<Project> findAllByQuery(@Param("query") String query, Pageable pageable, ProjectStatus status);
 
-    @Query("SELECT p FROM Project p WHERE (SELECT u.role FROM UserRoleForProject u WHERE u.user.id = :userId) IN (SELECT ac.role FROM ActualRoleForProject ac WHERE ac.project.id = p.id)")
+    @Query("SELECT p FROM Project p WHERE (SELECT u.role.id FROM UserRoleForProject u WHERE u.user.id = :userId) IN (SELECT ac.role.id FROM ActualRoleForProject ac WHERE ac.project.id = p.id)")
     Page<Project> findAllByRoleForProject(Pageable pageable, long userId);
 }
