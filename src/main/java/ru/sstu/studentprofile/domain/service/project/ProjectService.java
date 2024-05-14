@@ -101,10 +101,14 @@ public class ProjectService {
         return mapper.toProjectOut(project, mapperProjectMember, mapperActualRoleMapper, mapperProjectEvent);
     }
 
-    public PageableOut<ProjectOut> all(String query, int page, int limit) {
+    public PageableOut<ProjectOut> all(String query, boolean needActualRoles, int page, int limit) {
         Pageable pageable = PageRequest.of(page - 1, limit, Sort.by("createDate").descending());
         Page<Project> projects;
-        if (query.isEmpty()) {
+        if (needActualRoles) {
+            projects = projectRepository.findAllByActualRoleProject();
+        }
+
+        else if (query.isEmpty()) {
             projects = projectRepository.findAllByOrderByCreateDateDesc(pageable);
         }
         else {

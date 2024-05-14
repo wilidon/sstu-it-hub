@@ -56,6 +56,7 @@ public interface ProjectApi {
             ),
     })
     ResponseEntity<?> getAllProjects(@RequestParam(value = "search", defaultValue = "") String search,
+                                     @RequestParam(value = "needActualRoles", defaultValue = "false") boolean needActualRoles,
                                      @RequestParam(value = "page", defaultValue = "1") int page,
                                      @RequestParam(value = "limit", defaultValue = "25") int limit);
 

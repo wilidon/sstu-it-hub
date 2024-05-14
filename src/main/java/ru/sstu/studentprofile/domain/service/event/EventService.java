@@ -56,7 +56,7 @@ public class EventService {
         this.userRepository = userRepository;
     }
 
-    public PageableOut<ShortEventOut> all(String query, boolean needActualRoles, int page, int limit, FilterStatusIn eventStatusIn) {
+    public PageableOut<ShortEventOut> all(String query, int page, int limit, FilterStatusIn eventStatusIn) {
         query = query.toLowerCase();
         Pageable pageable = PageRequest.of(page - 1,
                 limit,
