@@ -83,7 +83,10 @@ public class ProjectService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new NotFoundException("Пользователь с id=%d не найден".formatted(userId)));
 
+        ProjectMedia projectMedia = new ProjectMedia();
         Project project = mapper.toProject(projectIn, user);
+        project.setProjectMedia(projectMedia);
+
         projectRepository.save(project);
 
         ProjectMember leader = new ProjectMember();
@@ -128,6 +131,9 @@ public class ProjectService {
         );
     }
 
+    public void updateMedia() {
+
+    }
 
     @Transactional
     public ProjectOut update(long projectId, ProjectIn projectIn, Authentication authentication) {
@@ -140,8 +146,9 @@ public class ProjectService {
 
         project.setName(projectIn.name());
         project.setDescription(projectIn.description());
-        project.setCreateDate(projectIn.createDate());
-        project.setStatus(ProjectStatus.fromProjectStatusIn(projectIn.status()));
+        project.getProjectMedia().setGithubLink(projectIn.githubUrl());
+        project.getProjectMedia().setUrlSite(projectIn.siteUrl());
+        project.getProjectMedia().setStack(projectIn.stack());
 
         projectRepository.save(project);
         return this.findProjectById(projectId);

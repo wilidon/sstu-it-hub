@@ -42,7 +42,7 @@ public class Project {
     @JoinColumn(name = "leader_id", nullable = false)
     private User leader;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     private ProjectMedia projectMedia;
 
     @ManyToOne

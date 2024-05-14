@@ -5,7 +5,8 @@ import java.time.LocalDateTime;
 public record ProjectIn (
         String name,
         String description,
-        ProjectStatusIn status,
-        LocalDateTime createDate
-) {
+        String githubUrl,
+        String siteUrl,
+        String stack
+        ) {
 }
