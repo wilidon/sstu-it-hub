@@ -56,12 +56,17 @@ public class EventService {
         this.userRepository = userRepository;
     }
 
-    public PageableOut<ShortEventOut> all(int page, int limit, FilterStatusIn eventStatusIn) {
+    public PageableOut<ShortEventOut> all(String query, boolean needActualRoles, int page, int limit, FilterStatusIn eventStatusIn) {
+        query = query.toLowerCase();
         Pageable pageable = PageRequest.of(page - 1,
                 limit,
                 Sort.by("endDate").ascending());
-        if (eventStatusIn == FilterStatusIn.ALL) {
-            Page<Event> events = eventRepository.findAll(pageable);
+        Page<Event> events;
+
+        // TODO Переписать потом на CriteriaApi
+        if (eventStatusIn == FilterStatusIn.ALL && query.isEmpty()) {
+            // Фильтры всё, в query - пусто
+            events = eventRepository.findAll(pageable);
             return new PageableOut<>(
                     page,
                     events.getSize(),
@@ -70,8 +75,28 @@ public class EventService {
                     mapper.toShortEventOut(events.getContent())
             );
         }
-        EventStatus eventStatus = EventStatus.fromString(eventStatusIn.name());
-        Page<Event> events = eventRepository.findAllByStatusOrderByStartDateDesc(eventStatus, pageable);
+
+        else if (eventStatusIn == FilterStatusIn.ALL && !query.isBlank()) {
+            // Фильтры == ALL, а query не пустой
+            events = eventRepository.findAllByQuery(query, pageable);
+            return new PageableOut<>(
+                    page,
+                    events.getSize(),
+                    events.getTotalPages(),
+                    events.getTotalElements(),
+                    mapper.toShortEventOut(events.getContent())
+            );
+        }
+        else if (eventStatusIn != FilterStatusIn.ALL && query.isEmpty()) {
+            // Фильтры != ALL, query - пусто
+            EventStatus eventStatus = EventStatus.fromString(eventStatusIn.name());
+            events = eventRepository.findAllByStatusOrderByStartDateDesc(eventStatus, pageable);
+        }
+        else {
+            // Фильтры != ALL, query - есть
+            EventStatus eventStatus = EventStatus.fromString(eventStatusIn.name());
+            events = eventRepository.findAllByStatusAndQuery(query, eventStatus, pageable);
+        }
         return new PageableOut<>(
                 page,
                 events.getSize(),
@@ -96,8 +121,8 @@ public class EventService {
     }
 
     public PageableOut<ProjectOut> getProjects(long eventId, int page, int limit) {
-        Pageable pageable = PageRequest.of(page-1, limit);
-        Page<Project> projects = projectRepository.findAllProjectsByEventId(eventId, pageable);
+        Pageable pageable = PageRequest.of(page - 1, limit);
+        Page<Project> projects = projectRepository.findAll(pageable);
 
         return new PageableOut<>(
                 page,

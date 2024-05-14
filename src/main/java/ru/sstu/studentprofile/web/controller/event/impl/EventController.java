@@ -27,10 +27,12 @@ public class EventController implements EventApi {
     private final EventService eventService;
 
     @Override
-    public ResponseEntity<PageableOut<ShortEventOut>> getAllEvents(final int page,
+    public ResponseEntity<PageableOut<ShortEventOut>> getAllEvents(String query,
+                                                                   boolean needActualRoles,
+                                                                   final int page,
                                                                    final int limit,
                                                                    FilterStatusIn eventStatusIn) {
-        return ResponseEntity.ok(eventService.all(page, limit, eventStatusIn));
+        return ResponseEntity.ok(eventService.all(query, needActualRoles, page, limit, eventStatusIn));
     }
 
     @Override

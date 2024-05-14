@@ -33,7 +33,9 @@ public interface EventApi {
                     @ApiResponse(responseCode = "200", description = "Список мероприятий")
             }
     )
-    ResponseEntity<?> getAllEvents(@RequestParam(value = "page", defaultValue = "1") int page,
+    ResponseEntity<?> getAllEvents(@RequestParam(value = "query", defaultValue = "") String query,
+                                   @RequestParam(value = "needActualRoles", defaultValue = "false") boolean needActualRoles,
+                                   @RequestParam(value = "page", defaultValue = "1") int page,
                                    @RequestParam(value = "limit", defaultValue = "25") int limit,
                                    @RequestParam(value = "status") FilterStatusIn eventStatusIn);
 
