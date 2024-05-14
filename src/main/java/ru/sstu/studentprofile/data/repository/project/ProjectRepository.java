@@ -17,9 +17,9 @@ public interface ProjectRepository extends JpaRepository<Project, Long> {
     Page<Project> findAllByOrderByCreateDateDesc(Pageable pageable);
 
     @Query("""
-select p from Project p
+        select ac.project from ActualRoleForProject ac GROUP BY ac.project
 """)
-    Page<Project> findAllByActualRoleProject();
+    Page<Project> findAllByActualRoleProject(Pageable pageable);
 
     @Query("SELECT COUNT(p) FROM Project p")
     long getCountAllProject();

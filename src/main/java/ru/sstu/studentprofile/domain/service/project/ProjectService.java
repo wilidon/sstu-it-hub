@@ -105,7 +105,7 @@ public class ProjectService {
         Pageable pageable = PageRequest.of(page - 1, limit, Sort.by("createDate").descending());
         Page<Project> projects;
         if (needActualRoles) {
-            projects = projectRepository.findAllByActualRoleProject();
+            projects = projectRepository.findAllByActualRoleProject(pageable);
         }
 
         else if (query.isEmpty()) {
