@@ -21,6 +21,7 @@ public interface EventMapper {
 
     @Mapping(target = "membersCount", source = "membersCount")
     @Mapping(target = "projects", source = "projects")
+    @Mapping(target = "winners", source = "event.winners")
     EventOut toEventOut(Event event, Long membersCount, List<EventMembers> members,
                         List<Project> projects);
 

@@ -33,6 +33,7 @@ import ru.sstu.studentprofile.domain.service.storage.FileLoader;
 import ru.sstu.studentprofile.domain.service.util.PageableOut;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -62,29 +63,39 @@ public class EventService {
                 limit,
                 Sort.by("endDate").ascending());
         Page<Event> events;
-
         // TODO Переписать потом на CriteriaApi
         if (eventStatusIn == FilterStatusIn.ALL && query.isEmpty()) {
             // Фильтры всё, в query - пусто
             events = eventRepository.findAll(pageable);
+
+            List<ShortEventOut> shortEventOut = mapper.toShortEventOut(events.getContent());
+            for (ShortEventOut event: shortEventOut) {
+                event.setMembersCount(eventRepository.countMembersById(event.getId()));
+            }
+
             return new PageableOut<>(
                     page,
                     events.getSize(),
                     events.getTotalPages(),
                     events.getTotalElements(),
-                    mapper.toShortEventOut(events.getContent())
+                    shortEventOut
+
             );
         }
 
         else if (eventStatusIn == FilterStatusIn.ALL && !query.isBlank()) {
             // Фильтры == ALL, а query не пустой
             events = eventRepository.findAllByQuery(query, pageable);
+            List<ShortEventOut> shortEventOut = mapper.toShortEventOut(events.getContent());
+            for (ShortEventOut event: shortEventOut) {
+                event.setMembersCount(eventRepository.countMembersById(event.getId()));
+            }
             return new PageableOut<>(
                     page,
                     events.getSize(),
                     events.getTotalPages(),
                     events.getTotalElements(),
-                    mapper.toShortEventOut(events.getContent())
+                    shortEventOut
             );
         }
         else if (eventStatusIn != FilterStatusIn.ALL && query.isEmpty()) {
@@ -97,12 +108,16 @@ public class EventService {
             EventStatus eventStatus = EventStatus.fromString(eventStatusIn.name());
             events = eventRepository.findAllByStatusAndQuery(query, eventStatus, pageable);
         }
+        List<ShortEventOut> shortEventOut = mapper.toShortEventOut(events.getContent());
+        for (ShortEventOut event: shortEventOut) {
+            event.setMembersCount(eventRepository.countMembersById(event.getId()));
+        }
         return new PageableOut<>(
                 page,
                 events.getSize(),
                 events.getTotalPages(),
                 events.getTotalElements(),
-                mapper.toShortEventOut(events.getContent())
+                shortEventOut
         );
     }
 
@@ -117,6 +132,7 @@ public class EventService {
 
         Page<Project> projects =
                 projectRepository.findAllProjectsByEventId(id, PageRequest.of(0, 6));
+
         return mapper.toEventOut(event, membersCount, eventMembers, projects.getContent());
     }
 
@@ -132,6 +148,7 @@ public class EventService {
                 projectMapper.toProjectOut(projects.getContent())
         );
     }
+
 
     @Transactional
     public EventOut create(EventIn eventIn,

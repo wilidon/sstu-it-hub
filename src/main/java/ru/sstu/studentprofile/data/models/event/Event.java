@@ -11,6 +11,7 @@ import ru.sstu.studentprofile.data.models.user.UserRole;
 
 import java.time.LocalDateTime;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -46,6 +47,9 @@ public class Event {
 
     @Enumerated(EnumType.STRING)
     private EventStatus status;
+
+    @OneToMany(mappedBy = "event")
+    private List<EventWinner> winners;
 
     @OneToMany(mappedBy = "event", orphanRemoval = true)
     private Set<Project> eventProjects = new LinkedHashSet<>();

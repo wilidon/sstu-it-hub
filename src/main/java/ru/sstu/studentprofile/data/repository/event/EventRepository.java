@@ -22,6 +22,7 @@ public interface EventRepository extends JpaRepository<Event, Long> {
                                                     Pageable pageable);
 
 
+
     @Query("""
             select e from Event e
             where lower(e.name) like %:query%
