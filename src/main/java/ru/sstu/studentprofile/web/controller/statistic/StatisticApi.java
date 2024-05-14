@@ -20,7 +20,6 @@ import ru.sstu.studentprofile.domain.service.statistic.dto.StatisticsHotOut;
 @CrossOrigin(origins = "*")
 public interface StatisticApi {
     @GetMapping("/projects")
-    @SecurityRequirement(name = "bearerAuth")
     @ApiResponses(value = {
             @ApiResponse(
                     responseCode = "200",
@@ -33,7 +32,6 @@ public interface StatisticApi {
     ResponseEntity<StatisticProjectOut> getStatisticProjects();
 
     @GetMapping("/people")
-    @SecurityRequirement(name = "bearerAuth")
     @ApiResponses(value = {
             @ApiResponse(
                     responseCode = "200",
@@ -46,7 +44,6 @@ public interface StatisticApi {
     ResponseEntity<StatisticPeopleOut> getStatisticPeople();
 
     @GetMapping("")
-    @SecurityRequirement(name = "bearerAuth")
     @ApiResponses(value = {
             @ApiResponse(
                     responseCode = "200",
@@ -59,7 +56,6 @@ public interface StatisticApi {
     ResponseEntity<StatisticOut> getStatistic();
 
     @GetMapping("/hot")
-    @SecurityRequirement(name = "bearerAuth")
     @ApiResponses(value = {
             @ApiResponse(
                     responseCode = "200",
