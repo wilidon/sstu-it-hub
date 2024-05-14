@@ -125,23 +125,6 @@ public class ProjectService {
         );
     }
 
-    public PageableOut<ProjectOut> search(String query, int page, int limit) {
-        Pageable pageable = PageRequest.of(page - 1, limit);
-        Page<Project> projects = projectRepository.findAllByQuery(query, pageable);
-
-        List<ProjectOut> projectsOut = new ArrayList<>();
-        for (Project project : projects.getContent()) {
-            projectsOut.add(mapper.toProjectOut(project, mapperProjectMember, mapperActualRoleMapper, mapperProjectEvent));
-        }
-
-        return new PageableOut<>(
-                page,
-                projects.getSize(),
-                projects.getTotalPages(),
-                projects.getTotalElements(),
-                projectsOut
-        );
-    }
 
     @Transactional
     public ProjectOut update(long projectId, ProjectIn projectIn, Authentication authentication) {

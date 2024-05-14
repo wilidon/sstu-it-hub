@@ -22,7 +22,7 @@ public interface ProjectMemberMapper {
     @Mapping(target = "lastName", expression = "java(projectMember.getUser().getLastName())")
     @Mapping(target = "firstName", expression = "java(projectMember.getUser().getFirstName())")
     @Mapping(target = "middleName", expression = "java(projectMember.getUser().getMiddleName())")
-    @Mapping(target = "rolesForProject", expression = "java(projectMember.getProjectMemberRoles().stream().map(role -> role.getRole().getName()).toList())")
+    @Mapping(target = "rolesForProject", expression = "java(projectMember.getProjectMemberRoles().stream().map(role -> new ProjectActualRoleOut(role.getRole().getId(), role.getRole().getName())).toList())")
     ProjectMemberOut toProjectMemberOut(ProjectMember projectMember);
 
     @Mapping(target = "userId", expression = "java(user.getId())")
