@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.27.xsd"
+        objectQuotingStrategy="QUOTE_ONLY_RESERVED_WORDS">
+    <changeSet id="1715681517489-3" author="ildar (generated)">
+        <addColumn tableName="request">
+            <column name="created_at" type="DATETIME" defaultOnNull="true" defaultValue="2024-05-12 07:22:31.370000"/>
+        </addColumn>
+    </changeSet>
+
+</databaseChangeLog>

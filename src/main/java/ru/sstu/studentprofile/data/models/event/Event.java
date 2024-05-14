@@ -49,6 +49,7 @@ public class Event {
     private EventStatus status;
 
     @OneToMany(mappedBy = "event")
+    @OrderBy("place asc")
     private List<EventWinner> winners;
 
     @OneToMany(mappedBy = "event", orphanRemoval = true)

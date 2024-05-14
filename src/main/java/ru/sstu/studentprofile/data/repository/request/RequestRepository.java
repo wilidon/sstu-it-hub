@@ -9,6 +9,6 @@ import java.util.List;
 
 @Repository
 public interface RequestRepository extends JpaRepository<Request, Long> {
-    @Query("SELECT r FROM Request r WHERE r.sender.id = :userId OR r.recipient.id = :userId")
+    @Query("SELECT r FROM Request r WHERE r.recipient.id = :userId")
     List<Request> getAllByIdUser(long userId);
 }
