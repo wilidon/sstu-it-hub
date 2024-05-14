@@ -122,10 +122,6 @@ public class ProjectService {
         List<ProjectOut> projectsOut = new ArrayList<>();
         for (Project project : projects.getContent()) {
             ProjectOut projectOut = mapper.toProjectOut(project, mapperProjectMember, mapperActualRoleMapper, mapperProjectEvent);
-
-            List<ProjectMemberOut> membersOld = projectOut.members();
-            membersOld.stream().sorted(Comparator.comparing(ProjectMemberOut::id)).collect(Collectors.toList());
-
             projectsOut.add(projectOut);
         }
 
