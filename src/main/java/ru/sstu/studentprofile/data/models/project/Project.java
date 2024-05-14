@@ -42,6 +42,9 @@ public class Project {
     @JoinColumn(name = "leader_id", nullable = false)
     private User leader;
 
+    @OneToOne
+    private ProjectMedia projectMedia;
+
     @ManyToOne
     @JoinColumn(name = "event_id", nullable = true)
     private Event event;

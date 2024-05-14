@@ -16,6 +16,7 @@ public interface ProjectMapper {
     @Mapping(target = "members", expression = "java(project.getProjectMembers().stream().map(member -> mapperProjectMember.toProjectMemberOut(member)).toList())")
     @Mapping(target = "event", expression = "java(mapperProjectEvent.toProjectEventOut(project.getEvent()))")
     @Mapping(target = "leader", expression = "java(mapperProjectMember.toProjectLeaderOut(project.getLeader()))")
+    @Mapping(target = "media", source = "project.projectMedia")
     ProjectOut toProjectOut(Project project, ProjectMemberMapper mapperProjectMember, ProjectActualRoleMapper mapperProjectActualRole, ProjectEventMapper mapperProjectEvent);
 
     List<ProjectOut> toProjectOut(List<Project> projects);

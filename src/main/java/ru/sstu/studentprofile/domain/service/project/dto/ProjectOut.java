@@ -13,6 +13,7 @@ public record ProjectOut (
     ProjectEventOut event,
     List<ProjectMemberOut> members,
     List<ProjectActualRoleOut> actualRoles,
-    LocalDateTime createDate
+    LocalDateTime createDate,
+    ProjectMediaOut media
 ) {
 }
