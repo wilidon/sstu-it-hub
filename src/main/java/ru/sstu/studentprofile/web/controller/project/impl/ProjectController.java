@@ -82,6 +82,11 @@ public class ProjectController implements ProjectApi {
     public ResponseEntity<ProjectOut> deleteProjectMember(long projectId, long memberId, JwtAuthentication authentication) {
         return ResponseEntity.ok(projectService.deleteProjectMember(projectId, memberId, authentication));
     }
+
+    @Override
+    public ResponseEntity<?> getAllProjectsNeeded(int page, int limit, JwtAuthentication authentication) {
+        return ResponseEntity.ok(projectService.getAllNeeded(page, limit, authentication));
+    }
 }
 
 // TODO ДОБАВИТЬ ФУНКЦИЮ ПО УДАЛЕНИЮ ПРИВЯЗКИ МЕРОПРИЯТИЯ К ПРОЕКТУ

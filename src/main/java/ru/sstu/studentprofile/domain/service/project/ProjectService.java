@@ -273,4 +273,43 @@ public class ProjectService {
 
         return this.findProjectById(projectId);
     }
+
+    public PageableOut<ProjectOut> getAllNeeded(int page, int limit, JwtAuthentication authentication){
+        if (authentication == null){
+            Pageable pageable = PageRequest.of(page - 1, limit);
+            Page<Project> projects = projectRepository.findAll(pageable);
+
+            List<ProjectOut> projectsOut = new ArrayList<>();
+            for (Project project : projects.getContent()) {
+                projectsOut.add(mapper.toProjectOut(project, mapperProjectMember, mapperActualRoleMapper, mapperProjectEvent));
+            }
+
+            return new PageableOut<>(
+                    page,
+                    projects.getSize(),
+                    projects.getTotalPages(),
+                    projects.getTotalElements(),
+                    projectsOut
+            );
+        }
+        else{
+            long userId = authentication.getUserId();
+
+            Pageable pageable = PageRequest.of(page - 1, limit);
+            Page<Project> projects = projectRepository.findAllByRoleForProject(pageable, userId);
+
+            List<ProjectOut> projectsOut = new ArrayList<>();
+            for (Project project : projects.getContent()) {
+                projectsOut.add(mapper.toProjectOut(project, mapperProjectMember, mapperActualRoleMapper, mapperProjectEvent));
+            }
+
+            return new PageableOut<>(
+                    page,
+                    projects.getSize(),
+                    projects.getTotalPages(),
+                    projects.getTotalElements(),
+                    projectsOut
+            );
+        }
+    }
 }

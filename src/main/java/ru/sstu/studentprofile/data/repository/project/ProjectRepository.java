@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 import ru.sstu.studentprofile.data.models.event.Event;
 import ru.sstu.studentprofile.data.models.project.Project;
 import ru.sstu.studentprofile.data.models.project.ProjectStatus;
+import ru.sstu.studentprofile.data.models.project.RoleForProject;
 import ru.sstu.studentprofile.domain.service.project.dto.ProjectStatusSearchIn;
 
 import java.time.LocalDate;
@@ -68,5 +69,6 @@ public interface ProjectRepository extends JpaRepository<Project, Long> {
     )
     Page<Project> findAllByQuery(@Param("query") String query, Pageable pageable, ProjectStatus status);
 
-
+    @Query("SELECT p FROM Project p WHERE (SELECT u.role FROM UserRoleForProject u WHERE u.user.id = :userId) IN (SELECT ac.role FROM ActualRoleForProject ac WHERE ac.project.id = p.id)")
+    Page<Project> findAllByRoleForProject(Pageable pageable, long userId);
 }

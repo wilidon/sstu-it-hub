@@ -340,4 +340,14 @@ public interface ProjectApi {
                     )}
     )
     ResponseEntity<ProjectOut> deleteProjectMember(long projectId, @RequestParam long memberId, JwtAuthentication authentication);
+
+    @GetMapping("/all/needed")
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Возвращает все проекты"
+            ),
+    })
+    ResponseEntity<?> getAllProjectsNeeded(@RequestParam(value = "page", defaultValue = "1") int page,
+                                     @RequestParam(value = "limit", defaultValue = "25") int limit, JwtAuthentication authentication);
 }
