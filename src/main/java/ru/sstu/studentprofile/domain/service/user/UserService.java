@@ -261,6 +261,42 @@ public class UserService {
     }
 
     @Transactional
+    public void addRoleToUser(long roleId,
+                              JwtAuthentication authentication) {
+        final User user = userRepository.findById(authentication.getUserId())
+                .orElseThrow(() -> new NotFoundException("Пользователь не найден"));
+
+        final RoleForProject roleForProject = roleForProjectRepository.findById(roleId)
+                .orElseThrow(() -> new NotFoundException("Роль не найдена"));
+
+        if (userRoleForProjectRepository.findByUserIdAndRoleId(user.getId(), roleId).isPresent()) {
+            throw new ConflictException("Такая роль уже привязана");
+        };
+
+        UserRoleForProject userRoleForProject = new UserRoleForProject();
+        userRoleForProject.setRole(roleForProject);
+        userRoleForProject.setUser(user);
+
+        user.getUserRolesForProject().add(userRoleForProject);
+        userRoleForProjectRepository.save(userRoleForProject);
+//        userRepository.save(user);
+    }
+
+    @Transactional
+    public void removeRoleToUser(long roleId, JwtAuthentication authentication) {
+        final User user = userRepository.findById(authentication.getUserId())
+                .orElseThrow(() -> new NotFoundException("Пользователь не найден"));
+
+        final RoleForProject roleForProject = roleForProjectRepository.findById(roleId)
+                .orElseThrow(() -> new NotFoundException("Роль не найдена"));
+
+        UserRoleForProject userRole = userRoleForProjectRepository.findByUserIdAndRoleId(user.getId(), roleForProject.getId())
+                .orElseThrow(() -> new NotFoundException("Такая роль не привязана"));
+
+        userRoleForProjectRepository.delete(userRole);
+    }
+
+    @Transactional
     public List<UserRoleForProjectOut> updateUserRoleForProjectById(long userId,
                                                                     List<UserRoleForProjectOut> roles,
                                                                     Authentication authentication) {

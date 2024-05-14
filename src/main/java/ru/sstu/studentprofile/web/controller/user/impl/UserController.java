@@ -50,6 +50,18 @@ public class UserController implements UserApi {
     }
 
     @Override
+    public ResponseEntity<?> addRoleForProjects(long roleId, JwtAuthentication authentication) {
+        userService.addRoleToUser(roleId, authentication);
+        return ResponseEntity.ok(null);
+    }
+
+    @Override
+    public ResponseEntity<?> deleteRoleForProjects(long roleId, JwtAuthentication authentication) {
+        userService.removeRoleToUser(roleId, authentication);
+        return ResponseEntity.ok(null);
+    }
+
+    @Override
     public ResponseEntity<?> userReviews(long userId, int page, int limit) {
         return ResponseEntity.ok(userService.findAllUserReviews(userId, page, limit));
     }
