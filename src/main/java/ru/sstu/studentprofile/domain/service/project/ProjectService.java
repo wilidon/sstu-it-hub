@@ -259,4 +259,18 @@ public class ProjectService {
 
         return roles;
     }
+
+    @Transactional
+    public ProjectOut deleteProjectMember(long projectId, long memberId, JwtAuthentication authentication){
+        Project project = projectRepository.findById(projectId)
+                .orElseThrow(() -> new NotFoundException("Проект с id=%d не найдено".formatted(projectId)));
+        long userId = authentication.getUserId();
+
+        if (project.getLeader().getId() != userId)
+            throw new ForbiddenException("Вы не лидер проекта");
+
+        projectMemberRepository.deleteById(memberId);
+
+        return this.findProjectById(projectId);
+    }
 }

@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import ru.sstu.studentprofile.data.models.project.Project;
 import ru.sstu.studentprofile.data.models.project.ProjectMember;
+import ru.sstu.studentprofile.domain.security.JwtAuthentication;
 import ru.sstu.studentprofile.domain.service.event.dto.EventOut;
 import ru.sstu.studentprofile.domain.service.event.dto.EventStatusIn;
 import ru.sstu.studentprofile.domain.service.event.dto.ShortEventOut;
@@ -75,6 +76,11 @@ public class ProjectController implements ProjectApi {
     @Override
     public ResponseEntity<List<ProjectActualRoleOut>> updateProjectActualRole(List<ProjectActualRoleOut> roles, long projectId, Authentication authentication) {
         return ResponseEntity.ok(projectService.updateProjectActualRole(roles, projectId, authentication));
+    }
+
+    @Override
+    public ResponseEntity<ProjectOut> deleteProjectMember(long projectId, long memberId, JwtAuthentication authentication) {
+        return ResponseEntity.ok(projectService.deleteProjectMember(projectId, memberId, authentication));
     }
 }
 

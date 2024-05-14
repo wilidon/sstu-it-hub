@@ -5,10 +5,8 @@ import java.util.List;
 public record StatisticsHotOut(
         List<StatisticHotProjectOut> lastCreatedProjects,
         StatisticsEventOut topEvent,
-//        StatisticUserOut topMember,
-//        StatisticUserOut topLeader,
-        String topRole,
-        String rareRole,
-        String findRole
+        StatisticRoleOut topRole,
+        StatisticRoleOut rareRole,
+        StatisticRoleOut findRole
 ) {
 }
