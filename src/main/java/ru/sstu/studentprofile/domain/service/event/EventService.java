@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import ru.sstu.studentprofile.data.models.event.Event;
 import ru.sstu.studentprofile.data.models.event.EventStatus;
+import ru.sstu.studentprofile.data.models.event.EventWinner;
 import ru.sstu.studentprofile.data.models.project.Project;
 import ru.sstu.studentprofile.data.models.user.User;
 import ru.sstu.studentprofile.data.repository.event.EventRepository;
@@ -69,7 +70,7 @@ public class EventService {
             events = eventRepository.findAll(pageable);
 
             List<ShortEventOut> shortEventOut = mapper.toShortEventOut(events.getContent());
-            for (ShortEventOut event: shortEventOut) {
+            for (ShortEventOut event : shortEventOut) {
                 event.setMembersCount(eventRepository.countMembersById(event.getId()));
             }
 
@@ -81,13 +82,11 @@ public class EventService {
                     shortEventOut
 
             );
-        }
-
-        else if (eventStatusIn == FilterStatusIn.ALL && !query.isBlank()) {
+        } else if (eventStatusIn == FilterStatusIn.ALL && !query.isBlank()) {
             // Фильтры == ALL, а query не пустой
             events = eventRepository.findAllByQuery(query, pageable);
             List<ShortEventOut> shortEventOut = mapper.toShortEventOut(events.getContent());
-            for (ShortEventOut event: shortEventOut) {
+            for (ShortEventOut event : shortEventOut) {
                 event.setMembersCount(eventRepository.countMembersById(event.getId()));
             }
             return new PageableOut<>(
@@ -97,19 +96,17 @@ public class EventService {
                     events.getTotalElements(),
                     shortEventOut
             );
-        }
-        else if (eventStatusIn != FilterStatusIn.ALL && query.isEmpty()) {
+        } else if (eventStatusIn != FilterStatusIn.ALL && query.isEmpty()) {
             // Фильтры != ALL, query - пусто
             EventStatus eventStatus = EventStatus.fromString(eventStatusIn.name());
             events = eventRepository.findAllByStatusOrderByStartDateDesc(eventStatus, pageable);
-        }
-        else {
+        } else {
             // Фильтры != ALL, query - есть
             EventStatus eventStatus = EventStatus.fromString(eventStatusIn.name());
             events = eventRepository.findAllByStatusAndQuery(query, eventStatus, pageable);
         }
         List<ShortEventOut> shortEventOut = mapper.toShortEventOut(events.getContent());
-        for (ShortEventOut event: shortEventOut) {
+        for (ShortEventOut event : shortEventOut) {
             event.setMembersCount(eventRepository.countMembersById(event.getId()));
         }
         return new PageableOut<>(
@@ -133,7 +130,11 @@ public class EventService {
         Page<Project> projects =
                 projectRepository.findAllProjectsByEventId(id, PageRequest.of(0, 6, Sort.by("createDate").descending()));
 
-        return mapper.toEventOut(event, membersCount, eventMembers, projects.getContent());
+        List<Project> winners = new ArrayList<>();
+        for (EventWinner winner : event.getWinners()) {
+            winners.add(winner.getProject());
+        }
+        return mapper.toEventOut(event, membersCount, eventMembers, projects.getContent(), winners);
     }
 
     public PageableOut<ProjectOut> getProjects(long eventId, int page, int limit) {
