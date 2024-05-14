@@ -101,18 +101,17 @@ public class ProjectService {
         return mapper.toProjectOut(project, mapperProjectMember, mapperActualRoleMapper, mapperProjectEvent);
     }
 
-    public PageableOut<ProjectOut> all(String query, boolean needActualRoles, int page, int limit) {
-        Pageable pageable = PageRequest.of(page - 1, limit, Sort.by("createDate").descending());
+    public PageableOut<ProjectOut> all(String query, boolean needActualRoles, int page, int limit, ProjectStatusSearchIn status) {
+        Pageable pageable = PageRequest.of(page - 1, limit);
         Page<Project> projects;
         if (needActualRoles) {
-            projects = projectRepository.findAllByActualRoleProject(pageable);
+            projects = projectRepository.findAllByActualRoleProject(pageable, status==ProjectStatusSearchIn.ALL?null:ProjectStatus.fromProjectStatusSearchIn(status));
         }
-
         else if (query.isEmpty()) {
-            projects = projectRepository.findAllByOrderByCreateDateDesc(pageable);
+            projects = projectRepository.findAllByOrderByCreateDateDesc(pageable, status==ProjectStatusSearchIn.ALL?null:ProjectStatus.fromProjectStatusSearchIn(status));
         }
         else {
-            projects = projectRepository.findAllByQuery(query.toLowerCase(), pageable);
+            projects = projectRepository.findAllByQuery(query.toLowerCase(), pageable, status==ProjectStatusSearchIn.ALL?null:ProjectStatus.fromProjectStatusSearchIn(status));
         }
 
         List<ProjectOut> projectsOut = new ArrayList<>();

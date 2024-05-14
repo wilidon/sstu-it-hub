@@ -8,18 +8,29 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import ru.sstu.studentprofile.data.models.event.Event;
 import ru.sstu.studentprofile.data.models.project.Project;
+import ru.sstu.studentprofile.data.models.project.ProjectStatus;
+import ru.sstu.studentprofile.domain.service.project.dto.ProjectStatusSearchIn;
 
 import java.time.LocalDate;
 import java.util.List;
 
 @Repository
 public interface ProjectRepository extends JpaRepository<Project, Long> {
-    Page<Project> findAllByOrderByCreateDateDesc(Pageable pageable);
+    @Query("SELECT p FROM Project p WHERE (:status is NULL OR p.status = :status) ORDER BY p.createDate DESC")
+    Page<Project> findAllByOrderByCreateDateDesc(Pageable pageable, ProjectStatus status);
 
     @Query("""
-        select ac.project from ActualRoleForProject ac GROUP BY ac.project
+        select ac.project from ActualRoleForProject ac WHERE ac.role.name = :nameRole GROUP BY ac.project
 """)
-    Page<Project> findAllByActualRoleProject(Pageable pageable);
+    Page<Project> findAllByActualRoleMemberProject(Pageable pageable, String nameRole);
+
+    @Query("""
+        select p from Project p WHERE p.status = :status
+""")
+    Page<Project> findAllByStatusProject(Pageable pageable, String status);
+
+    @Query("select ac.project from ActualRoleForProject ac WHERE (:status is NULL OR ac.project.status = :status) GROUP BY ac.project")
+    Page<Project> findAllByActualRoleProject(Pageable pageable, ProjectStatus status);
 
     @Query("SELECT COUNT(p) FROM Project p")
     long getCountAllProject();
@@ -52,10 +63,10 @@ public interface ProjectRepository extends JpaRepository<Project, Long> {
     @Query(
             """
                     select p from Project p
-                    where lower(p.name) like %:query%
+                    where (:status is NULL OR p.status = :status) AND lower(p.name) like %:query%
                     """
     )
-    Page<Project> findAllByQuery(@Param("query") String query, Pageable pageable);
+    Page<Project> findAllByQuery(@Param("query") String query, Pageable pageable, ProjectStatus status);
 
 
 }
