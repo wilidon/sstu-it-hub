@@ -119,7 +119,8 @@ public class ProjectService {
 
         List<ProjectOut> projectsOut = new ArrayList<>();
         for (Project project : projects.getContent()) {
-            projectsOut.add(mapper.toProjectOut(project, mapperProjectMember, mapperActualRoleMapper, mapperProjectEvent));
+            ProjectOut projectOut = mapper.toProjectOut(project, mapperProjectMember, mapperActualRoleMapper, mapperProjectEvent);
+            projectsOut.add(projectOut);
         }
 
         return new PageableOut<>(

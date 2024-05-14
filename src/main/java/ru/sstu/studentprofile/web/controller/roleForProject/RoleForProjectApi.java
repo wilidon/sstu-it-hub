@@ -19,7 +19,6 @@ import java.util.List;
 @CrossOrigin(origins = "*")
 public interface RoleForProjectApi {
     @GetMapping("{roleForProjectId}")
-    @SecurityRequirement(name = "bearerAuth")
     @ApiResponses(value = {
             @ApiResponse(
                     responseCode = "200",
@@ -32,7 +31,6 @@ public interface RoleForProjectApi {
     ResponseEntity<RoleForProjectOut> getRoleForProjectById(@PathVariable("roleForProjectId") long roleForProjectId);
 
     @GetMapping("/all")
-    @SecurityRequirement(name = "bearerAuth")
     @ApiResponses(value = {
             @ApiResponse(
                     responseCode = "201",
