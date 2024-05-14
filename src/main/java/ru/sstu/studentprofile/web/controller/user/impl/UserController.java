@@ -101,7 +101,7 @@ public class UserController implements UserApi {
     }
 
     @Override
-    public ResponseEntity<?> all(int page, int limit, String roles) {
-        return ResponseEntity.ok(userService.findAll(page, limit, roles));
+    public ResponseEntity<?> all(int page, int limit, String roles, String search) {
+        return ResponseEntity.ok(userService.findAll(page, limit, roles, search));
     }
 }

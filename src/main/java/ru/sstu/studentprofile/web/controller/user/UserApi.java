@@ -218,5 +218,8 @@ public interface UserApi {
                             schema = @Schema(implementation = UserOut.class))
             )
     })
-    ResponseEntity<?> all(@RequestParam(value = "page") int page, @RequestParam("limit") int limit, @RequestParam(value = "roles", defaultValue = "all") String roles);
+    ResponseEntity<?> all(@RequestParam(value = "page") int page,
+                          @RequestParam("limit") int limit,
+                          @RequestParam(value = "roles", defaultValue = "all") String roles,
+                          @RequestParam(value = "search", defaultValue = "") String search);
 }

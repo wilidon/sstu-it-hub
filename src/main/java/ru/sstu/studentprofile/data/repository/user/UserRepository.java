@@ -20,9 +20,19 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @Query("""
         SELECT DISTINCT u FROM User u 
             INNER JOIN UserRoleForProject ur ON u.id = ur.user.id
+        WHERE ur.role.id IN :roles AND (lower(u.lastName) like %:search% OR lower(u.firstName) like %:search% OR lower(u.middleName) like %:search%)
+""")
+    Page<User> findAllByRoleForProjectWithSearch(Pageable pageable, List<Integer> roles, String search);
+
+    @Query("""
+        SELECT DISTINCT u FROM User u 
+            INNER JOIN UserRoleForProject ur ON u.id = ur.user.id
         WHERE ur.role.id IN :roles
 """)
     Page<User> findAllByRoleForProject(Pageable pageable, List<Integer> roles);
+
+    @Query("SELECT u FROM User u WHERE lower(u.lastName) like %:search% OR lower(u.firstName) like %:search% OR lower(u.middleName) like %:search%")
+    Page<User> findAllWithSearch(Pageable pageable, String search);
 
     Page<User> findAll(Pageable pageable);
 }

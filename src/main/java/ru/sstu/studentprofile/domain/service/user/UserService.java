@@ -352,18 +352,28 @@ public class UserService {
         return findUserById(userId);
     }
 
-    public List<UserOut> findAll(int page, int limit, String rolesSource){
+    public PageableOut<UserOut> findAll(int page, int limit, String rolesSource, String search){
         Pageable pageable = PageRequest.of(page - 1, limit);
         Page<User> users = null;
 
         if (rolesSource.equals("all")){
-            users = userRepository.findAll(pageable);
+            if (!search.equals("''")){
+                users = userRepository.findAllWithSearch(pageable, search);
+            }
+            else{
+                users = userRepository.findAll(pageable);
+            }
         }
         else{
             List<Integer> rolesList = Arrays.asList(rolesSource.split(";"))
                     .stream().map(item -> Integer.parseInt(item)).toList();
 
-            users = userRepository.findAllByRoleForProject(pageable, rolesList);
+            if (!search.equals("''")){
+                users = userRepository.findAllByRoleForProjectWithSearch(pageable, rolesList, search);
+            }
+            else{
+                users = userRepository.findAllByRoleForProject(pageable, rolesList);
+            }
         }
 
         List<UserOut> usersOut = new ArrayList<>();
@@ -371,6 +381,12 @@ public class UserService {
             usersOut.add(userMapper.toUserOut(user, null, null));
         }
 
-        return usersOut;
+        return new PageableOut<>(
+                page,
+                users.getSize(),
+                users.getTotalPages(),
+                users.getTotalElements(),
+                usersOut
+        );
     }
 }
