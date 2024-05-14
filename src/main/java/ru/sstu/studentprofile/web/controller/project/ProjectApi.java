@@ -14,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import ru.sstu.studentprofile.domain.security.JwtAuthentication;
 import ru.sstu.studentprofile.domain.service.event.dto.EventOut;
 import ru.sstu.studentprofile.domain.service.event.dto.ShortEventOut;
 import ru.sstu.studentprofile.domain.service.project.dto.*;
@@ -309,4 +310,34 @@ public interface ProjectApi {
                     )}
     )
     ResponseEntity<List<ProjectActualRoleOut>> updateProjectActualRole(@RequestBody @Valid List<ProjectActualRoleOut> roles, long projectId, Authentication authentication);
+
+    @DeleteMapping("/{projectId}/member")
+    @SecurityRequirement(name = "bearerAuth")
+    @ApiResponses(
+            value = {@ApiResponse(
+                    responseCode = "200",
+                    description = "Удаление участника из проекта",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ProjectOut.class))
+            ),
+                    @ApiResponse(
+                            responseCode = "404",
+                            description = "Проект не найден",
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = ru.sstu.studentprofile.web.exp.ErrorMessage.class)
+                            )
+                    ),
+                    @ApiResponse(
+                            responseCode = "403",
+                            description = "Недостаточно прав",
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = ru.sstu.studentprofile.web.exp.ErrorMessage.class)
+                            )
+
+                    )}
+    )
+    ResponseEntity<ProjectOut> deleteProjectMember(long projectId, @RequestParam long memberId, JwtAuthentication authentication);
 }
