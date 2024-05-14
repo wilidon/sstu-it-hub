@@ -58,6 +58,7 @@ public interface ProjectRepository extends JpaRepository<Project, Long> {
     @Query("""
                     select p from Project p
                     where p.event.id = :eventId
+                    order by p.createDate desc
             """)
     Page<Project> findAllProjectsByEventId(long eventId, Pageable pageable);
 
