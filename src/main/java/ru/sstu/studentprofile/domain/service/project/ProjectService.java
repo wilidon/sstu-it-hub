@@ -78,7 +78,7 @@ public class ProjectService {
     }
 
     @Transactional
-    public ProjectOut create(ProjectIn projectIn, Authentication authentication){
+    public ProjectOut create(ProjectIn projectIn, Authentication authentication) {
         long userId = ((JwtAuthentication) authentication).getUserId();
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new NotFoundException("Пользователь с id=%d не найден".formatted(userId)));
@@ -95,18 +95,42 @@ public class ProjectService {
         return mapper.toProjectOut(project, mapperProjectMember, mapperActualRoleMapper, mapperProjectEvent);
     }
 
-    public ProjectOut findProjectById(final long id){
-        Project project =  projectRepository.findById(id).orElseThrow(() -> new NotFoundException("Проект не найден"));
+    public ProjectOut findProjectById(final long id) {
+        Project project = projectRepository.findById(id).orElseThrow(() -> new NotFoundException("Проект не найден"));
 
         return mapper.toProjectOut(project, mapperProjectMember, mapperActualRoleMapper, mapperProjectEvent);
     }
 
-    public PageableOut<ProjectOut> all(int page, int limit){
+    public PageableOut<ProjectOut> all(String query, int page, int limit) {
         Pageable pageable = PageRequest.of(page - 1, limit, Sort.by("createDate").descending());
-        Page<Project> projects = projectRepository.findAllByOrderByCreateDateDesc(pageable);
+        Page<Project> projects;
+        if (query.equals("")) {
+            projects = projectRepository.findAllByOrderByCreateDateDesc(pageable);
+        }
+        else {
+            projects = projectRepository.findAllByQuery(query.toLowerCase(), pageable);
+        }
 
         List<ProjectOut> projectsOut = new ArrayList<>();
-        for (Project project : projects.getContent()){
+        for (Project project : projects.getContent()) {
+            projectsOut.add(mapper.toProjectOut(project, mapperProjectMember, mapperActualRoleMapper, mapperProjectEvent));
+        }
+
+        return new PageableOut<>(
+                page,
+                projects.getSize(),
+                projects.getTotalPages(),
+                projects.getTotalElements(),
+                projectsOut
+        );
+    }
+
+    public PageableOut<ProjectOut> search(String query, int page, int limit) {
+        Pageable pageable = PageRequest.of(page - 1, limit);
+        Page<Project> projects = projectRepository.findAllByQuery(query, pageable);
+
+        List<ProjectOut> projectsOut = new ArrayList<>();
+        for (Project project : projects.getContent()) {
             projectsOut.add(mapper.toProjectOut(project, mapperProjectMember, mapperActualRoleMapper, mapperProjectEvent));
         }
 
@@ -120,7 +144,7 @@ public class ProjectService {
     }
 
     @Transactional
-    public ProjectOut update(long projectId, ProjectIn projectIn, Authentication authentication){
+    public ProjectOut update(long projectId, ProjectIn projectIn, Authentication authentication) {
         Project project = projectRepository.findById(projectId)
                 .orElseThrow(() -> new NotFoundException("Проект с id=%d не найдено".formatted(projectId)));
         long userId = ((JwtAuthentication) authentication).getUserId();
@@ -138,7 +162,7 @@ public class ProjectService {
     }
 
     @Transactional
-    public ProjectOut updateProjectStatus(long projectId, ProjectStatusIn projectStatusIn, Authentication authentication){
+    public ProjectOut updateProjectStatus(long projectId, ProjectStatusIn projectStatusIn, Authentication authentication) {
         Project project = projectRepository.findById(projectId)
                 .orElseThrow(() -> new NotFoundException("Проект с id=%d не найдено".formatted(projectId)));
         long userId = ((JwtAuthentication) authentication).getUserId();
@@ -171,7 +195,7 @@ public class ProjectService {
     }
 
     @Transactional
-    public ProjectOut deleteFileAvatar(long projectId, Authentication authentication){
+    public ProjectOut deleteFileAvatar(long projectId, Authentication authentication) {
         Project project = projectRepository.findById(projectId)
                 .orElseThrow(() -> new NotFoundException("Проект с id=%d не найдено".formatted(projectId)));
         long userId = ((JwtAuthentication) authentication).getUserId();
@@ -185,7 +209,7 @@ public class ProjectService {
     }
 
     @Transactional
-    public ProjectEventOut updateProjectEvent(long projectId, long eventId, Authentication authentication){
+    public ProjectEventOut updateProjectEvent(long projectId, long eventId, Authentication authentication) {
         Project project = projectRepository.findById(projectId)
                 .orElseThrow(() -> new NotFoundException("Проект с id=%d не найдено".formatted(projectId)));
         long userId = ((JwtAuthentication) authentication).getUserId();
@@ -203,7 +227,7 @@ public class ProjectService {
     }
 
     @Transactional
-    public ProjectOut deleteProjectEvent(long projectId, Authentication authentication){
+    public ProjectOut deleteProjectEvent(long projectId, Authentication authentication) {
         Project project = projectRepository.findById(projectId)
                 .orElseThrow(() -> new NotFoundException("Проект с id=%d не найдено".formatted(projectId)));
         long userId = ((JwtAuthentication) authentication).getUserId();
@@ -218,7 +242,7 @@ public class ProjectService {
     }
 
     @Transactional
-    public List<ProjectActualRoleOut> updateProjectActualRole(List<ProjectActualRoleOut> roles, long projectId, Authentication authentication){
+    public List<ProjectActualRoleOut> updateProjectActualRole(List<ProjectActualRoleOut> roles, long projectId, Authentication authentication) {
         Project project = projectRepository.findById(projectId)
                 .orElseThrow(() -> new NotFoundException("Проект с id=%d не найдено".formatted(projectId)));
         long userId = ((JwtAuthentication) authentication).getUserId();
@@ -228,9 +252,10 @@ public class ProjectService {
 
         actualRoleForProjectRepository.deleteByIdProject(projectId);
 
-        for (ProjectActualRoleOut roleActual : roles){
+        for (ProjectActualRoleOut roleActual : roles) {
             RoleForProject roleForProject = roleForProjectRepository.findById(roleActual.id())
-                    .orElseThrow(() -> new NotFoundException("Роль для проекта с id=%d не найдено".formatted(roleActual.id())));;
+                    .orElseThrow(() -> new NotFoundException("Роль для проекта с id=%d не найдено".formatted(roleActual.id())));
+            ;
 
             ActualRoleForProject roleActualNew = new ActualRoleForProject();
             roleActualNew.setProject(project);

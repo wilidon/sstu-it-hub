@@ -48,7 +48,6 @@ public interface ProjectApi {
     ResponseEntity<?> create(@RequestBody @Valid ProjectIn projectIn,
                              Authentication authentication);
 
-    @SecurityRequirement(name = "bearerAuth")
     @GetMapping("/all")
     @ApiResponses(value = {
             @ApiResponse(
@@ -56,8 +55,9 @@ public interface ProjectApi {
                     description = "Возвращает все проекты"
             ),
     })
-    ResponseEntity<?> getAllProjects(@RequestParam("page") int page,
-                                     @RequestParam("limit") int limit);
+    ResponseEntity<?> getAllProjects(@RequestParam(value = "search", defaultValue = "") String search,
+                                     @RequestParam(value = "page", defaultValue = "1") int page,
+                                     @RequestParam(value = "limit", defaultValue = "25") int limit);
 
     @SecurityRequirement(name = "bearerAuth")
     @GetMapping("/{projectId}")

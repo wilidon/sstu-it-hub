@@ -38,8 +38,8 @@ public class ProjectController implements ProjectApi {
     }
 
     @Override
-    public ResponseEntity<PageableOut<ProjectOut>> getAllProjects(int page, int limit){
-        return ResponseEntity.ok(projectService.all(page, limit));
+    public ResponseEntity<PageableOut<ProjectOut>> getAllProjects(String search, int page, int limit){
+        return ResponseEntity.ok(projectService.all(search, page, limit));
     }
 
     @Override

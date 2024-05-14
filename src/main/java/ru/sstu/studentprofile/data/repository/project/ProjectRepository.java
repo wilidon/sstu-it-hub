@@ -32,17 +32,25 @@ public interface ProjectRepository extends JpaRepository<Project, Long> {
     long getCountAllProjectCompleted();
 
     @Query("""
-    select p from Project p 
-    join ProjectMember pm on p.id = pm.project.id
-    where pm.user.id = :userId
-""")
+                select p from Project p 
+                join ProjectMember pm on p.id = pm.project.id
+                where pm.user.id = :userId
+            """)
     Page<Project> findAllProjectsByUserId(@Param("userId") long userId, Pageable pageable);
 
     @Query("""
-        select p from Project p
-        where p.event.id = :eventId
-""")
+                    select p from Project p
+                    where p.event.id = :eventId
+            """)
     Page<Project> findAllProjectsByEventId(long eventId, Pageable pageable);
+
+    @Query(
+            """
+                    select p from Project p
+                    where lower(p.name) like %:query%
+                    """
+    )
+    Page<Project> findAllByQuery(@Param("query") String query, Pageable pageable);
 
 
 }
