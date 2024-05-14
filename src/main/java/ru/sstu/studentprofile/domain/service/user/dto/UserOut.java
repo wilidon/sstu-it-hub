@@ -1,5 +1,7 @@
 package ru.sstu.studentprofile.domain.service.user.dto;
 
+import ru.sstu.studentprofile.data.models.project.RoleForProject;
+import ru.sstu.studentprofile.domain.service.roleForProject.dto.RoleForProjectOut;
 import ru.sstu.studentprofile.domain.service.user.dto.rating.UserRatingOut;
 
 import java.util.List;
@@ -14,7 +16,7 @@ public record UserOut(
         String firstName,
         String middleName,
         List<String> roles,
-        List<String> rolesForProject,
+        List<RoleForProjectOut> rolesForProject,
         List<UserReviewOut> reviews,
         UserMediaOut media,
         UserRatingOut ratings

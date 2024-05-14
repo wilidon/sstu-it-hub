@@ -25,7 +25,7 @@ import java.util.List;
 )
 public interface UserMapper {
     @Mapping(target = "roles", expression = "java(user.getUserRoles().stream().map(userRole -> userRole.getRole().getName()).toList())")
-    @Mapping(target = "rolesForProject", expression = "java(user.getUserRolesForProject().stream().map(userRoleForProject -> userRoleForProject.getRole().getName()).toList())")
+    @Mapping(target = "rolesForProject", expression = "java(user.getUserRolesForProject().stream().map(userRoleForProject -> new RoleForProjectOut(userRoleForProject.getRole().getId(), userRoleForProject.getRole().getName())).toList())")
     @Mapping(target = "media", source = "user")
     @Mapping(target = "ratings", source = "userRating")
     UserOut toUserOut(User user, List<UserReview> userReviews, UserRatingOut userRating);
