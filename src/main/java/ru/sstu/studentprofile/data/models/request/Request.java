@@ -7,6 +7,8 @@ import ru.sstu.studentprofile.data.models.project.Project;
 import ru.sstu.studentprofile.data.models.project.ProjectStatus;
 import ru.sstu.studentprofile.data.models.user.User;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Table(name = "request")
 @Getter
@@ -36,4 +38,6 @@ public class Request {
     @Enumerated(EnumType.STRING)
     @Column(name="result", nullable = false)
     private RequestResult result;
+
+    private LocalDateTime createdAt = LocalDateTime.now();
 }
