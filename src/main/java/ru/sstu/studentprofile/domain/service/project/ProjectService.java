@@ -7,6 +7,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -108,18 +109,16 @@ public class ProjectService {
         return mapper.toProjectOut(project, mapperProjectMember, mapperActualRoleMapper, mapperProjectEvent);
     }
 
-    public PageableOut<ProjectOut> all(String query, boolean needActualRoles, int page, int limit, ProjectStatusSearchIn status) {
+    public PageableOut<ProjectOut> all(String query,
+                                       boolean needActualRoles,
+                                       long userId,
+                                       int page,
+                                       int limit,
+                                       ProjectStatusSearchIn status,
+                                       Sort.Direction orderBy) {
         Pageable pageable = PageRequest.of(page - 1, limit);
-        Page<Project> projects;
-        if (needActualRoles) {
-            projects = projectRepository.findAllByActualRoleProject(pageable, status==ProjectStatusSearchIn.ALL?null:ProjectStatus.fromProjectStatusSearchIn(status));
-        }
-        else if (query.isEmpty()) {
-            projects = projectRepository.findAllByOrderByCreateDateDesc(pageable, status==ProjectStatusSearchIn.ALL?null:ProjectStatus.fromProjectStatusSearchIn(status));
-        }
-        else {
-            projects = projectRepository.findAllByQuery(query.toLowerCase(), pageable, status==ProjectStatusSearchIn.ALL?null:ProjectStatus.fromProjectStatusSearchIn(status));
-        }
+        final Specification<Project> spec = ProjectSpec.filterBy(query, needActualRoles, userId, orderBy);
+        Page<Project> projects = projectRepository.findAll(spec, pageable);
 
         List<ProjectOut> projectsOut = new ArrayList<>();
         for (Project project : projects.getContent()) {
@@ -309,7 +308,7 @@ public class ProjectService {
             }
 
             if (projects.getTotalElements() == 0){
-                return this.all("", true, page, limit, ProjectStatusSearchIn.ALL);
+                return this.all("", true, 0, page, limit, ProjectStatusSearchIn.ALL, Sort.Direction.DESC);
             }
 
             return new PageableOut<>(

@@ -2,6 +2,7 @@ package ru.sstu.studentprofile.web.controller.project.impl;
 
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
@@ -39,8 +40,14 @@ public class ProjectController implements ProjectApi {
     }
 
     @Override
-    public ResponseEntity<PageableOut<ProjectOut>> getAllProjects(String search, boolean needActualRoles, int page, int limit, ProjectStatusSearchIn status){
-        return ResponseEntity.ok(projectService.all(search, needActualRoles, page, limit, status));
+    public ResponseEntity<PageableOut<ProjectOut>> getAllProjects(String search,
+                                                                  boolean needActualRoles,
+                                                                  long userId,
+                                                                  int page,
+                                                                  int limit,
+                                                                  ProjectStatusSearchIn status,
+                                                                  Sort.Direction orderBy){
+        return ResponseEntity.ok(projectService.all(search, needActualRoles, userId, page, limit, status, orderBy));
     }
 
     @Override

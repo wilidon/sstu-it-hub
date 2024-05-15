@@ -3,6 +3,7 @@ package ru.sstu.studentprofile.data.repository.project;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -16,7 +17,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 @Repository
-public interface ProjectRepository extends JpaRepository<Project, Long> {
+public interface ProjectRepository extends JpaRepository<Project, Long>, JpaSpecificationExecutor<Project> {
     @Query("SELECT p FROM Project p WHERE (:status is NULL OR p.status = :status) ORDER BY p.createDate DESC")
     Page<Project> findAllByOrderByCreateDateDesc(Pageable pageable, ProjectStatus status);
 
@@ -61,14 +62,6 @@ public interface ProjectRepository extends JpaRepository<Project, Long> {
                     order by p.createDate desc
             """)
     Page<Project> findAllProjectsByEventId(long eventId, Pageable pageable);
-
-    @Query(
-            """
-                    select p from Project p
-                    where (:status is NULL OR p.status = :status) AND lower(p.name) like %:query%
-                    """
-    )
-    Page<Project> findAllByQuery(@Param("query") String query, Pageable pageable, ProjectStatus status);
 
     @Query("SELECT p FROM Project p WHERE EXISTS (SELECT 1 FROM UserRoleForProject u WHERE u.user.id = :userId AND u.role IN (SELECT ac.role FROM ActualRoleForProject ac WHERE ac.project.id = p.id))")
     Page<Project> findAllByRoleForProject(Pageable pageable, long userId);

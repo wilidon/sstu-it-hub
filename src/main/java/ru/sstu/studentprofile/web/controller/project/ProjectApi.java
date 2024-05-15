@@ -1,5 +1,6 @@
 package ru.sstu.studentprofile.web.controller.project;
 
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -9,6 +10,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import org.springdoc.api.ErrorMessage;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -53,14 +55,26 @@ public interface ProjectApi {
     @ApiResponses(value = {
             @ApiResponse(
                     responseCode = "200",
-                    description = "Возвращает все проекты"
+                    description = """
+                            Возвращает все проекты на платформе с учетом параметров.
+                            """
             ),
     })
-    ResponseEntity<?> getAllProjects(@RequestParam(value = "search", defaultValue = "") String search,
-                                     @RequestParam(value = "needActualRoles", defaultValue = "false") boolean needActualRoles,
-                                     @RequestParam(value = "page", defaultValue = "1") int page,
-                                     @RequestParam(value = "limit", defaultValue = "25") int limit,
-                                     @RequestParam(value = "status") ProjectStatusSearchIn status);
+    ResponseEntity<?> getAllProjects(
+            @Parameter(description = "Поиск по названию проекта")
+            @RequestParam(value = "search", defaultValue = "") String search,
+            @Parameter(description = "Нужны ли актуальные роли")
+            @RequestParam(value = "needActualRoles", defaultValue = "false") boolean needActualRoles,
+            @Parameter(description = "Id пользователя, возвращает все проекты, где этот пользователь участвует")
+            @RequestParam(value = "userId", defaultValue = "0") long userId,
+            @Parameter(description = "Номер страницы, начинается с 1")
+            @RequestParam(value = "page", defaultValue = "1") int page,
+            @Parameter(description = "Количество проектов на странице, по умолчанию 25")
+            @RequestParam(value = "limit", defaultValue = "25") int limit,
+            @Parameter(description = "Статус проекта")
+            @RequestParam(value = "status", defaultValue = "ALL") ProjectStatusSearchIn status,
+            @Parameter(description = "Сортировка по id проекта")
+            @RequestParam(value = "orderBy", defaultValue = "DESC") Sort.Direction orderBy);
 
     @SecurityRequirement(name = "bearerAuth")
     @GetMapping("/{projectId}")
@@ -349,5 +363,5 @@ public interface ProjectApi {
             ),
     })
     ResponseEntity<?> getAllProjectsNeeded(@RequestParam(value = "page", defaultValue = "1") int page,
-                                     @RequestParam(value = "limit", defaultValue = "25") int limit, JwtAuthentication authentication);
+                                           @RequestParam(value = "limit", defaultValue = "25") int limit, JwtAuthentication authentication);
 }
