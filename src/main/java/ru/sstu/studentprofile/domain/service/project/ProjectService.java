@@ -90,6 +90,7 @@ public class ProjectService {
         Project project = mapper.toProject(projectIn, user);
         project.setProjectMedia(projectMedia);
         project.setCreateDate(LocalDateTime.now());
+        project.setStatus(ProjectStatus.PLANNED);
         projectRepository.save(project);
 
         ProjectMember leader = new ProjectMember();
