@@ -33,6 +33,7 @@ import ru.sstu.studentprofile.domain.service.storage.FileLoader;
 import ru.sstu.studentprofile.domain.service.util.PageableOut;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -88,7 +89,7 @@ public class ProjectService {
         ProjectMedia projectMedia = new ProjectMedia();
         Project project = mapper.toProject(projectIn, user);
         project.setProjectMedia(projectMedia);
-
+        project.setCreateDate(LocalDateTime.now());
         projectRepository.save(project);
 
         ProjectMember leader = new ProjectMember();
