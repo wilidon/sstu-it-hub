@@ -31,13 +31,11 @@ public class SwaggerConfig {
     @Order(Ordered.HIGHEST_PRECEDENCE)
     public OpenAPI openApi(final ServletContext servletContext) {
         return new OpenAPI()
-                .info(new Info().title("API серверной части приложения Личный кабинет студента")
+                .info(new Info().title("API серверной части приложения IT-Hub")
                         .version(appVersion)
                         .description(appDescription))
                 .servers(
-                        List.of(new Server().url("http://192.168.101.112:8080")
-                                        .description("Local service"),
-                                new Server().url("http://127.0.0.1:8080")
+                        List.of(new Server().url("http://127.0.0.1:8080")
                                         .description("Local service"),
                                 new Server().url("https://it-hub.fita.cc")
                                         .description("Production service")));

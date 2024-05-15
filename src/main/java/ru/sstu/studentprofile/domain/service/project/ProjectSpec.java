@@ -9,6 +9,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import ru.sstu.studentprofile.data.models.project.ActualRoleForProject;
 import ru.sstu.studentprofile.data.models.project.Project;
+import ru.sstu.studentprofile.domain.service.project.dto.ProjectStatusSearchIn;
 
 import java.util.Objects;
 
@@ -19,6 +20,7 @@ public class ProjectSpec {
     public static Specification<Project> filterBy(final String searchQuery,
                                                   final boolean needActualRoles,
                                                   final long userId,
+                                                  final ProjectStatusSearchIn statusSearchIn,
                                                   Sort.Direction orderBy) {
 
         return (root, query, cb) -> {
@@ -32,7 +34,8 @@ public class ProjectSpec {
             return cb.and(
                     searchQuery(searchQuery).toPredicate(root, query, cb),
                     needActualRoles(needActualRoles).toPredicate(root, query, cb),
-                    byUserId(userId).toPredicate(root, query, cb)
+                    byUserId(userId).toPredicate(root, query, cb),
+                    byStatus(statusSearchIn).toPredicate(root, query, cb)
 
             );
         };
@@ -70,6 +73,15 @@ public class ProjectSpec {
                 return root.get("projectMembers").get("user").get("id").in(userId);
             }
             return cb.conjunction();
+        };
+    }
+
+    private static Specification<Project> byStatus(final ProjectStatusSearchIn statusSearchIn) {
+        return (root, query, cb) -> {
+            if (statusSearchIn == null || statusSearchIn == ProjectStatusSearchIn.ALL) {
+                return cb.conjunction();
+            }
+            return cb.equal(root.get("status"), statusSearchIn);
         };
     }
 

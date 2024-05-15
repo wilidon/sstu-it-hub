@@ -117,7 +117,11 @@ public class ProjectService {
                                        ProjectStatusSearchIn status,
                                        Sort.Direction orderBy) {
         Pageable pageable = PageRequest.of(page - 1, limit);
-        final Specification<Project> spec = ProjectSpec.filterBy(query, needActualRoles, userId, orderBy);
+        final Specification<Project> spec = ProjectSpec.filterBy(query,
+                needActualRoles,
+                userId,
+                status,
+                orderBy);
         Page<Project> projects = projectRepository.findAll(spec, pageable);
 
         List<ProjectOut> projectsOut = new ArrayList<>();
