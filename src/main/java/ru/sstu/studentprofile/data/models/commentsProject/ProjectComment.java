@@ -10,10 +10,10 @@ import ru.sstu.studentprofile.data.models.user.User;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "comments_project")
+@Table(name = "project_comment")
 @Getter
 @Setter
-public class CommentsProject {
+public class ProjectComment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
@@ -28,10 +28,22 @@ public class CommentsProject {
     @NotNull
     private Project project;
 
-    @Column(name = "text", nullable = false)
+    @Column(name = "text", nullable = false, length = 1024)
     private String text;
 
     @NotNull
-    private LocalDateTime createDate;
+    private LocalDateTime createdAt = LocalDateTime.now();
+
+    @NotNull
+    private LocalDateTime updatedAt = createdAt;
+
+    @Transient
+    private boolean isEdited;
+
+    @PostLoad
+    @PostUpdate
+    public void setIsEditedPostLoad() {
+        isEdited = !createdAt.equals(updatedAt);
+    }
 
 }

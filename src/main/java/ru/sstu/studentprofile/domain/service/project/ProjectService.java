@@ -116,7 +116,7 @@ public class ProjectService {
                                        int limit,
                                        ProjectStatusSearchIn status,
                                        Sort.Direction orderBy) {
-        Pageable pageable = PageRequest.of(page - 1, limit);
+        Pageable pageable = PageRequest.of(page, limit);
         final Specification<Project> spec = ProjectSpec.filterBy(query,
                 needActualRoles,
                 userId,
@@ -284,7 +284,7 @@ public class ProjectService {
 
     public PageableOut<ProjectOut> getAllNeeded(int page, int limit, JwtAuthentication authentication){
         if (authentication == null){
-            Pageable pageable = PageRequest.of(page - 1, limit);
+            Pageable pageable = PageRequest.of(page, limit);
             Page<Project> projects = projectRepository.findAll(pageable);
 
             List<ProjectOut> projectsOut = new ArrayList<>();
@@ -303,7 +303,7 @@ public class ProjectService {
         else{
             long userId = authentication.getUserId();
 
-            Pageable pageable = PageRequest.of(page - 1, limit);
+            Pageable pageable = PageRequest.of(page, limit);
             Page<Project> projects = projectRepository.findAllByRoleForProject(pageable, userId);
 
             List<ProjectOut> projectsOut = new ArrayList<>();

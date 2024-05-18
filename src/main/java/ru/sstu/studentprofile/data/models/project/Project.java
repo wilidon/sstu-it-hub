@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
-import ru.sstu.studentprofile.data.models.commentsProject.CommentsProject;
+import ru.sstu.studentprofile.data.models.commentsProject.ProjectComment;
 import ru.sstu.studentprofile.data.models.event.Event;
 import ru.sstu.studentprofile.data.models.user.User;
 
@@ -56,5 +56,5 @@ public class Project {
     private Set<ActualRoleForProject> actualRoleForProject = new LinkedHashSet<>();
 
     @OneToMany(mappedBy = "project", orphanRemoval = true)
-    private Set<CommentsProject> commentsProject = new LinkedHashSet<>();
+    private Set<ProjectComment> projectComment = new LinkedHashSet<>();
 }

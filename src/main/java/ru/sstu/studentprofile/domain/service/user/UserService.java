@@ -92,7 +92,7 @@ public class UserService {
         final User user = userRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Пользователь не найден"));
 
-        Pageable pageable = PageRequest.of(REVIEW_PAGE - 1,
+        Pageable pageable = PageRequest.of(REVIEW_PAGE,
                 REVIEW_LIMIT,
                 Sort.by("createdAt").descending());
         final Page<UserReview> reviews = userReviewRepository.findAllByRecipientId(id,
@@ -142,7 +142,7 @@ public class UserService {
     }
 
     public PageableOut<UserEvent> findAllUserEvents(long userId, int page, int limit) {
-        Pageable pageable = PageRequest.of(page - 1,
+        Pageable pageable = PageRequest.of(page,
                 limit,
                 Sort.by("id").descending());
         Page<Event> events = eventRepository.findEventByUserId(userId,
@@ -164,7 +164,7 @@ public class UserService {
     public PageableOut<UserReviewOut> findAllUserReviews(long userId,
                                                          int page,
                                                          int limit) {
-        Pageable pageable = PageRequest.of(page - 1,
+        Pageable pageable = PageRequest.of(page,
                 limit,
                 Sort.by("createdAt").descending());
 
@@ -182,7 +182,7 @@ public class UserService {
     }
 
     public PageableOut<UserProject> findAllUserProjects(long userId, int page, int limit) {
-        Pageable pageable = PageRequest.of(page - 1,
+        Pageable pageable = PageRequest.of(page,
                 limit,
                 Sort.by("createDate").descending());
 
@@ -353,7 +353,7 @@ public class UserService {
     }
 
     public PageableOut<UserOut> findAll(int page, int limit, String rolesSource, String search){
-        Pageable pageable = PageRequest.of(page - 1, limit);
+        Pageable pageable = PageRequest.of(page, limit);
         Page<User> users = null;
 
         if (rolesSource.equals("all")){

@@ -60,7 +60,7 @@ public class EventService {
 
     public PageableOut<ShortEventOut> all(String query, int page, int limit, FilterStatusIn eventStatusIn) {
         query = query.toLowerCase();
-        Pageable pageable = PageRequest.of(page - 1,
+        Pageable pageable = PageRequest.of(page,
                 limit,
                 Sort.by("endDate").ascending());
         Page<Event> events;
@@ -138,7 +138,7 @@ public class EventService {
     }
 
     public PageableOut<ProjectOut> getProjects(long eventId, int page, int limit) {
-        Pageable pageable = PageRequest.of(page - 1, limit);
+        Pageable pageable = PageRequest.of(page, limit);
         Page<Project> projects = projectRepository.findAll(pageable);
 
         return new PageableOut<>(

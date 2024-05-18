@@ -27,6 +27,7 @@ public class SwaggerConfig {
     private final String appVersion = "1.0.0";
     private final String appDescription = "";
 
+
     @Bean
     @Order(Ordered.HIGHEST_PRECEDENCE)
     public OpenAPI openApi(final ServletContext servletContext) {
@@ -40,4 +41,6 @@ public class SwaggerConfig {
                                 new Server().url("https://it-hub.fita.cc")
                                         .description("Production service")));
     }
+
+
 }

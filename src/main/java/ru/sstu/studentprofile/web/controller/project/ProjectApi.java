@@ -364,4 +364,5 @@ public interface ProjectApi {
     })
     ResponseEntity<?> getAllProjectsNeeded(@RequestParam(value = "page", defaultValue = "1") int page,
                                            @RequestParam(value = "limit", defaultValue = "25") int limit, JwtAuthentication authentication);
+
 }

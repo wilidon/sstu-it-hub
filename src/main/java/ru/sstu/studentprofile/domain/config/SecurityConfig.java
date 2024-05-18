@@ -54,7 +54,8 @@ public class SecurityConfig implements WebMvcConfigurer {
                                 "/users/**",
                                 "/projects/**",
                                 "/statistic/**",
-                                "/roleForProject/**").permitAll()
+                                "/roleForProject/**",
+                                "/commentsProject/**").permitAll()
                         .anyRequest().authenticated())
                 .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .addFilterAfter(jwtFilter, UsernamePasswordAuthenticationFilter.class)
