@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
-import ru.sstu.studentprofile.data.models.commentsProject.ProjectComment;
+import ru.sstu.studentprofile.data.models.project.comment.ProjectComment;
 import ru.sstu.studentprofile.data.models.event.Event;
 import ru.sstu.studentprofile.data.models.user.User;
 

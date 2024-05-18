@@ -3,7 +3,7 @@ package ru.sstu.studentprofile.domain.service.project.comment.mappers;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingConstants;
-import ru.sstu.studentprofile.data.models.commentsProject.ProjectComment;
+import ru.sstu.studentprofile.data.models.project.comment.ProjectComment;
 import ru.sstu.studentprofile.domain.service.project.comment.dto.ProjectCommentIn;
 import ru.sstu.studentprofile.domain.service.project.comment.dto.ProjectCommentOut;
 

@@ -1,4 +1,4 @@
-package ru.sstu.studentprofile.data.models.commentsProject;
+package ru.sstu.studentprofile.data.models.project.comment;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;

@@ -4,7 +4,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import ru.sstu.studentprofile.data.models.commentsProject.ProjectComment;
+import ru.sstu.studentprofile.data.models.project.comment.ProjectComment;
 
 public interface CommentsProjectRepository extends JpaRepository<ProjectComment, Long> {
     @Query("SELECT c FROM ProjectComment c WHERE c.project.id = :projectId")

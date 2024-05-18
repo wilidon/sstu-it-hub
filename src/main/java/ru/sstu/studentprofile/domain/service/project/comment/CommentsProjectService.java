@@ -2,13 +2,12 @@ package ru.sstu.studentprofile.domain.service.project.comment;
 
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
-import org.springframework.cglib.core.Local;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-import ru.sstu.studentprofile.data.models.commentsProject.ProjectComment;
+import ru.sstu.studentprofile.data.models.project.comment.ProjectComment;
 import ru.sstu.studentprofile.data.models.project.Project;
 import ru.sstu.studentprofile.data.models.user.User;
 import ru.sstu.studentprofile.data.repository.commentsProject.CommentsProjectRepository;
